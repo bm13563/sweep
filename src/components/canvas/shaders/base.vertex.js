@@ -1,0 +1,13 @@
+export const baseVertex = `
+#version 300 es
+
+in vec2 position;
+in vec2 texcoord;
+
+out vec2 o_texCoord;
+
+void main() {
+    gl_Position = vec4(position, 0, 1);
+    o_texCoord = texcoord;
+}
+`;

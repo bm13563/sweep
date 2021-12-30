@@ -5,4 +5,4 @@ export interface ContextProps {
     map: Map | undefined;
 }
 
-export const MapContext = createContext<ContextProps>({map: undefined});
+export const MapContext = createContext<ContextProps>({ map: undefined });
