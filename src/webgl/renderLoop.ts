@@ -1,18 +1,8 @@
 import * as twgl from "twgl.js";
-import { BaseLayer } from "../ui/map/layers/baseLayer";
 import { Pseudolayer } from "../ui/map/layers/pseudolayer";
+import { isBaseLayer, isPseudolayer } from "../utils/utils";
 import { baseFragment } from "./shaders/base.fragment";
 import { flipVertex } from "./shaders/flip.vertex";
-
-const isPseudolayer = (
-    layer: BaseLayer | Pseudolayer
-): layer is Pseudolayer => {
-    return layer.type === "pseudolayer";
-};
-
-const isBaseLayer = (layer: BaseLayer | Pseudolayer): layer is BaseLayer => {
-    return layer.type === "baseLayer";
-};
 
 export class RenderLoop {
     stopped = false;
