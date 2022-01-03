@@ -6,6 +6,6 @@ export interface XyzProps {
     maxZoom: number;
 }
 
-export function xyz({ url, attributions, maxZoom }: XyzProps) {
+export const xyz = ({ url, attributions, maxZoom }: XyzProps): olSource.XYZ => {
     return new olSource.XYZ({ url, attributions, maxZoom });
-}
+};

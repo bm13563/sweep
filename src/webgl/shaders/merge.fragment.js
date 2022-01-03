@@ -13,10 +13,6 @@ void main() {
     vec4 current = texture(u_current_image, o_texCoord);
     vec4 previous = texture(u_previous_image, o_texCoord);
 
-    if (current.a == 0.0) {
-        o_colour = previous;
-    } else {
-        o_colour = mix(previous, current, current.a);
-    }
+    o_colour = mix(previous, current, current.a);
 }
 `;

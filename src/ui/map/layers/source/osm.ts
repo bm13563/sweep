@@ -1,5 +1,5 @@
 import * as olSource from "ol/source";
 
-export function osm() {
+export const osm = (): olSource.OSM => {
     return new olSource.OSM();
-}
+};

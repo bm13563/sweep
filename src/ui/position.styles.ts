@@ -1,14 +1,14 @@
 import styled from "styled-components";
-import { Canvas } from "../canvas/Canvas";
-import { MapLayer } from "../map/map";
-import { MapArea } from "./MapArea";
+import { Map } from "./map/Map";
+import { Canvas } from "./canvas/Canvas";
+import { MapLayer } from "./map/mapLayer/mapLayer";
 
 const positioning = {
     height: "650px",
     width: "800px",
 };
 
-export const PositionedMapArea = styled(MapArea)`
+export const PositionedMap = styled(Map)`
     position: relative;
     top: 0px;
     left: 70px;
