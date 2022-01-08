@@ -40,10 +40,15 @@ export const PageContainer = (): JSX.Element => {
                 <Grid item xs={2} sx={{ height: "90%" }}>
                     <LayerPanel setActive={setActive} />
                 </Grid>
-                <Grid item xs={10} sx={{ height: "90%", display: "grid" }}>
-                    {pseudolayer && (
-                        <PositionedMap view={view} pseudolayer={pseudolayer} />
-                    )}
+                <Grid
+                    item
+                    xs={10}
+                    sx={{
+                        height: "90%",
+                        display: "flex",
+                    }}
+                >
+                    <PositionedMap view={view} pseudolayer={pseudolayer} />
                     <PositionedCanvas />
                 </Grid>
             </Grid>

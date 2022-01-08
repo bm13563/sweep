@@ -14,8 +14,6 @@ export const PositionedMap = styled(Map)`
     height: 100%;
     width: 100%;
     margin: 0px;
-    grid-column: 1;
-    grid-row: 1;
     z-index: 1;
 `;
 
@@ -32,7 +30,6 @@ export const PositionedCanvas = styled(Canvas)`
     height: 100%;
     width: 100%;
     margin: 0px;
-    grid-column: 1;
-    grid-row: 1;
+    margin-left: -100%;
     z-index: 0;
 `;

@@ -10,22 +10,21 @@ export const Map = ({
     className,
 }: {
     view: View;
-    pseudolayer: Pseudolayer;
+    pseudolayer: Pseudolayer | undefined;
     className?: string;
 }): JSX.Element => {
-    const baseLayers = Object.values(pseudolayer.baseLayers);
-
     return (
         <div className={className}>
-            {baseLayers.map((baseLayer) => {
-                return (
-                    <PositionedMapLayer
-                        key={baseLayer.uid}
-                        view={view}
-                        layer={baseLayer}
-                    />
-                );
-            })}
+            {pseudolayer &&
+                Object.values(pseudolayer.baseLayers).map((baseLayer) => {
+                    return (
+                        <PositionedMapLayer
+                            key={baseLayer.uid}
+                            view={view}
+                            layer={baseLayer}
+                        />
+                    );
+                })}
         </div>
     );
 };
