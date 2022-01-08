@@ -38,5 +38,13 @@
         ],
         "prefer-arrow-callback": ["error"],
         "func-style": ["error", "expression"]
-    }
+    },
+    "overrides": [
+        {
+          "files": ["*.ts", "*.tsx"],
+          "parserOptions": {
+            "project": ["./tsconfig.json"]
+          }
+        }
+      ]
 }

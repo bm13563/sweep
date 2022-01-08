@@ -3,17 +3,18 @@ import * as twgl from "twgl.js";
 import { RenderLoopContext } from "../../App";
 
 export const Canvas = ({ className }: { className?: string }): JSX.Element => {
-    const mapRef = useRef() as React.MutableRefObject<HTMLCanvasElement>;
+    const canvasRef = useRef() as React.MutableRefObject<HTMLCanvasElement>;
     const renderLoop = useContext(RenderLoopContext);
 
     useEffect(() => {
-        const gl = twgl.getContext(mapRef.current);
+        const gl = twgl.getContext(canvasRef.current);
+        console.log(gl.canvas.height, gl.canvas.width);
         renderLoop.registerWebGl(gl);
     });
 
     return (
         <div>
-            <canvas ref={mapRef} className={className} />
+            <canvas ref={canvasRef} className={className} />
         </div>
     );
 };

@@ -11,23 +11,22 @@ const positioning = {
 export const PositionedMap = styled(Map)`
     position: relative;
     top: 0px;
-    left: 70px;
-    height: ${positioning.height};
-    width: ${positioning.width};
+    height: 100%;
+    width: 100%;
     margin: 0px;
 `;
 
 export const PositionedMapLayer = styled(MapLayer)`
     position: absolute;
-    height: ${positioning.height};
-    width: ${positioning.width};
+    height: 100%;
+    width: 100%;
     z-index: 1;
     opacity: 0;
 `;
 
 export const PositionedCanvas = styled(Canvas)`
     position: absolute;
-    height: ${positioning.height};
-    width: ${positioning.width};
+    height: 100%;
+    width: 100%;
     z-index: 0;
 `;
