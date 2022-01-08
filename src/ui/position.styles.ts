@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { Map } from "./map/Map";
-import { Canvas } from "./canvas/Canvas";
-import { MapLayer } from "./map/mapLayer/mapLayer";
+import { Canvas } from "./map/Canvas";
+import { MapLayer } from "./map/MapLayer";
 
 const positioning = {
     height: "650px",
@@ -14,19 +14,25 @@ export const PositionedMap = styled(Map)`
     height: 100%;
     width: 100%;
     margin: 0px;
+    grid-column: 1;
+    grid-row: 1;
+    z-index: 1;
 `;
 
 export const PositionedMapLayer = styled(MapLayer)`
     position: absolute;
     height: 100%;
     width: 100%;
-    z-index: 1;
     opacity: 0;
 `;
 
 export const PositionedCanvas = styled(Canvas)`
-    position: absolute;
+    position: relative;
+    top: 0px;
     height: 100%;
     width: 100%;
+    margin: 0px;
+    grid-column: 1;
+    grid-row: 1;
     z-index: 0;
 `;

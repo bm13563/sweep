@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@fontsource/roboto": "^4.5.1",
+    "@mui/icons-material": "^5.2.5",
     "@mui/material": "^5.2.7",
     "@mui/styled-engine": "npm:@mui/styled-engine-sc@latest",
     "@testing-library/jest-dom": "^5.11.4",

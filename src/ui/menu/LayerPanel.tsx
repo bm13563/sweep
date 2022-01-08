@@ -1,40 +1,64 @@
 import { Button, Container, Stack, Typography } from "@mui/material";
-import React, { useState } from "react";
-import { isConstructorDeclaration } from "typescript";
-import { flippedPseudolayer } from "../../utils/utils";
+import React, { useEffect, useState } from "react";
+import { defaultPseudolayer, flippedPseudolayer } from "../../utils/utils";
 import { Pseudolayer } from "../map/layers/pseudolayer";
+import { Layer } from "./Layer";
+import { v4 as uuidv4 } from "uuid";
+import { setConstantValue } from "typescript";
 
-interface NamedPseudolayers {
+export interface UiLayer {
+    uid: string;
     name: string;
+    visible: boolean;
     pseudolayer: Pseudolayer;
 }
 
 export const LayerPanel = ({
-    pseudolayer,
     setActive,
 }: {
-    pseudolayer: Pseudolayer;
-    setActive: (pseudolayer: Pseudolayer) => void;
+    setActive: (pseudolayer: Pseudolayer | undefined) => void;
 }): JSX.Element => {
-    const [namedPseudolayers, setNamedPseudolayers] = useState<
-        NamedPseudolayers[]
-    >([{ name: "OSM Road", pseudolayer: pseudolayer }]);
+    const [uiLayers, setUiLayers] = useState<UiLayer[]>([
+        {
+            uid: uuidv4(),
+            name: "OSM Road",
+            visible: true,
+            pseudolayer: defaultPseudolayer(),
+        },
+    ]);
 
     const addPseudolayer = () => {
-        setNamedPseudolayers((lastPseudolayer: NamedPseudolayers[]) => {
+        setUiLayers((lastPseudolayer: UiLayer[]) => {
             return [
                 ...lastPseudolayer,
                 {
+                    uid: uuidv4(),
                     name: "Flipped OSM Road",
+                    visible: true,
                     pseudolayer: flippedPseudolayer(),
                 },
             ];
         });
     };
 
-    const setActivePseudolayer = (pseudolayer: Pseudolayer) => {
-        setActive(pseudolayer);
+    const updateVisibility = (uiLayer: UiLayer) => {
+        setUiLayers(
+            uiLayers.map((stateLayer: UiLayer) => {
+                return stateLayer.uid === uiLayer.uid
+                    ? { ...uiLayer, visible: !uiLayer.visible }
+                    : { ...stateLayer };
+            })
+        );
     };
+
+    useEffect(() => {
+        const activeUiLayer = uiLayers.find((uiLayer: UiLayer) => {
+            return uiLayer.visible === true;
+        });
+        activeUiLayer
+            ? setActive(activeUiLayer.pseudolayer)
+            : setActive(undefined);
+    });
 
     return (
         <>
@@ -45,21 +69,15 @@ export const LayerPanel = ({
                     textAlign: "center",
                 }}
             >
-                <Stack spacing={2}>
+                <Stack spacing={2} sx={{ height: "100%" }}>
                     <Typography variant="h4">Layers</Typography>
-                    {namedPseudolayers.map((namedPseudolayer) => {
+                    {uiLayers.map((uiLayer) => {
                         return (
-                            <Typography
-                                key={namedPseudolayer.pseudolayer.uid}
-                                variant="body2"
-                                onClick={() =>
-                                    setActivePseudolayer(
-                                        namedPseudolayer.pseudolayer
-                                    )
-                                }
-                            >
-                                {namedPseudolayer.name}
-                            </Typography>
+                            <Layer
+                                key={uiLayer.pseudolayer.uid}
+                                uiLayer={uiLayer}
+                                updateVisibility={updateVisibility}
+                            />
                         );
                     })}
                     <Button onClick={addPseudolayer}>Add pseudolayer</Button>

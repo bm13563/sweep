@@ -1,22 +1,19 @@
 import { fromLonLat } from "ol/proj";
-import View from "ol/View";
 import React from "react";
+import View from "ol/View";
 import { PositionedCanvas, PositionedMapLayer } from "../position.styles";
 import { Pseudolayer } from "./layers/pseudolayer";
 
 export const Map = ({
+    view,
     pseudolayer,
     className,
 }: {
+    view: View;
     pseudolayer: Pseudolayer;
     className?: string;
 }): JSX.Element => {
     const baseLayers = Object.values(pseudolayer.baseLayers);
-
-    const view = new View({
-        zoom: 9,
-        center: fromLonLat([-94.9065, 38.9884]),
-    });
 
     return (
         <div className={className}>
@@ -29,7 +26,6 @@ export const Map = ({
                     />
                 );
             })}
-            <PositionedCanvas />
         </div>
     );
 };

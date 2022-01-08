@@ -8,7 +8,7 @@ export class RenderLoop {
     stopped = false;
     clock = new Date().getTime();
     fps = 30;
-    pseudolayer?: Pseudolayer;
+    pseudolayer?: Pseudolayer | undefined;
     gl?: WebGLRenderingContext;
 
     registerWebGl(gl: WebGLRenderingContext): void {
@@ -16,7 +16,7 @@ export class RenderLoop {
         this.render(gl);
     }
 
-    renderPseudolayer = (pseudolayer: Pseudolayer): void => {
+    renderPseudolayer = (pseudolayer: Pseudolayer | undefined): void => {
         this.pseudolayer = pseudolayer;
     };
 
@@ -114,8 +114,13 @@ export class RenderLoop {
             const elapsed = new Date().getTime() - this.clock;
 
             if (elapsed > 1000 / this.fps) {
-                if (gl && this.pseudolayer) {
-                    manifest(this.pseudolayer);
+                if (gl) {
+                    if (this.pseudolayer) {
+                        manifest(this.pseudolayer);
+                    } else {
+                        gl.clearColor(1.0, 1.0, 1.0, 1.0);
+                        gl.clear(gl.COLOR_BUFFER_BIT);
+                    }
                 }
                 this.clock = now - (elapsed % (1000 / this.fps));
             }

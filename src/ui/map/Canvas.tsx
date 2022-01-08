@@ -8,13 +8,12 @@ export const Canvas = ({ className }: { className?: string }): JSX.Element => {
 
     useEffect(() => {
         const gl = twgl.getContext(canvasRef.current);
-        console.log(gl.canvas.height, gl.canvas.width);
         renderLoop.registerWebGl(gl);
     });
 
     return (
-        <div>
+        <>
             <canvas ref={canvasRef} className={className} />
-        </div>
+        </>
     );
 };
