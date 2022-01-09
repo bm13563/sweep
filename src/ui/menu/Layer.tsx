@@ -1,19 +1,25 @@
 import { Box, Stack } from "@mui/material";
-import React, { useState } from "react";
-import { Pseudolayer } from "../map/layers/pseudolayer";
+import React from "react";
 import { UiLayer } from "./LayerPanel";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 export const Layer = ({
     uiLayer,
     updateVisibility,
+    remove,
 }: {
     uiLayer: UiLayer;
     updateVisibility: (uiLayer: UiLayer) => void;
+    remove: (uiLayer: UiLayer) => void;
 }): JSX.Element => {
     const changeVisibility = () => {
         updateVisibility(uiLayer);
+    };
+
+    const removeUiLayer = () => {
+        remove(uiLayer);
     };
 
     return (
@@ -29,17 +35,14 @@ export const Layer = ({
         >
             <Stack direction="row">
                 <Box>{uiLayer.name}</Box>
-                {uiLayer.visible ? (
-                    <VisibilityOffIcon
-                        onClick={changeVisibility}
-                        sx={{ marginLeft: "auto" }}
-                    />
-                ) : (
-                    <RemoveRedEyeIcon
-                        onClick={changeVisibility}
-                        sx={{ marginLeft: "auto" }}
-                    />
-                )}
+                <Stack direction="row" spacing={1} sx={{ marginLeft: "auto" }}>
+                    <DeleteIcon onClick={removeUiLayer} />
+                    {uiLayer.visible ? (
+                        <VisibilityOffIcon onClick={changeVisibility} />
+                    ) : (
+                        <RemoveRedEyeIcon onClick={changeVisibility} />
+                    )}
+                </Stack>
             </Stack>
         </Box>
     );

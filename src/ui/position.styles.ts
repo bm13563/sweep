@@ -3,11 +3,6 @@ import { Map } from "./map/Map";
 import { Canvas } from "./map/Canvas";
 import { MapLayer } from "./map/MapLayer";
 
-const positioning = {
-    height: "650px",
-    width: "800px",
-};
-
 export const PositionedMap = styled(Map)`
     position: relative;
     top: 0px;

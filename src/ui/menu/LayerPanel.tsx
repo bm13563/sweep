@@ -1,10 +1,10 @@
-import { Button, Container, Stack, Typography } from "@mui/material";
+import { Button, Container, Stack } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { defaultPseudolayer, flippedPseudolayer } from "../../utils/utils";
 import { Pseudolayer } from "../map/layers/pseudolayer";
 import { Layer } from "./Layer";
 import { v4 as uuidv4 } from "uuid";
-import { setConstantValue } from "typescript";
+import { LayerHeader } from "./LayerHeader";
 
 export interface UiLayer {
     uid: string;
@@ -30,15 +30,23 @@ export const LayerPanel = ({
     const addPseudolayer = () => {
         setUiLayers((lastPseudolayer: UiLayer[]) => {
             return [
-                ...lastPseudolayer,
                 {
                     uid: uuidv4(),
                     name: "Flipped OSM Road",
                     visible: true,
                     pseudolayer: flippedPseudolayer(),
                 },
+                ...lastPseudolayer,
             ];
         });
+    };
+
+    const remove = (uiLayer: UiLayer) => {
+        setUiLayers(
+            uiLayers.filter((stateLayer: UiLayer) => {
+                return stateLayer.uid !== uiLayer.uid;
+            })
+        );
     };
 
     const updateVisibility = (uiLayer: UiLayer) => {
@@ -66,17 +74,18 @@ export const LayerPanel = ({
                 sx={{
                     backgroundColor: "red",
                     height: "100%",
-                    textAlign: "center",
+                    textAlign: "left",
                 }}
             >
                 <Stack spacing={2} sx={{ height: "100%" }}>
-                    <Typography variant="h4">Layers</Typography>
+                    <LayerHeader />
                     {uiLayers.map((uiLayer) => {
                         return (
                             <Layer
                                 key={uiLayer.pseudolayer.uid}
                                 uiLayer={uiLayer}
                                 updateVisibility={updateVisibility}
+                                remove={remove}
                             />
                         );
                     })}

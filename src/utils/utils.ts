@@ -4,7 +4,7 @@ import { Pseudolayer } from "../ui/map/layers/pseudolayer";
 import { TileBaseLayer } from "../ui/map/layers/tileLayer";
 import { baseFragment } from "../webgl/shaders/base.fragment";
 import { baseVertex } from "../webgl/shaders/base.vertex";
-import { flipVertex } from "../webgl/shaders/flip.vertex";
+import { blueFragment } from "../webgl/shaders/blue.fragment";
 
 export const isPseudolayer = (
     layer: BaseLayer | Pseudolayer
@@ -39,7 +39,7 @@ export const flippedPseudolayer = (): Pseudolayer => {
     const flippedPseudolayer = new Pseudolayer(
         { u_image: defaultTileLayer },
         {},
-        { vertexShader: flipVertex, fragmentShader: baseFragment }
+        { vertexShader: baseVertex, fragmentShader: blueFragment }
     );
     return flippedPseudolayer;
 };

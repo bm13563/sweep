@@ -1,7 +1,6 @@
-import { fromLonLat } from "ol/proj";
 import React from "react";
 import View from "ol/View";
-import { PositionedCanvas, PositionedMapLayer } from "../position.styles";
+import { PositionedMapLayer } from "../position.styles";
 import { Pseudolayer } from "./layers/pseudolayer";
 
 export const Map = ({
