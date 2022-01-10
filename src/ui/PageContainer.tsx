@@ -1,11 +1,13 @@
 import React, { useContext, useState } from "react";
 import View from "ol/View";
-import { PositionedCanvas, PositionedMap } from "./position.styles";
 import { RenderLoopContext } from "../App";
-import { Grid } from "@mui/material";
-import { LayerPanel } from "./menu/LayerPanel";
+import { Box, Grid } from "@mui/material";
+import { LayerContainer } from "./menu/LayerContainer";
 import { Pseudolayer } from "./map/layers/pseudolayer";
 import { fromLonLat } from "ol/proj";
+import { MapContainer } from "./map/MapContainer";
+import { Canvas } from "./map/Canvas";
+import { ActionContainer } from "./actions/ActionContainer";
 
 const view = new View({
     zoom: 9,
@@ -16,11 +18,16 @@ export const PageContainer = (): JSX.Element => {
     const renderLoop = useContext(RenderLoopContext);
 
     const [pseudolayer, setPseudolayer] = useState<Pseudolayer>();
+    const [action, setAction] = useState<JSX.Element>();
 
     renderLoop.renderPseudolayer(pseudolayer);
 
-    const setActive = (pseudolayer: Pseudolayer | undefined) => {
+    const setPseudolayerCallback = (pseudolayer: Pseudolayer | undefined) => {
         setPseudolayer(pseudolayer);
+    };
+
+    const setActionCallback = (component: JSX.Element) => {
+        setAction(component);
     };
 
     return (
@@ -38,7 +45,10 @@ export const PageContainer = (): JSX.Element => {
                     hi
                 </Grid>
                 <Grid item xs={2} sx={{ height: "90%" }}>
-                    <LayerPanel setActive={setActive} />
+                    <LayerContainer
+                        setPseudolayer={setPseudolayerCallback}
+                        setAction={setActionCallback}
+                    />
                 </Grid>
                 <Grid
                     item
@@ -46,10 +56,13 @@ export const PageContainer = (): JSX.Element => {
                     sx={{
                         height: "90%",
                         display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
                     }}
                 >
-                    <PositionedMap view={view} pseudolayer={pseudolayer} />
-                    <PositionedCanvas />
+                    {action && <ActionContainer action={action} />}
+                    <MapContainer view={view} pseudolayer={pseudolayer} />
+                    <Canvas />
                 </Grid>
             </Grid>
         </>

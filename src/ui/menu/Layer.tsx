@@ -1,6 +1,6 @@
 import { Box, Stack } from "@mui/material";
 import React from "react";
-import { UiLayer } from "./LayerPanel";
+import { UiLayer } from "./LayerContainer";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import DeleteIcon from "@mui/icons-material/Delete";

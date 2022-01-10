@@ -4,15 +4,14 @@ import View from "ol/View";
 import { Controls } from "./controls";
 import { unByKey } from "ol/Observable";
 import { BaseLayer } from "./layers/baseLayer";
+import { Box } from "@mui/material";
 
 export const MapLayer = ({
     view,
     layer,
-    className,
 }: {
     view: View;
     layer: BaseLayer;
-    className?: string;
 }): JSX.Element => {
     const mapRef = useRef() as React.MutableRefObject<HTMLInputElement>;
 
@@ -40,8 +39,16 @@ export const MapLayer = ({
     }, [layer.layer]);
 
     return (
-        <div ref={mapRef} className={className}>
+        <Box
+            sx={{
+                position: "absolute",
+                height: "100%",
+                width: "100%",
+                opacity: 0,
+            }}
+            ref={mapRef}
+        >
             <Controls />
-        </div>
+        </Box>
     );
 };

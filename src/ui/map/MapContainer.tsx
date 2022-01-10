@@ -1,29 +1,37 @@
 import React from "react";
 import View from "ol/View";
-import { PositionedMapLayer } from "../position.styles";
 import { Pseudolayer } from "./layers/pseudolayer";
+import { Box } from "@mui/material";
+import { MapLayer } from "./MapLayer";
 
-export const Map = ({
+export const MapContainer = ({
     view,
     pseudolayer,
-    className,
 }: {
     view: View;
     pseudolayer: Pseudolayer | undefined;
-    className?: string;
 }): JSX.Element => {
     return (
-        <div className={className}>
+        <Box
+            sx={{
+                position: "relative",
+                top: "0px",
+                height: "100%",
+                width: "100%",
+                margin: "0px",
+                zIndex: 1,
+            }}
+        >
             {pseudolayer &&
                 Object.values(pseudolayer.baseLayers).map((baseLayer) => {
                     return (
-                        <PositionedMapLayer
+                        <MapLayer
                             key={baseLayer.uid}
                             view={view}
                             layer={baseLayer}
                         />
                     );
                 })}
-        </div>
+        </Box>
     );
 };

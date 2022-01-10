@@ -1,8 +1,15 @@
+import { Box } from "@mui/material";
 import React, { useContext, useEffect, useRef } from "react";
 import * as twgl from "twgl.js";
 import { RenderLoopContext } from "../../App";
+import styled from "styled-components";
 
-export const Canvas = ({ className }: { className?: string }): JSX.Element => {
+const ExpandingCanvas = styled.canvas`
+    height: 100%;
+    width: 100%;
+`;
+
+export const Canvas = (): JSX.Element => {
     const canvasRef = useRef() as React.MutableRefObject<HTMLCanvasElement>;
     const renderLoop = useContext(RenderLoopContext);
 
@@ -12,8 +19,18 @@ export const Canvas = ({ className }: { className?: string }): JSX.Element => {
     });
 
     return (
-        <>
-            <canvas ref={canvasRef} className={className} />
-        </>
+        <Box
+            sx={{
+                position: "relative",
+                top: "0px",
+                height: "100%",
+                width: "100%",
+                margin: "0px",
+                marginLeft: "-100%",
+                zIndex: 0,
+            }}
+        >
+            <ExpandingCanvas ref={canvasRef} />
+        </Box>
     );
 };

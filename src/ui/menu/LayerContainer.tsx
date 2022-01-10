@@ -13,10 +13,12 @@ export interface UiLayer {
     pseudolayer: Pseudolayer;
 }
 
-export const LayerPanel = ({
-    setActive,
+export const LayerContainer = ({
+    setPseudolayer,
+    setAction,
 }: {
-    setActive: (pseudolayer: Pseudolayer | undefined) => void;
+    setPseudolayer: (pseudolayer: Pseudolayer | undefined) => void;
+    setAction: (component: JSX.Element) => void;
 }): JSX.Element => {
     const [uiLayers, setUiLayers] = useState<UiLayer[]>([
         {
@@ -64,8 +66,8 @@ export const LayerPanel = ({
             return uiLayer.visible === true;
         });
         activeUiLayer
-            ? setActive(activeUiLayer.pseudolayer)
-            : setActive(undefined);
+            ? setPseudolayer(activeUiLayer.pseudolayer)
+            : setPseudolayer(undefined);
     });
 
     return (
@@ -78,7 +80,7 @@ export const LayerPanel = ({
                 }}
             >
                 <Stack spacing={2} sx={{ height: "100%" }}>
-                    <LayerHeader />
+                    <LayerHeader setAction={setAction} />
                     {uiLayers.map((uiLayer) => {
                         return (
                             <Layer
