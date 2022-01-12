@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
 import View from "ol/View";
 import { RenderLoopContext } from "../App";
-import { Box, Grid } from "@mui/material";
+import { Grid } from "@mui/material";
 import { LayerContainer } from "./menu/LayerContainer";
 import { Pseudolayer } from "./map/layers/pseudolayer";
 import { fromLonLat } from "ol/proj";
@@ -26,7 +26,7 @@ export const PageContainer = (): JSX.Element => {
         setPseudolayer(pseudolayer);
     };
 
-    const setActionCallback = (component: JSX.Element) => {
+    const setActionCallback = (component: JSX.Element | undefined) => {
         setAction(component);
     };
 

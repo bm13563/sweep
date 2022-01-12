@@ -18,7 +18,7 @@ export const LayerContainer = ({
     setAction,
 }: {
     setPseudolayer: (pseudolayer: Pseudolayer | undefined) => void;
-    setAction: (component: JSX.Element) => void;
+    setAction: (component: JSX.Element | undefined) => void;
 }): JSX.Element => {
     const [uiLayers, setUiLayers] = useState<UiLayer[]>([
         {

@@ -11,8 +11,7 @@ export const ActionContainer = ({
             sx={{
                 position: "absolute",
                 backgroundColor: "blue",
-                width: "30%",
-                height: "50%",
+                width: "20%",
                 zIndex: 2,
             }}
         >
