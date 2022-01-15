@@ -7,7 +7,7 @@ import { flipVertex } from "./shaders/flip.vertex";
 export class RenderLoop {
     stopped = false;
     clock = new Date().getTime();
-    fps = 30;
+    fps = 24;
     pseudolayer?: Pseudolayer | undefined;
     gl?: WebGLRenderingContext;
 

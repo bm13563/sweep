@@ -27,16 +27,16 @@ export const LayerContainer = ({
         },
     ]);
 
-    const addPseudolayer = () => {
-        setUiLayers((lastPseudolayer: UiLayer[]) => {
+    const addPseudolayer = (newPseudolayer: Pseudolayer) => {
+        setUiLayers((prevUiLayerState: UiLayer[]) => {
             return [
                 {
                     uid: uuidv4(),
-                    name: "Flipped OSM Road",
+                    name: "OSM Road",
                     visible: true,
-                    pseudolayer: flippedPseudolayer(),
+                    pseudolayer: newPseudolayer,
                 },
-                ...lastPseudolayer,
+                ...prevUiLayerState,
             ];
         });
     };
@@ -78,7 +78,7 @@ export const LayerContainer = ({
                 }}
             >
                 <Stack spacing={2} sx={{ height: "100%" }}>
-                    <LayerHeader />
+                    <LayerHeader addPseudolayer={addPseudolayer} />
                     {uiLayers.map((uiLayer) => {
                         return (
                             <Layer
@@ -89,7 +89,6 @@ export const LayerContainer = ({
                             />
                         );
                     })}
-                    <Button onClick={addPseudolayer}>Add pseudolayer</Button>
                 </Stack>
             </Container>
         </>

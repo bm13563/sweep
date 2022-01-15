@@ -3,10 +3,19 @@ import AddIcon from "@mui/icons-material/Add";
 import { ActionConfig } from "../actions/Action";
 import { SelectChangeEvent } from "@mui/material";
 import { useAction } from "../actions/ActionContext";
+import TileLayer from "ol/layer/Tile";
+import { Pseudolayer } from "../map/layers/pseudolayer";
+import { XYZBaseLayer } from "../map/layers/xyzLayer";
+import { baseVertex } from "../../webgl/shaders/base.vertex";
+import { baseFragment } from "../../webgl/shaders/base.fragment";
 
-export const AddLayer = (): JSX.Element => {
+export const AddLayer = ({
+    addPseudolayer,
+}: {
+    addPseudolayer: (pseudolayer: Pseudolayer) => void;
+}): JSX.Element => {
     const [displayAction, setDisplayAction] = useState(false);
-    const [layerType, setLayerType] = useState("tile");
+    const [layerType, setLayerType] = useState("xyz");
     const [url, setUrl] = useState("");
 
     const updateLayerType = (event: SelectChangeEvent<string>): void => {
@@ -18,7 +27,21 @@ export const AddLayer = (): JSX.Element => {
     };
 
     const onSubmit = () => {
-        console.log(layerType, url);
+        const defaultTileLayer = new XYZBaseLayer({
+            source: {
+                url: url,
+            },
+            zIndex: 0,
+        });
+        const pseudolayer = new Pseudolayer(
+            { u_image: defaultTileLayer },
+            {},
+            { vertexShader: baseVertex, fragmentShader: baseFragment }
+        );
+        addPseudolayer(pseudolayer);
+        setUrl("");
+        setLayerType("xyz");
+        setDisplayAction(false);
     };
 
     const onClose = () => {
@@ -30,14 +53,14 @@ export const AddLayer = (): JSX.Element => {
     };
 
     const config: ActionConfig = {
-        title: url,
+        title: "Add layer",
         onSubmit: onSubmit,
         onClose: onClose,
         sections: [
             {
                 type: "dropdown",
                 title: "Layer type",
-                items: ["tile"],
+                items: ["xyz"],
                 value: layerType,
                 onChange: updateLayerType,
             },
