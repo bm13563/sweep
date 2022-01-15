@@ -1,24 +1,20 @@
 import React, { useContext, useState } from "react";
-import View from "ol/View";
 import { RenderLoopContext } from "../App";
 import { Grid } from "@mui/material";
 import { LayerContainer } from "./menu/LayerContainer";
 import { Pseudolayer } from "./map/layers/pseudolayer";
-import { fromLonLat } from "ol/proj";
 import { MapContainer } from "./map/MapContainer";
 import { Canvas } from "./map/Canvas";
 import { ActionContainer } from "./actions/ActionContainer";
+import { defaultView } from "../utils/utils";
+import { ActionStateProvider } from "./actions/ActionContext";
 
-const view = new View({
-    zoom: 9,
-    center: fromLonLat([-94.9065, 38.9884]),
-});
+const view = defaultView();
 
 export const PageContainer = (): JSX.Element => {
     const renderLoop = useContext(RenderLoopContext);
 
     const [pseudolayer, setPseudolayer] = useState<Pseudolayer>();
-    const [action, setAction] = useState<JSX.Element>();
 
     renderLoop.renderPseudolayer(pseudolayer);
 
@@ -26,12 +22,8 @@ export const PageContainer = (): JSX.Element => {
         setPseudolayer(pseudolayer);
     };
 
-    const setActionCallback = (component: JSX.Element | undefined) => {
-        setAction(component);
-    };
-
     return (
-        <>
+        <ActionStateProvider>
             <Grid
                 container
                 spacing={0}
@@ -45,10 +37,7 @@ export const PageContainer = (): JSX.Element => {
                     hi
                 </Grid>
                 <Grid item xs={2} sx={{ height: "90%" }}>
-                    <LayerContainer
-                        setPseudolayer={setPseudolayerCallback}
-                        setAction={setActionCallback}
-                    />
+                    <LayerContainer setPseudolayer={setPseudolayerCallback} />
                 </Grid>
                 <Grid
                     item
@@ -60,11 +49,11 @@ export const PageContainer = (): JSX.Element => {
                         alignItems: "center",
                     }}
                 >
-                    {action && <ActionContainer action={action} />}
+                    <ActionContainer />
                     <MapContainer view={view} pseudolayer={pseudolayer} />
                     <Canvas />
                 </Grid>
             </Grid>
-        </>
+        </ActionStateProvider>
     );
 };

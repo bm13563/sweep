@@ -1,11 +1,11 @@
 import { Box } from "@mui/material";
-import React from "react";
+import React, { useContext } from "react";
+import { Action } from "./Action";
+import { ActionState } from "./ActionContext";
 
-export const ActionContainer = ({
-    action,
-}: {
-    action: JSX.Element;
-}): JSX.Element => {
+export const ActionContainer = (): JSX.Element => {
+    const { configState } = useContext(ActionState);
+
     return (
         <Box
             sx={{
@@ -15,7 +15,9 @@ export const ActionContainer = ({
                 zIndex: 2,
             }}
         >
-            <Box sx={{ zIndex: 3 }}>{action}</Box>
+            <Box sx={{ zIndex: 3 }}>
+                {configState && <Action config={configState} />}
+            </Box>
         </Box>
     );
 };

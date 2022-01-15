@@ -1,6 +1,6 @@
 import {
     Box,
-    InputLabel,
+    Button,
     MenuItem,
     Select,
     SelectChangeEvent,
@@ -19,9 +19,8 @@ export type ActionSection =
 
 interface ActionSectionBase {
     title: string;
-    default?: string;
+    value?: string;
     customChild?: JSX.Element;
-    customStyles?: Record<string, string | number>;
 }
 
 interface ActionSectionInput extends ActionSectionBase {
@@ -37,6 +36,8 @@ interface ActionSectionDropdown extends ActionSectionBase {
 
 interface ActionSectionSlider extends ActionSectionBase {
     type: "slider";
+    min?: number;
+    max?: number;
     onChange?: (
         event: Event,
         value: number | number[],
@@ -46,22 +47,38 @@ interface ActionSectionSlider extends ActionSectionBase {
 
 export interface ActionConfig {
     title: string;
-    setAction: (component: JSX.Element | undefined) => void;
     sections: ActionSection[];
+    onSubmit: () => void;
+    onClose: () => void;
 }
 
 export const Action = ({ config }: { config: ActionConfig }): JSX.Element => {
     return (
         <Box>
-            <Stack>
-                <Stack direction="row">
+            <Stack spacing={0}>
+                <Stack direction="row" sx={{ marginBottom: "1rem" }}>
                     <Typography variant="h4">{config.title}</Typography>
                     <CloseIcon
-                        onClick={() => config.setAction(undefined)}
+                        onClick={() => config.onClose()}
                         sx={{ marginLeft: "auto" }}
                     />
                 </Stack>
-                {config.sections.map((section) => actionParser(section))}
+                {config.sections.map((section, index) => {
+                    return (
+                        <Box
+                            key={index}
+                            sx={{
+                                marginBottom: "1rem",
+                            }}
+                        >
+                            <Typography>{section.title}</Typography>
+                            {actionParser(section)}
+                        </Box>
+                    );
+                })}
+                <Button onClick={config.onSubmit} variant="contained">
+                    Apply
+                </Button>
             </Stack>
         </Box>
     );
@@ -83,24 +100,26 @@ const actionParser = (actionSection: ActionSection) => {
 
 const renderInput = (config: ActionSectionInput) => {
     return (
-        <>
-            <InputLabel>{config.title}</InputLabel>
+        <Box>
             <TextField
-                defaultValue={config.default}
+                fullWidth
+                defaultValue={config.value}
                 onChange={config.onChange}
-                sx={config.customStyles}
             >
                 {config.customChild}
             </TextField>
-        </>
+        </Box>
     );
 };
 
 const renderDropdown = (config: ActionSectionDropdown): JSX.Element => {
     return (
-        <>
-            <InputLabel>{config.title}</InputLabel>
-            <Select defaultValue={config.default} onChange={config.onChange}>
+        <Box>
+            <Select
+                fullWidth
+                defaultValue={config.value}
+                onChange={config.onChange}
+            >
                 {config.items.map((item) => {
                     return (
                         <MenuItem key={item} value={item}>
@@ -109,21 +128,22 @@ const renderDropdown = (config: ActionSectionDropdown): JSX.Element => {
                     );
                 })}
             </Select>
-        </>
+        </Box>
     );
 };
 
 const renderSlider = (config: ActionSectionSlider): JSX.Element => {
     return (
-        <>
-            <InputLabel>{config.title}</InputLabel>
+        <Box>
             <Slider
+                min={config.min}
+                max={config.max}
                 defaultValue={
-                    config.default ? parseFloat(config.default) : undefined
+                    config.value ? parseFloat(config.value) : undefined
                 }
                 valueLabelDisplay="auto"
                 onChange={config.onChange}
             />
-        </>
+        </Box>
     );
 };

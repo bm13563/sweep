@@ -15,10 +15,8 @@ export interface UiLayer {
 
 export const LayerContainer = ({
     setPseudolayer,
-    setAction,
 }: {
     setPseudolayer: (pseudolayer: Pseudolayer | undefined) => void;
-    setAction: (component: JSX.Element | undefined) => void;
 }): JSX.Element => {
     const [uiLayers, setUiLayers] = useState<UiLayer[]>([
         {
@@ -80,7 +78,7 @@ export const LayerContainer = ({
                 }}
             >
                 <Stack spacing={2} sx={{ height: "100%" }}>
-                    <LayerHeader setAction={setAction} />
+                    <LayerHeader />
                     {uiLayers.map((uiLayer) => {
                         return (
                             <Layer

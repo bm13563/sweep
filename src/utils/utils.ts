@@ -1,4 +1,6 @@
+import { View } from "ol";
 import OSM from "ol/source/OSM";
+import { fromLonLat, get as getProjection } from "ol/proj";
 import { BaseLayer } from "../ui/map/layers/baseLayer";
 import { Pseudolayer } from "../ui/map/layers/pseudolayer";
 import { TileBaseLayer } from "../ui/map/layers/tileLayer";
@@ -16,6 +18,15 @@ export const isBaseLayer = (
     layer: BaseLayer | Pseudolayer
 ): layer is BaseLayer => {
     return layer.type === "baseLayer";
+};
+
+export const defaultView = (): View => {
+    const projection = getProjection("EPSG:3857");
+    return new View({
+        center: fromLonLat([-94.9065, 38.9884]),
+        zoom: 9,
+        projection: projection,
+    });
 };
 
 export const defaultPseudolayer = (): Pseudolayer => {
