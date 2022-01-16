@@ -7,18 +7,16 @@ export interface XYZSourceProps {
     url: string;
 }
 
-export interface XYZBaseLayerProps {
+export interface XYZLayerProps {
     source: XYZSourceProps;
 }
 
-export type XYZLayer = OLTileLayer<XYZ>;
+export class XYZLayer extends Layer {
+    mapLayer: OLTileLayer<XYZ>;
 
-export class XYZBaseLayer extends Layer {
-    layer: XYZLayer;
-
-    constructor(props: XYZBaseLayerProps) {
+    constructor(props: XYZLayerProps) {
         super();
-        this.layer = new OLTileLayer({
+        this.mapLayer = new OLTileLayer({
             source: new XYZ({
                 url: props.source.url,
                 crossOrigin: "anonymous",
@@ -29,6 +27,6 @@ export class XYZBaseLayer extends Layer {
     }
 }
 
-export const getXYZLayer = (props: XYZBaseLayerProps): XYZBaseLayer => {
-    return new XYZBaseLayer(props);
+export const getXYZLayer = (props: XYZLayerProps): XYZLayer => {
+    return new XYZLayer(props);
 };

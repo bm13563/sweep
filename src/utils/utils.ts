@@ -1,21 +1,19 @@
 import { View } from "ol";
 import { fromLonLat, get as getProjection } from "ol/proj";
-import { BaseLayer } from "../ui/map/layers/layer";
+import { Layers } from "../ui/map/layers/layer";
 import {
     getDefaultPseudolayer,
     Pseudolayer,
 } from "../ui/map/layers/pseudolayer";
-import { XYZBaseLayer } from "../ui/map/layers/xyzLayer";
+import { XYZLayer } from "../ui/map/layers/xyzLayer";
 
 export const isPseudolayer = (
-    layer: BaseLayer | Pseudolayer
+    layer: Layers | Pseudolayer
 ): layer is Pseudolayer => {
     return layer.type === "pseudolayer";
 };
 
-export const isBaseLayer = (
-    layer: BaseLayer | Pseudolayer
-): layer is BaseLayer => {
+export const isBaseLayer = (layer: Layers | Pseudolayer): layer is Layers => {
     return layer.type === "baseLayer";
 };
 
@@ -29,7 +27,7 @@ export const defaultView = (): View => {
 };
 
 export const defaultPseudolayer = (): Pseudolayer => {
-    const defaultTileLayer = new XYZBaseLayer({
+    const defaultTileLayer = new XYZLayer({
         source: {
             url: "https://{a-c}.tile.openstreetmap.org/{z}/{x}/{y}.png",
         },

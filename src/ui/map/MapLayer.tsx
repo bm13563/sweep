@@ -3,7 +3,7 @@ import Map from "ol/Map";
 import View from "ol/View";
 import { Controls } from "./controls";
 import { unByKey } from "ol/Observable";
-import { BaseLayer } from "./layers/layer";
+import { Layers } from "./layers/layer";
 import { Box } from "@mui/material";
 
 export const MapLayer = ({
@@ -11,14 +11,14 @@ export const MapLayer = ({
     layer,
 }: {
     view: View;
-    layer: BaseLayer;
+    layer: Layers;
 }): JSX.Element => {
     const mapRef = useRef() as React.MutableRefObject<HTMLInputElement>;
 
     useEffect(() => {
         const options = {
             view,
-            layers: [layer.layer],
+            layers: [layer.mapLayer],
             controls: [],
             overlays: [],
         };
@@ -26,17 +26,17 @@ export const MapLayer = ({
         mapObject.setTarget(mapRef.current);
 
         return () => mapObject.setTarget(undefined);
-    }, [layer.layer]);
+    }, [layer.mapLayer]);
 
     useEffect(() => {
-        const register = layer.layer.once("postrender", (event) => {
+        const register = layer.mapLayer.once("postrender", (event) => {
             if (event.context) {
                 layer.registerContext(event.context);
             }
         });
 
         () => unByKey(register);
-    }, [layer.layer]);
+    }, [layer.mapLayer]);
 
     return (
         <Box

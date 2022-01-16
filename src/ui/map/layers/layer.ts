@@ -1,9 +1,9 @@
 import { v4 as uuidv4 } from "uuid";
-import { getXYZLayer, XYZBaseLayer, XYZBaseLayerProps } from "./xyzLayer";
+import { getXYZLayer, XYZLayer, XYZLayerProps } from "./xyzLayer";
 
-export type BaseLayer = XYZBaseLayer;
+export type Layers = XYZLayer;
 
-export type LayerProps = XYZBaseLayerProps;
+export type LayerProps = XYZLayerProps;
 
 export enum LayerTypes {
     XYZ = "XYZ",
@@ -19,6 +19,6 @@ export class Layer {
     }
 }
 
-export const getLayer = (type: string, props: LayerProps): BaseLayer => {
+export const getLayer = (type: string, props: LayerProps): Layers => {
     return getXYZLayer(props);
 };

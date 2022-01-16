@@ -1,12 +1,12 @@
-import { Container, Stack } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import { Box, Container, Stack, Typography } from "@mui/material";
+import React, { useCallback, useEffect, useState } from "react";
 import { defaultPseudolayer } from "../../utils/utils";
 import { getDefaultPseudolayer, Pseudolayer } from "../map/layers/pseudolayer";
 import { Layer } from "./Layer";
 import { v4 as uuidv4 } from "uuid";
-import { LayerHeader } from "./LayerHeader";
-import { AddLayerProps } from "./AddLayer";
+import { AddLayer, AddLayerProps } from "./AddLayer";
 import { getLayer } from "../map/layers/layer";
+import update from "immutability-helper";
 
 export interface UiLayer {
     uid: string;
@@ -63,6 +63,22 @@ export const LayerContainer = ({
         );
     };
 
+    const move = useCallback(
+        (dragIndex: number, hoverIndex: number) => {
+            if (uiLayers.length === 1) return;
+            const dragCard = uiLayers[dragIndex];
+            setUiLayers(
+                update(uiLayers, {
+                    $splice: [
+                        [dragIndex, 1],
+                        [hoverIndex, 0, dragCard],
+                    ],
+                })
+            );
+        },
+        [uiLayers]
+    );
+
     useEffect(() => {
         const activeUiLayer = uiLayers.find((uiLayer: UiLayer) => {
             return uiLayer.visible === true;
@@ -82,14 +98,24 @@ export const LayerContainer = ({
                 }}
             >
                 <Stack spacing={2} sx={{ height: "100%" }}>
-                    <LayerHeader addUiLayer={addUiLayer} />
-                    {uiLayers.map((uiLayer) => {
+                    <Stack
+                        direction="row"
+                        sx={{ alignItems: "center", width: "90%" }}
+                    >
+                        <Typography variant="h4">Layers</Typography>
+                        <Box sx={{ marginLeft: "auto" }}>
+                            <AddLayer addUiLayer={addUiLayer} />
+                        </Box>
+                    </Stack>
+                    {uiLayers.map((uiLayer, index) => {
                         return (
                             <Layer
                                 key={uiLayer.pseudolayer.uid}
                                 uiLayer={uiLayer}
+                                index={index}
                                 updateVisibility={updateVisibility}
                                 remove={remove}
+                                move={move}
                             />
                         );
                     })}

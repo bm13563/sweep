@@ -23,7 +23,7 @@ export const MapContainer = ({
             }}
         >
             {pseudolayer &&
-                Object.values(pseudolayer.baseLayers).map((baseLayer) => {
+                Object.values(pseudolayer.mapLayers).map((baseLayer) => {
                     return (
                         <MapLayer
                             key={baseLayer.uid}

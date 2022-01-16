@@ -3,7 +3,7 @@ import AddIcon from "@mui/icons-material/Add";
 import { ActionConfig } from "../actions/Action";
 import { SelectChangeEvent } from "@mui/material";
 import { useAction } from "../actions/ActionContext";
-import { LayerProps, LayerTypes } from "../map/layers/layer";
+import { LayerProps } from "../map/layers/layer";
 
 export interface AddLayerProps {
     name: string;
@@ -18,7 +18,7 @@ export const AddLayer = ({
 }): JSX.Element => {
     const [displayAction, setDisplayAction] = useState(false);
     const [name, setName] = useState("");
-    const [type, setType] = useState("xyz");
+    const [type, setType] = useState("XYZ");
     const [url, setUrl] = useState("");
 
     const updateName = (event: ChangeEvent<HTMLInputElement>): void => {
@@ -41,6 +41,7 @@ export const AddLayer = ({
             type: type,
             source: { source: { url: url } },
         });
+        setName("");
         setUrl("");
         setType("xyz");
         setDisplayAction(false);
@@ -68,7 +69,7 @@ export const AddLayer = ({
             {
                 type: "dropdown",
                 title: "Layer type",
-                items: Object.values(LayerTypes),
+                items: ["XYZ"],
                 value: type,
                 onChange: updateLayerType,
             },
