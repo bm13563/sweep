@@ -1,10 +1,12 @@
-import { Button, Container, Stack } from "@mui/material";
+import { Container, Stack } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { defaultPseudolayer, flippedPseudolayer } from "../../utils/utils";
-import { Pseudolayer } from "../map/layers/pseudolayer";
+import { defaultPseudolayer } from "../../utils/utils";
+import { getDefaultPseudolayer, Pseudolayer } from "../map/layers/pseudolayer";
 import { Layer } from "./Layer";
 import { v4 as uuidv4 } from "uuid";
 import { LayerHeader } from "./LayerHeader";
+import { AddLayerProps } from "./AddLayer";
+import { getLayer } from "../map/layers/layer";
 
 export interface UiLayer {
     uid: string;
@@ -27,14 +29,16 @@ export const LayerContainer = ({
         },
     ]);
 
-    const addPseudolayer = (newPseudolayer: Pseudolayer) => {
+    const addUiLayer = ({ name, type, source }: AddLayerProps) => {
+        const layer = getLayer(type, source);
+        const pseudolayer = getDefaultPseudolayer(layer);
         setUiLayers((prevUiLayerState: UiLayer[]) => {
             return [
                 {
                     uid: uuidv4(),
-                    name: "OSM Road",
+                    name: name,
                     visible: true,
-                    pseudolayer: newPseudolayer,
+                    pseudolayer: pseudolayer,
                 },
                 ...prevUiLayerState,
             ];
@@ -78,7 +82,7 @@ export const LayerContainer = ({
                 }}
             >
                 <Stack spacing={2} sx={{ height: "100%" }}>
-                    <LayerHeader addPseudolayer={addPseudolayer} />
+                    <LayerHeader addUiLayer={addUiLayer} />
                     {uiLayers.map((uiLayer) => {
                         return (
                             <Layer

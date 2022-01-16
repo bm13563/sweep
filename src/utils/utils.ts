@@ -1,12 +1,11 @@
 import { View } from "ol";
-import OSM from "ol/source/OSM";
 import { fromLonLat, get as getProjection } from "ol/proj";
-import { BaseLayer } from "../ui/map/layers/baseLayer";
-import { Pseudolayer } from "../ui/map/layers/pseudolayer";
-import { TileBaseLayer } from "../ui/map/layers/tileLayer";
-import { baseFragment } from "../webgl/shaders/base.fragment";
-import { baseVertex } from "../webgl/shaders/base.vertex";
-import { blueFragment } from "../webgl/shaders/blue.fragment";
+import { BaseLayer } from "../ui/map/layers/layer";
+import {
+    getDefaultPseudolayer,
+    Pseudolayer,
+} from "../ui/map/layers/pseudolayer";
+import { XYZBaseLayer } from "../ui/map/layers/xyzLayer";
 
 export const isPseudolayer = (
     layer: BaseLayer | Pseudolayer
@@ -30,27 +29,10 @@ export const defaultView = (): View => {
 };
 
 export const defaultPseudolayer = (): Pseudolayer => {
-    const defaultTileLayer = new TileBaseLayer({
-        source: new OSM(),
-        zIndex: 0,
+    const defaultTileLayer = new XYZBaseLayer({
+        source: {
+            url: "https://{a-c}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+        },
     });
-    const defaultPseudolayer = new Pseudolayer(
-        { u_image: defaultTileLayer },
-        {},
-        { vertexShader: baseVertex, fragmentShader: baseFragment }
-    );
-    return defaultPseudolayer;
-};
-
-export const flippedPseudolayer = (): Pseudolayer => {
-    const defaultTileLayer = new TileBaseLayer({
-        source: new OSM(),
-        zIndex: 0,
-    });
-    const flippedPseudolayer = new Pseudolayer(
-        { u_image: defaultTileLayer },
-        {},
-        { vertexShader: baseVertex, fragmentShader: blueFragment }
-    );
-    return flippedPseudolayer;
+    return getDefaultPseudolayer(defaultTileLayer);
 };

@@ -3,23 +3,30 @@ import AddIcon from "@mui/icons-material/Add";
 import { ActionConfig } from "../actions/Action";
 import { SelectChangeEvent } from "@mui/material";
 import { useAction } from "../actions/ActionContext";
-import TileLayer from "ol/layer/Tile";
-import { Pseudolayer } from "../map/layers/pseudolayer";
-import { XYZBaseLayer } from "../map/layers/xyzLayer";
-import { baseVertex } from "../../webgl/shaders/base.vertex";
-import { baseFragment } from "../../webgl/shaders/base.fragment";
+import { LayerProps, LayerTypes } from "../map/layers/layer";
+
+export interface AddLayerProps {
+    name: string;
+    type: string;
+    source: LayerProps;
+}
 
 export const AddLayer = ({
-    addPseudolayer,
+    addUiLayer,
 }: {
-    addPseudolayer: (pseudolayer: Pseudolayer) => void;
+    addUiLayer: (addLayerProps: AddLayerProps) => void;
 }): JSX.Element => {
     const [displayAction, setDisplayAction] = useState(false);
-    const [layerType, setLayerType] = useState("xyz");
+    const [name, setName] = useState("");
+    const [type, setType] = useState("xyz");
     const [url, setUrl] = useState("");
 
+    const updateName = (event: ChangeEvent<HTMLInputElement>): void => {
+        setName(event.target.value);
+    };
+
     const updateLayerType = (event: SelectChangeEvent<string>): void => {
-        setLayerType(event.target.value);
+        setType(event.target.value);
     };
 
     const updateUrl = (event: ChangeEvent<HTMLInputElement>): void => {
@@ -27,20 +34,15 @@ export const AddLayer = ({
     };
 
     const onSubmit = () => {
-        const defaultTileLayer = new XYZBaseLayer({
-            source: {
-                url: url,
-            },
-            zIndex: 0,
+        //https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}
+        //https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}.png
+        addUiLayer({
+            name: name,
+            type: type,
+            source: { source: { url: url } },
         });
-        const pseudolayer = new Pseudolayer(
-            { u_image: defaultTileLayer },
-            {},
-            { vertexShader: baseVertex, fragmentShader: baseFragment }
-        );
-        addPseudolayer(pseudolayer);
         setUrl("");
-        setLayerType("xyz");
+        setType("xyz");
         setDisplayAction(false);
     };
 
@@ -58,10 +60,16 @@ export const AddLayer = ({
         onClose: onClose,
         sections: [
             {
+                type: "input",
+                title: "Name",
+                value: name,
+                onChange: updateName,
+            },
+            {
                 type: "dropdown",
                 title: "Layer type",
-                items: ["xyz"],
-                value: layerType,
+                items: Object.values(LayerTypes),
+                value: type,
                 onChange: updateLayerType,
             },
             {

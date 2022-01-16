@@ -1,12 +1,11 @@
 import { Typography, Box, Stack } from "@mui/material";
 import React from "react";
-import { Pseudolayer } from "../map/layers/pseudolayer";
-import { AddLayer } from "./AddLayer";
+import { AddLayer, AddLayerProps } from "./AddLayer";
 
 export const LayerHeader = ({
-    addPseudolayer,
+    addUiLayer,
 }: {
-    addPseudolayer: (pseudolayer: Pseudolayer) => void;
+    addUiLayer: (addLayerProps: AddLayerProps) => void;
 }): JSX.Element => {
     return (
         <Box
@@ -18,7 +17,7 @@ export const LayerHeader = ({
             <Stack direction="row" sx={{ alignItems: "center" }}>
                 <Typography variant="h4">Layers</Typography>
                 <Box sx={{ marginLeft: "auto" }}>
-                    <AddLayer addPseudolayer={addPseudolayer} />
+                    <AddLayer addUiLayer={addUiLayer} />
                 </Box>
             </Stack>
         </Box>

@@ -1,6 +1,8 @@
 import { v4 as uuidv4 } from "uuid";
 import { isBaseLayer, isPseudolayer } from "../../../utils/utils";
-import { BaseLayer } from "./baseLayer";
+import { baseFragment } from "../../../webgl/shaders/base.fragment";
+import { baseVertex } from "../../../webgl/shaders/base.vertex";
+import { BaseLayer } from "./layer";
 
 export interface ShaderProps {
     vertexShader: string;
@@ -39,3 +41,11 @@ export class Pseudolayer {
         }
     }
 }
+
+export const getDefaultPseudolayer = (layer: BaseLayer): Pseudolayer => {
+    return new Pseudolayer(
+        { u_image: layer },
+        {},
+        { vertexShader: baseVertex, fragmentShader: baseFragment }
+    );
+};

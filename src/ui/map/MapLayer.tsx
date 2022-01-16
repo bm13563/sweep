@@ -3,7 +3,7 @@ import Map from "ol/Map";
 import View from "ol/View";
 import { Controls } from "./controls";
 import { unByKey } from "ol/Observable";
-import { BaseLayer } from "./layers/baseLayer";
+import { BaseLayer } from "./layers/layer";
 import { Box } from "@mui/material";
 
 export const MapLayer = ({
