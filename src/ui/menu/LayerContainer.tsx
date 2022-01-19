@@ -20,14 +20,16 @@ export const LayerContainer = ({
 }: {
     setPseudolayer: (pseudolayer: Pseudolayer | undefined) => void;
 }): JSX.Element => {
-    const [uiLayers, setUiLayers] = useState<UiLayer[]>([
-        {
-            uid: uuidv4(),
-            name: "OSM Road",
-            visible: true,
-            pseudolayer: defaultPseudolayer(),
-        },
-    ]);
+    const defaultUiLayer = {
+        uid: uuidv4(),
+        name: "OSM Road",
+        visible: true,
+        pseudolayer: defaultPseudolayer(),
+    };
+    const [activeUiLayer, setActiveUiLayer] = useState<UiLayer | undefined>(
+        defaultUiLayer
+    );
+    const [uiLayers, setUiLayers] = useState<UiLayer[]>([defaultUiLayer]);
 
     const addUiLayer = ({ name, type, source }: AddLayerProps) => {
         const layer = getLayer(type, source);
@@ -83,44 +85,44 @@ export const LayerContainer = ({
         const activeUiLayer = uiLayers.find((uiLayer: UiLayer) => {
             return uiLayer.visible === true;
         });
-        activeUiLayer
-            ? setPseudolayer(activeUiLayer.pseudolayer)
-            : setPseudolayer(undefined);
+        if (activeUiLayer) {
+            setActiveUiLayer(activeUiLayer);
+            setPseudolayer(activeUiLayer.pseudolayer);
+        } else {
+            setActiveUiLayer(undefined);
+            setPseudolayer(undefined);
+        }
     });
 
     return (
-        <>
-            <Container
-                sx={{
-                    backgroundColor: "red",
-                    height: "100%",
-                    textAlign: "left",
-                }}
-            >
-                <Stack spacing={2} sx={{ height: "100%" }}>
-                    <Stack
-                        direction="row"
-                        sx={{ alignItems: "center", width: "90%" }}
-                    >
-                        <Typography variant="h4">Layers</Typography>
-                        <Box sx={{ marginLeft: "auto" }}>
-                            <AddLayer addUiLayer={addUiLayer} />
-                        </Box>
-                    </Stack>
-                    {uiLayers.map((uiLayer, index) => {
-                        return (
-                            <Layer
-                                key={uiLayer.pseudolayer.uid}
-                                uiLayer={uiLayer}
-                                index={index}
-                                updateVisibility={updateVisibility}
-                                remove={remove}
-                                move={move}
-                            />
-                        );
-                    })}
+        <Container
+            sx={{
+                backgroundColor: "red",
+                height: "100%",
+                textAlign: "left",
+            }}
+        >
+            <Stack spacing={2} sx={{ height: "100%", width: "90%" }}>
+                <Stack direction="row" sx={{ alignItems: "center" }}>
+                    <Typography variant="h4">Layers</Typography>
+                    <Box sx={{ marginLeft: "auto" }}>
+                        <AddLayer addUiLayer={addUiLayer} />
+                    </Box>
                 </Stack>
-            </Container>
-        </>
+                {uiLayers.map((uiLayer, index) => {
+                    return (
+                        <Layer
+                            key={uiLayer.pseudolayer.uid}
+                            uiLayer={uiLayer}
+                            activeUiLayer={activeUiLayer}
+                            index={index}
+                            updateVisibility={updateVisibility}
+                            remove={remove}
+                            move={move}
+                        />
+                    );
+                })}
+            </Stack>
+        </Container>
     );
 };

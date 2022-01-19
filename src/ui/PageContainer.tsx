@@ -8,6 +8,7 @@ import { Canvas } from "./map/Canvas";
 import { ActionContainer } from "./actions/ActionContainer";
 import { defaultView } from "../utils/utils";
 import { ActionStateProvider } from "./actions/ActionContext";
+import { ToolbarContainer } from "./toolbar/ToolbarContainer";
 
 const view = defaultView();
 
@@ -33,17 +34,17 @@ export const PageContainer = (): JSX.Element => {
                     alignContent: "flex-start",
                 }}
             >
-                <Grid item xs={12} sx={{ height: "10%" }}>
-                    hi
+                <Grid item xs={12} sx={{ height: "5%" }}>
+                    <ToolbarContainer />
                 </Grid>
-                <Grid item xs={2} sx={{ height: "90%" }}>
+                <Grid item sx={{ height: "95%", width: "15.625rem" }}>
                     <LayerContainer setPseudolayer={setPseudolayerCallback} />
                 </Grid>
                 <Grid
                     item
-                    xs={10}
                     sx={{
-                        height: "90%",
+                        height: "95%",
+                        width: "calc(100% - 15.625rem)",
                         display: "flex",
                         justifyContent: "center",
                         alignItems: "center",

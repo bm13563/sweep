@@ -1,4 +1,4 @@
-import { Box, Stack } from "@mui/material";
+import { Box, Stack, Typography } from "@mui/material";
 import React, { useRef } from "react";
 import { useDrag, useDrop, DropTargetMonitor } from "react-dnd";
 import { UiLayer } from "./LayerContainer";
@@ -15,12 +15,14 @@ interface DragItem {
 
 export const Layer = ({
     uiLayer,
+    activeUiLayer,
     index,
     updateVisibility,
     remove,
     move,
 }: {
     uiLayer: UiLayer;
+    activeUiLayer: UiLayer | undefined;
     index: number;
     updateVisibility: (uiLayer: UiLayer) => void;
     remove: (uiLayer: UiLayer) => void;
@@ -87,17 +89,22 @@ export const Layer = ({
             ref={ref}
             data-handler-id={handlerId}
             sx={{
-                width: "90%",
                 height: "5%",
                 backgroundColor: "green",
                 display: "flex",
                 flexDirection: "column",
                 justifyContent: "center",
                 opacity: isDragging ? 0 : 1,
+                outline:
+                    uiLayer.uid === activeUiLayer?.uid
+                        ? "2px solid yellow"
+                        : "none",
             }}
         >
             <Stack direction="row">
-                <Box>{uiLayer.name}</Box>
+                <Box>
+                    <Typography variant="body1">{uiLayer.name}</Typography>
+                </Box>
                 <Stack direction="row" spacing={1} sx={{ marginLeft: "auto" }}>
                     <DeleteIcon onClick={removeUiLayer} />
                     {uiLayer.visible ? (

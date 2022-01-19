@@ -43,7 +43,7 @@ export const AddLayer = ({
         });
         setName("");
         setUrl("");
-        setType("xyz");
+        setType("XYZ");
         setDisplayAction(false);
     };
 
