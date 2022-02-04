@@ -1,14 +1,15 @@
 import * as twgl from "twgl.js";
-import { Pseudolayer } from "../ui/map/layers/pseudolayer";
-import { isBaseLayer, isPseudolayer } from "../utils/utils";
+import { isBaseLayer2, isPseudolayer2 } from "../utils/utils";
 import { baseFragment } from "./shaders/base.fragment";
 import { flipVertex } from "./shaders/flip.vertex";
+import { Pseudolayer2 } from "../ui/mapPanel/layers/pseudolayer2";
 
 export class RenderLoop {
     stopped = false;
     clock = new Date().getTime();
-    fps = 24;
-    pseudolayer?: Pseudolayer | undefined;
+    fps = 30;
+    contexts: Record<string, CanvasRenderingContext2D> = {};
+    pseudolayer?: Pseudolayer2 | undefined;
     gl?: WebGLRenderingContext;
 
     registerWebGl(gl: WebGLRenderingContext): void {
@@ -16,43 +17,57 @@ export class RenderLoop {
         this.render(gl);
     }
 
-    renderPseudolayer = (pseudolayer: Pseudolayer | undefined): void => {
+    registerContext(context: Record<string, CanvasRenderingContext2D>): void {
+        this.contexts = {
+            ...this.contexts,
+            ...context,
+        };
+    }
+
+    renderPseudolayer = (pseudolayer: Pseudolayer2 | undefined): void => {
+        this.contexts = {};
         this.pseudolayer = pseudolayer;
     };
 
     render(gl: WebGLRenderingContext): void {
-        let textures: WebGLTexture[] = [];
+        let textureCleanup: WebGLTexture[] = [];
+        let textureInputTracker: Record<string, WebGLTexture> = {};
+
         const flipProgram = twgl.createProgramInfo(gl, [
             flipVertex,
             baseFragment,
         ]);
 
-        const manifest = (pseudolayer: Pseudolayer) => {
-            const recurse = (pseudolayer: Pseudolayer): void => {
+        const manifest = (
+            pseudolayer: Pseudolayer2,
+            contexts: Record<string, CanvasRenderingContext2D>
+        ) => {
+            const recurse = (pseudolayer: Pseudolayer2): void => {
                 const program = twgl.createProgramInfo(gl, [
-                    pseudolayer.shaders.vertexShader,
-                    pseudolayer.shaders.fragmentShader,
+                    pseudolayer.config.shaders.vertexShader,
+                    pseudolayer.config.shaders.fragmentShader,
                 ]);
                 const uniforms: Record<string, WebGLTexture> = {
-                    ...pseudolayer.variables,
+                    ...pseudolayer.config.variables,
                 };
 
-                for (const key in pseudolayer.inputs) {
-                    const child = pseudolayer.inputs[key];
+                for (const key in pseudolayer.config.inputs) {
+                    const child = pseudolayer.config.inputs[key];
 
-                    if (isBaseLayer(child) && child.context) {
+                    if (isBaseLayer2(child)) {
                         const texture = twgl.createTexture(gl, {
-                            src: child.context.canvas,
+                            src: contexts[child.uid].canvas,
                         });
-                        textures.push(texture);
+                        textureCleanup.push(texture);
+                        textureInputTracker[child.uid] = texture;
                         uniforms[key] = texture;
                         return draw(pseudolayer, program, uniforms, true);
                     }
 
-                    if (isPseudolayer(child)) {
+                    if (isPseudolayer2(child)) {
                         recurse(child);
-                        if (child.output) {
-                            const texture = child.output;
+                        if (child.uid in textureInputTracker) {
+                            const texture = textureInputTracker[child.uid];
                             uniforms[key] = texture;
                         }
                     }
@@ -62,24 +77,26 @@ export class RenderLoop {
 
             recurse(pseudolayer);
 
-            if (pseudolayer.output) {
-                textures.push(pseudolayer.output);
+            if (pseudolayer.uid in textureInputTracker) {
+                textureCleanup.push(textureInputTracker[pseudolayer.uid]);
                 draw(
                     pseudolayer,
                     flipProgram,
-                    { u_image: pseudolayer.output },
+                    { u_image: textureInputTracker[pseudolayer.uid] },
                     false
                 );
             }
 
-            textures.forEach((texture) => {
+            textureCleanup.forEach((texture) => {
                 gl.deleteTexture(texture);
             });
-            textures = [];
+
+            textureCleanup = [];
+            textureInputTracker = {};
         };
 
         const draw = (
-            pseudolayer: Pseudolayer,
+            pseudolayer: Pseudolayer2,
             program: twgl.ProgramInfo,
             uniforms: Record<string, WebGLTexture | string>,
             useFramebuffer?: boolean
@@ -99,9 +116,9 @@ export class RenderLoop {
 
             twgl.drawBufferInfo(gl, quadVertices, gl.TRIANGLES);
 
-            pseudolayer.output = framebuffer.attachments[0];
+            textureInputTracker[pseudolayer.uid] = framebuffer.attachments[0];
 
-            textures.push(framebuffer.attachments[0]);
+            textureCleanup.push(framebuffer.attachments[0]);
             gl.deleteRenderbuffer(framebuffer.attachments[1]);
             gl.deleteFramebuffer(framebuffer.framebuffer);
         };
@@ -115,8 +132,8 @@ export class RenderLoop {
 
             if (elapsed > 1000 / this.fps) {
                 if (gl) {
-                    if (this.pseudolayer) {
-                        manifest(this.pseudolayer);
+                    if (this.pseudolayer && Object.keys(this.contexts).length) {
+                        manifest(this.pseudolayer, this.contexts);
                     } else {
                         gl.clearColor(1.0, 1.0, 1.0, 1.0);
                         gl.clear(gl.COLOR_BUFFER_BIT);

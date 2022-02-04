@@ -1,14 +1,14 @@
 import React, { ChangeEvent, useState } from "react";
 import AddIcon from "@mui/icons-material/Add";
-import { ActionConfig } from "../actions/Action";
+import { ActionConfig } from "../actionPanel/Action";
 import { SelectChangeEvent } from "@mui/material";
-import { useAction } from "../actions/ActionContext";
-import { LayerProps } from "../map/layers/layer";
+import { useAction } from "../actionPanel/ActionContext";
+import { LayerProps } from "../mapPanel/layers/layer";
 
 export interface AddLayerProps {
     name: string;
-    type: string;
-    source: LayerProps;
+    type: "XYZ";
+    url: string;
 }
 
 export const AddLayer = ({
@@ -38,8 +38,8 @@ export const AddLayer = ({
         //https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}.png
         addUiLayer({
             name: name,
-            type: type,
-            source: { source: { url: url } },
+            type: "XYZ",
+            url: url,
         });
         setName("");
         setUrl("");

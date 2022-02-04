@@ -1,16 +1,20 @@
 import React from "react";
 import View from "ol/View";
-import { Pseudolayer } from "./layers/pseudolayer";
 import { Box } from "@mui/material";
 import { MapLayer } from "./MapLayer";
+import { getActiveUiLayer, UiLayer } from "../uiLayer";
+import { findMapLayers } from "../../utils/utils";
 
 export const MapContainer = ({
     view,
-    pseudolayer,
+    uiLayers,
 }: {
     view: View;
-    pseudolayer: Pseudolayer | undefined;
+    uiLayers: UiLayer[];
 }): JSX.Element => {
+    const { activeUiLayer } = getActiveUiLayer(uiLayers);
+    const mapLayers = findMapLayers(activeUiLayer?.config.pseudolayer);
+
     return (
         <Box
             sx={{
@@ -22,14 +26,10 @@ export const MapContainer = ({
                 zIndex: 1,
             }}
         >
-            {pseudolayer &&
-                Object.values(pseudolayer.mapLayers).map((baseLayer) => {
+            {mapLayers &&
+                mapLayers.map((layer) => {
                     return (
-                        <MapLayer
-                            key={baseLayer.uid}
-                            view={view}
-                            layer={baseLayer}
-                        />
+                        <MapLayer key={layer.uid} view={view} layer={layer} />
                     );
                 })}
         </Box>

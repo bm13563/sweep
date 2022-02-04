@@ -1,11 +1,11 @@
 import { Box, Stack, Typography } from "@mui/material";
 import React, { useRef } from "react";
 import { useDrag, useDrop, DropTargetMonitor } from "react-dnd";
-import { UiLayer } from "./LayerContainer";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { XYCoord } from "dnd-core";
+import { UiLayer } from "../uiLayer";
 
 interface DragItem {
     index: number;
@@ -103,7 +103,9 @@ export const Layer = ({
         >
             <Stack direction="row">
                 <Box>
-                    <Typography variant="body1">{uiLayer.name}</Typography>
+                    <Typography variant="body1">
+                        {uiLayer.config.name}
+                    </Typography>
                 </Box>
                 <Stack direction="row" spacing={1} sx={{ marginLeft: "auto" }}>
                     <DeleteIcon onClick={removeUiLayer} />

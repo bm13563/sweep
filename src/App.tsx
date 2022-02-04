@@ -1,5 +1,5 @@
 import React, { createContext } from "react";
-import { PageContainer } from "./ui/PageContainer";
+import { PageContainer } from "./ui/UiContainer";
 import { RenderLoop } from "./webgl/renderLoop";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
