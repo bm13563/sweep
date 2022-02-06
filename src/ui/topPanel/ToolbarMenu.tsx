@@ -22,7 +22,6 @@ export const ToolbarMenu = ({
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
-            console.log(configState);
             if (configState) return;
 
             if (
@@ -60,7 +59,7 @@ export const ToolbarMenu = ({
                 }}
                 onClick={() => setOpen(!open)}
             >
-                <Typography variant="body1">{name}</Typography>
+                <Typography variant="body2">{name}</Typography>
             </Box>
             {open && (
                 <Stack

@@ -10,6 +10,7 @@ export interface UiLayer {
     uid: string;
     visible: boolean;
     config: UiLayerConfig;
+    updatedPseudolayer?: Pseudolayer2;
 }
 
 export const generateUiLayer = (config: UiLayerConfig): UiLayer => {

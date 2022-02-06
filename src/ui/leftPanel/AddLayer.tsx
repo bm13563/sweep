@@ -3,7 +3,6 @@ import AddIcon from "@mui/icons-material/Add";
 import { ActionConfig } from "../actionPanel/Action";
 import { SelectChangeEvent } from "@mui/material";
 import { useAction } from "../actionPanel/ActionContext";
-import { LayerProps } from "../mapPanel/layers/layer";
 
 export interface AddLayerProps {
     name: string;

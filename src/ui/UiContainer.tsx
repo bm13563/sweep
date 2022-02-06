@@ -13,7 +13,6 @@ import { generatePseudolayer2 } from "./mapPanel/layers/pseudolayer2";
 import { baseVertex } from "../webgl/shaders/base.vertex";
 import { baseFragment } from "../webgl/shaders/base.fragment";
 import { generateUiLayer, getActiveUiLayer, UiLayer } from "./uiLayer";
-import update from "immutability-helper";
 import { blueFragment } from "../webgl/shaders/blue.fragment";
 
 const view = defaultView();
@@ -54,7 +53,9 @@ export const PageContainer = (): JSX.Element => {
     ]);
     const { activeUiLayer } = getActiveUiLayer(uiLayers);
 
-    renderLoop.renderPseudolayer(activeUiLayer?.config.pseudolayer);
+    renderLoop.renderPseudolayer(
+        activeUiLayer?.updatedPseudolayer || activeUiLayer?.config.pseudolayer
+    );
 
     const updateUiLayers = (uiLayers: UiLayer[]) => {
         setUiLayers(uiLayers);
@@ -72,7 +73,10 @@ export const PageContainer = (): JSX.Element => {
                 }}
             >
                 <Grid item xs={12} sx={{ height: "5%" }}>
-                    {/* <ToolbarContainer uiLayers={uiLayers} /> */}
+                    <ToolbarContainer
+                        uiLayers={uiLayers}
+                        updateUiLayers={updateUiLayers}
+                    />
                 </Grid>
                 <Grid item sx={{ height: "95%", width: "15.625rem" }}>
                     <LayerContainer
@@ -91,7 +95,7 @@ export const PageContainer = (): JSX.Element => {
                     }}
                 >
                     <ActionContainer />
-                    <MapContainer view={view} uiLayers={uiLayers} />
+                    <MapContainer view={view} activeUiLayer={activeUiLayer} />
                     <Canvas />
                 </Grid>
             </Grid>

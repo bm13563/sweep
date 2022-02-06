@@ -36,6 +36,7 @@ interface ActionSectionDropdown extends ActionSectionBase {
 
 interface ActionSectionSlider extends ActionSectionBase {
     type: "slider";
+    step: number;
     min?: number;
     max?: number;
     onChange?: (
@@ -136,11 +137,11 @@ const renderSlider = (config: ActionSectionSlider): JSX.Element => {
     return (
         <Box>
             <Slider
+                key={config.title}
+                step={config.step}
                 min={config.min}
                 max={config.max}
-                defaultValue={
-                    config.value ? parseFloat(config.value) : undefined
-                }
+                value={config.value ? parseFloat(config.value) : undefined}
                 valueLabelDisplay="auto"
                 onChange={config.onChange}
             />

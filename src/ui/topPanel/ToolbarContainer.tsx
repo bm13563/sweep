@@ -1,19 +1,16 @@
 import { Box, Stack } from "@mui/material";
 import React from "react";
-import { UiLayer } from "../uiLayer";
-import { AdjustColours } from "./AdjustColours";
+import { getActiveUiLayer, UiLayer } from "../uiLayer";
+import { AdjustColorsProps, AdjustColours } from "./AdjustColours";
 import { ToolbarMenu } from "./ToolbarMenu";
-import { ToolbarMenuItem } from "./ToolbarMenuItem";
 
 export const ToolbarContainer = ({
     uiLayers,
+    updateUiLayers,
 }: {
     uiLayers: UiLayer[];
+    updateUiLayers: (uiLayer: UiLayer[]) => void;
 }): JSX.Element => {
-    const activeUiLayer = uiLayers.find((uiLayer: UiLayer) => {
-        return uiLayer.visible === true;
-    });
-
     return (
         <Box
             sx={{
@@ -24,7 +21,10 @@ export const ToolbarContainer = ({
         >
             <Stack direction="row" sx={{ height: "100%" }}>
                 <ToolbarMenu name="Image processing">
-                    <AdjustColours activeUiLayer={activeUiLayer} />
+                    <AdjustColours
+                        uiLayers={uiLayers}
+                        updateUiLayers={updateUiLayers}
+                    />
                 </ToolbarMenu>
             </Stack>
         </Box>

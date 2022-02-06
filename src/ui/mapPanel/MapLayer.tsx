@@ -37,9 +37,17 @@ export const MapLayer = ({
     const renderLoop = useContext(RenderLoopContext);
     const mapRef = useRef() as React.MutableRefObject<HTMLInputElement>;
 
-    const [olLayer] = useState<OlLayerTypes>(generateOlLayerFromConfig(layer));
+    const [olLayer, setOlLayer] = useState<OlLayerTypes>();
 
     useEffect(() => {
+        if (!olLayer) {
+            setOlLayer(generateOlLayerFromConfig(layer));
+        }
+    }, [layer]);
+
+    useEffect(() => {
+        if (!olLayer) return;
+
         const options = {
             view,
             layers: [olLayer],
@@ -50,9 +58,11 @@ export const MapLayer = ({
         mapObject.setTarget(mapRef.current);
 
         return () => mapObject.setTarget(undefined);
-    });
+    }, [olLayer]);
 
     useEffect(() => {
+        if (!olLayer) return;
+
         const register = olLayer.once("postrender", (event) => {
             if (event.context) {
                 renderLoop.registerContext({
@@ -62,7 +72,7 @@ export const MapLayer = ({
         });
 
         () => unByKey(register);
-    });
+    }, [olLayer]);
 
     return (
         <Box

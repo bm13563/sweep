@@ -7,8 +7,9 @@ import { Pseudolayer2 } from "../ui/mapPanel/layers/pseudolayer2";
 export class RenderLoop {
     stopped = false;
     clock = new Date().getTime();
-    fps = 30;
-    contexts: Record<string, CanvasRenderingContext2D> = {};
+    fps = 60;
+    contextCache: Record<string, CanvasRenderingContext2D> = {};
+    programCache: Record<string, twgl.ProgramInfo> = {};
     pseudolayer?: Pseudolayer2 | undefined;
     gl?: WebGLRenderingContext;
 
@@ -18,14 +19,14 @@ export class RenderLoop {
     }
 
     registerContext(context: Record<string, CanvasRenderingContext2D>): void {
-        this.contexts = {
-            ...this.contexts,
+        console.log("register");
+        this.contextCache = {
+            ...this.contextCache,
             ...context,
         };
     }
 
     renderPseudolayer = (pseudolayer: Pseudolayer2 | undefined): void => {
-        this.contexts = {};
         this.pseudolayer = pseudolayer;
     };
 
@@ -40,13 +41,21 @@ export class RenderLoop {
 
         const manifest = (
             pseudolayer: Pseudolayer2,
-            contexts: Record<string, CanvasRenderingContext2D>
+            contexts: Record<string, CanvasRenderingContext2D>,
+            programs: Record<string, twgl.ProgramInfo>
         ) => {
             const recurse = (pseudolayer: Pseudolayer2): void => {
-                const program = twgl.createProgramInfo(gl, [
-                    pseudolayer.config.shaders.vertexShader,
-                    pseudolayer.config.shaders.fragmentShader,
-                ]);
+                let program: twgl.ProgramInfo;
+                if (!(pseudolayer.uid in programs)) {
+                    program = twgl.createProgramInfo(gl, [
+                        pseudolayer.config.shaders.vertexShader,
+                        pseudolayer.config.shaders.fragmentShader,
+                    ]);
+                    this.programCache[pseudolayer.uid] = program;
+                } else {
+                    program = programs[pseudolayer.uid];
+                }
+
                 const uniforms: Record<string, WebGLTexture> = {
                     ...pseudolayer.config.variables,
                 };
@@ -132,8 +141,14 @@ export class RenderLoop {
 
             if (elapsed > 1000 / this.fps) {
                 if (gl) {
-                    if (this.pseudolayer && Object.keys(this.contexts).length) {
-                        manifest(this.pseudolayer, this.contexts);
+                    if (this.pseudolayer) {
+                        if (Object.keys(this.contextCache).length) {
+                            manifest(
+                                this.pseudolayer,
+                                this.contextCache,
+                                this.programCache
+                            );
+                        }
                     } else {
                         gl.clearColor(1.0, 1.0, 1.0, 1.0);
                         gl.clear(gl.COLOR_BUFFER_BIT);
