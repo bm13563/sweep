@@ -4,10 +4,10 @@ import { Layer } from "./Layer";
 import { generateUiLayer, getActiveUiLayer, UiLayer } from "../uiLayer";
 import update from "immutability-helper";
 import { AddLayer, AddLayerProps } from "./AddLayer";
-import { generateLayer2 } from "../mapPanel/layers/layer2";
-import { generatePseudolayer2 } from "../mapPanel/layers/pseudolayer2";
+import { generatePseudolayer } from "../mapPanel/layers/pseudolayer";
 import { baseVertex } from "../../webgl/shaders/base.vertex";
 import { baseFragment } from "../../webgl/shaders/base.fragment";
+import { generateLayer } from "../mapPanel/layers/layer";
 
 export const LayerContainer = ({
     uiLayers,
@@ -19,8 +19,8 @@ export const LayerContainer = ({
     const { activeUiLayer } = getActiveUiLayer(uiLayers);
 
     const addUiLayer = ({ name, type, url }: AddLayerProps) => {
-        const layer = generateLayer2({ type: type, url: url });
-        const pseudolayer = generatePseudolayer2({
+        const layer = generateLayer({ type: type, url: url });
+        const pseudolayer = generatePseudolayer({
             inputs: { u_image: layer },
             variables: {},
             shaders: { vertexShader: baseVertex, fragmentShader: baseFragment },

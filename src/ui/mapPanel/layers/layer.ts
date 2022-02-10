@@ -1,24 +1,22 @@
 import { v4 as uuidv4 } from "uuid";
-import { getXYZLayer, XYZLayer, XYZLayerProps } from "./xyzLayer";
 
-export type Layers = XYZLayer;
+type LayerConfig = XyzConfig;
 
-export type LayerProps = XYZLayerProps;
-
-export enum LayerTypes {
-    XYZ = "XYZ",
+interface XyzConfig {
+    type: "XYZ";
+    url: string;
 }
 
-export class Layer {
-    uid: string = uuidv4();
-    type = "baseLayer";
-    context?: CanvasRenderingContext2D;
-
-    registerContext(context: CanvasRenderingContext2D): void {
-        this.context = context;
-    }
+export interface Layer {
+    uid: string;
+    type: "baseLayer";
+    config: LayerConfig;
 }
 
-export const getLayer = (type: string, props: LayerProps): Layers => {
-    return getXYZLayer(props);
+export const generateLayer = (config: LayerConfig): Layer => {
+    return {
+        uid: uuidv4(),
+        type: "baseLayer",
+        config: config,
+    };
 };

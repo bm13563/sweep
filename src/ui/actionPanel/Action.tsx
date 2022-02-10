@@ -39,11 +39,7 @@ interface ActionSectionSlider extends ActionSectionBase {
     step: number;
     min?: number;
     max?: number;
-    onChange?: (
-        event: Event,
-        value: number | number[],
-        activeThumb: number
-    ) => void;
+    onChange?: (value: number) => void;
 }
 
 export interface ActionConfig {
@@ -134,6 +130,13 @@ const renderDropdown = (config: ActionSectionDropdown): JSX.Element => {
 };
 
 const renderSlider = (config: ActionSectionSlider): JSX.Element => {
+    const terseOnChange = (
+        event: Event,
+        value: number | number[],
+        activeThumb: number
+    ) => {
+        config.onChange && typeof value === "number" && config.onChange(value);
+    };
     return (
         <Box>
             <Slider
@@ -143,7 +146,7 @@ const renderSlider = (config: ActionSectionSlider): JSX.Element => {
                 max={config.max}
                 value={config.value ? parseFloat(config.value) : undefined}
                 valueLabelDisplay="auto"
-                onChange={config.onChange}
+                onChange={terseOnChange}
             />
         </Box>
     );

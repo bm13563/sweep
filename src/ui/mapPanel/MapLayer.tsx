@@ -4,7 +4,7 @@ import View from "ol/View";
 import { Controls } from "./controls";
 import { unByKey } from "ol/Observable";
 import { Box } from "@mui/material";
-import { Layer2 } from "./layers/layer2";
+import { Layer } from "./layers/layer";
 import { XYZ } from "ol/source";
 import OLTileLayer from "ol/layer/Tile";
 import { get as getProjection } from "ol/proj";
@@ -12,7 +12,7 @@ import { RenderLoopContext } from "../../App";
 
 type OlLayerTypes = OLTileLayer<XYZ>;
 
-const generateOlLayerFromConfig = (layer: Layer2): OlLayerTypes => {
+const generateOlLayerFromConfig = (layer: Layer): OlLayerTypes => {
     switch (layer.config.type) {
         case "XYZ": {
             return new OLTileLayer({
@@ -32,7 +32,7 @@ export const MapLayer = ({
     layer,
 }: {
     view: View;
-    layer: Layer2;
+    layer: Layer;
 }): JSX.Element => {
     const renderLoop = useContext(RenderLoopContext);
     const mapRef = useRef() as React.MutableRefObject<HTMLInputElement>;

@@ -8,8 +8,8 @@ import { ActionContainer } from "./actionPanel/ActionContainer";
 import { defaultView } from "../utils/utils";
 import { ActionStateProvider } from "./actionPanel/ActionContext";
 import { ToolbarContainer } from "./topPanel/ToolbarContainer";
-import { generateLayer2 } from "./mapPanel/layers/layer2";
-import { generatePseudolayer2 } from "./mapPanel/layers/pseudolayer2";
+import { generateLayer } from "./mapPanel/layers/layer";
+import { generatePseudolayer } from "./mapPanel/layers/pseudolayer";
 import { baseVertex } from "../webgl/shaders/base.vertex";
 import { baseFragment } from "../webgl/shaders/base.fragment";
 import { generateUiLayer, getActiveUiLayer, UiLayer } from "./uiLayer";
@@ -17,18 +17,18 @@ import { blueFragment } from "../webgl/shaders/blue.fragment";
 
 const view = defaultView();
 
-const newLayer2 = generateLayer2({
+const newLayer2 = generateLayer({
     type: "XYZ",
     url: "https://{a-c}.tile.openstreetmap.org/{z}/{x}/{y}.png",
 });
 
-const newPseudolayer2 = generatePseudolayer2({
+const newPseudolayer2 = generatePseudolayer({
     inputs: { u_image: newLayer2 },
     variables: {},
     shaders: { vertexShader: baseVertex, fragmentShader: baseFragment },
 });
 
-const newPseudolayer3 = generatePseudolayer2({
+const newPseudolayer3 = generatePseudolayer({
     inputs: { u_image: newPseudolayer2 },
     variables: {},
     shaders: { vertexShader: baseVertex, fragmentShader: blueFragment },

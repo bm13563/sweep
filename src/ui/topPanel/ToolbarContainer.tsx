@@ -1,7 +1,7 @@
 import { Box, Stack } from "@mui/material";
 import React from "react";
-import { getActiveUiLayer, UiLayer } from "../uiLayer";
-import { AdjustColorsProps, AdjustColours } from "./AdjustColours";
+import { UiLayer } from "../uiLayer";
+import { AdjustColours } from "./AdjustColours";
 import { ToolbarMenu } from "./ToolbarMenu";
 
 export const ToolbarContainer = ({

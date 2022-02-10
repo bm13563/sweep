@@ -1,8 +1,8 @@
 import * as twgl from "twgl.js";
-import { isBaseLayer2, isPseudolayer2 } from "../utils/utils";
+import { isBaseLayer, isPseudolayer } from "../utils/utils";
 import { baseFragment } from "./shaders/base.fragment";
 import { flipVertex } from "./shaders/flip.vertex";
-import { Pseudolayer2 } from "../ui/mapPanel/layers/pseudolayer2";
+import { Pseudolayer } from "../ui/mapPanel/layers/pseudolayer";
 
 export class RenderLoop {
     stopped = false;
@@ -10,7 +10,7 @@ export class RenderLoop {
     fps = 60;
     contextCache: Record<string, CanvasRenderingContext2D> = {};
     programCache: Record<string, twgl.ProgramInfo> = {};
-    pseudolayer?: Pseudolayer2 | undefined;
+    pseudolayer?: Pseudolayer | undefined;
     gl?: WebGLRenderingContext;
 
     registerWebGl(gl: WebGLRenderingContext): void {
@@ -26,7 +26,7 @@ export class RenderLoop {
         };
     }
 
-    renderPseudolayer = (pseudolayer: Pseudolayer2 | undefined): void => {
+    renderPseudolayer = (pseudolayer: Pseudolayer | undefined): void => {
         this.pseudolayer = pseudolayer;
     };
 
@@ -40,20 +40,24 @@ export class RenderLoop {
         ]);
 
         const manifest = (
-            pseudolayer: Pseudolayer2,
+            pseudolayer: Pseudolayer,
             contexts: Record<string, CanvasRenderingContext2D>,
             programs: Record<string, twgl.ProgramInfo>
         ) => {
-            const recurse = (pseudolayer: Pseudolayer2): void => {
+            const recurse = (pseudolayer: Pseudolayer): void => {
                 let program: twgl.ProgramInfo;
-                if (!(pseudolayer.uid in programs)) {
+                const programHash = `
+                    ${pseudolayer.config.shaders.vertexShader}
+                    ${pseudolayer.config.shaders.fragmentShader}
+                `;
+                if (!(programHash in programs)) {
                     program = twgl.createProgramInfo(gl, [
                         pseudolayer.config.shaders.vertexShader,
                         pseudolayer.config.shaders.fragmentShader,
                     ]);
-                    this.programCache[pseudolayer.uid] = program;
+                    this.programCache[programHash] = program;
                 } else {
-                    program = programs[pseudolayer.uid];
+                    program = programs[programHash];
                 }
 
                 const uniforms: Record<string, WebGLTexture> = {
@@ -63,7 +67,7 @@ export class RenderLoop {
                 for (const key in pseudolayer.config.inputs) {
                     const child = pseudolayer.config.inputs[key];
 
-                    if (isBaseLayer2(child)) {
+                    if (isBaseLayer(child)) {
                         const texture = twgl.createTexture(gl, {
                             src: contexts[child.uid].canvas,
                         });
@@ -73,7 +77,7 @@ export class RenderLoop {
                         return draw(pseudolayer, program, uniforms, true);
                     }
 
-                    if (isPseudolayer2(child)) {
+                    if (isPseudolayer(child)) {
                         recurse(child);
                         if (child.uid in textureInputTracker) {
                             const texture = textureInputTracker[child.uid];
@@ -105,7 +109,7 @@ export class RenderLoop {
         };
 
         const draw = (
-            pseudolayer: Pseudolayer2,
+            pseudolayer: Pseudolayer,
             program: twgl.ProgramInfo,
             uniforms: Record<string, WebGLTexture | string>,
             useFramebuffer?: boolean

@@ -1,39 +1,27 @@
 import { View } from "ol";
 import { fromLonLat, get as getProjection } from "ol/proj";
-import { Layers } from "../ui/mapPanel/layers/layer";
-import { Layer2 } from "../ui/mapPanel/layers/layer2";
+import { Layer } from "../ui/mapPanel/layers/layer";
 import { Pseudolayer } from "../ui/mapPanel/layers/pseudolayer";
-import { Pseudolayer2 } from "../ui/mapPanel/layers/pseudolayer2";
 
 export const isPseudolayer = (
-    layer: Layers | Pseudolayer
+    layer: Layer | Pseudolayer
 ): layer is Pseudolayer => {
     return layer.type === "pseudolayer";
 };
 
-export const isBaseLayer = (layer: Layers | Pseudolayer): layer is Layers => {
-    return layer.type === "baseLayer";
-};
-
-export const isPseudolayer2 = (
-    layer: Layer2 | Pseudolayer2
-): layer is Pseudolayer2 => {
-    return layer.type === "pseudolayer";
-};
-
-export const isBaseLayer2 = (layer: Layer2 | Pseudolayer2): layer is Layer2 => {
+export const isBaseLayer = (layer: Layer | Pseudolayer): layer is Layer => {
     return layer.type === "baseLayer";
 };
 
 export const findMapLayers = (
-    pseudolayer: Pseudolayer2 | undefined
-): Layer2[] => {
-    const mapLayers: Layer2[] = [];
+    pseudolayer: Pseudolayer | undefined
+): Layer[] => {
+    const mapLayers: Layer[] = [];
 
-    const recurse = (layer: Pseudolayer2 | Layer2): void => {
-        if (isBaseLayer2(layer)) {
+    const recurse = (layer: Pseudolayer | Layer): void => {
+        if (isBaseLayer(layer)) {
             mapLayers.push(layer);
-        } else if (isPseudolayer2(layer)) {
+        } else if (isPseudolayer(layer)) {
             for (const key in layer.config.inputs) {
                 recurse(layer.config.inputs[key]);
             }

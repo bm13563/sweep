@@ -1,16 +1,16 @@
 import { v4 as uuidv4 } from "uuid";
-import { Pseudolayer2 } from "./mapPanel/layers/pseudolayer2";
+import { Pseudolayer } from "./mapPanel/layers/pseudolayer";
 
 interface UiLayerConfig {
     name: string;
-    pseudolayer: Pseudolayer2;
+    pseudolayer: Pseudolayer;
 }
 
 export interface UiLayer {
     uid: string;
     visible: boolean;
     config: UiLayerConfig;
-    updatedPseudolayer?: Pseudolayer2;
+    updatedPseudolayer?: Pseudolayer;
 }
 
 export const generateUiLayer = (config: UiLayerConfig): UiLayer => {
