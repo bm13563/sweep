@@ -1,16 +1,16 @@
-import { Box } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import React, { ReactNode } from "react";
 
 export const ToolbarMenuItem = ({
     onClick,
-    children,
+    name,
 }: {
     onClick: () => void;
-    children?: ReactNode;
+    name: string;
 }): JSX.Element => {
     return (
         <Box onClick={onClick} sx={{ height: "100%", padding: "0.2rem" }}>
-            {children}
+            <Typography variant="caption">{name}</Typography>
         </Box>
     );
 };

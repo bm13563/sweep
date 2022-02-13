@@ -1,7 +1,7 @@
 import { Box, Stack } from "@mui/material";
 import React from "react";
 import { UiLayer } from "../uiLayer";
-import { AdjustColours } from "./AdjustColours";
+import { RgbManipulation } from "./RgbManipulation";
 import { ToolbarMenu } from "./ToolbarMenu";
 
 export const ToolbarContainer = ({
@@ -21,7 +21,7 @@ export const ToolbarContainer = ({
         >
             <Stack direction="row" sx={{ height: "100%" }}>
                 <ToolbarMenu name="Image processing">
-                    <AdjustColours
+                    <RgbManipulation
                         uiLayers={uiLayers}
                         updateUiLayers={updateUiLayers}
                     />

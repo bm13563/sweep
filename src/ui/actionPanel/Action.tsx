@@ -9,7 +9,7 @@ import {
     TextField,
     Typography,
 } from "@mui/material";
-import React, { ChangeEvent } from "react";
+import React, { ChangeEvent, useEffect } from "react";
 import CloseIcon from "@mui/icons-material/Close";
 
 export type ActionSection =
@@ -47,16 +47,38 @@ export interface ActionConfig {
     sections: ActionSection[];
     onSubmit: () => void;
     onClose: () => void;
+    onMount?: () => void;
+    onUnmount?: () => void;
 }
 
 export const Action = ({ config }: { config: ActionConfig }): JSX.Element => {
+    const onSubmitWithUnmount = () => {
+        if (config.onUnmount) {
+            config.onUnmount();
+        }
+        config.onSubmit();
+    };
+
+    const onCloseWithUnmount = () => {
+        if (config.onUnmount) {
+            config.onUnmount();
+        }
+        config.onClose();
+    };
+
+    useEffect(() => {
+        if (config.onMount) {
+            config.onMount();
+        }
+    }, []);
+
     return (
         <Box>
             <Stack spacing={0}>
                 <Stack direction="row" sx={{ marginBottom: "1rem" }}>
                     <Typography variant="h4">{config.title}</Typography>
                     <CloseIcon
-                        onClick={() => config.onClose()}
+                        onClick={onCloseWithUnmount}
                         sx={{ marginLeft: "auto" }}
                     />
                 </Stack>
@@ -73,7 +95,7 @@ export const Action = ({ config }: { config: ActionConfig }): JSX.Element => {
                         </Box>
                     );
                 })}
-                <Button onClick={config.onSubmit} variant="contained">
+                <Button onClick={onSubmitWithUnmount} variant="contained">
                     Apply
                 </Button>
             </Stack>

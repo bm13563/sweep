@@ -20,6 +20,7 @@ export const ToolbarMenu = ({
 
     const [open, setOpen] = useState(false);
 
+    // FIXME: can this be a hook
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
             if (configState) return;
@@ -61,16 +62,16 @@ export const ToolbarMenu = ({
             >
                 <Typography variant="body2">{name}</Typography>
             </Box>
-            {open && (
-                <Stack
-                    direction="column"
-                    sx={{
-                        backgroundColor: "pink",
-                    }}
-                >
-                    {children}
-                </Stack>
-            )}
+            <Stack
+                direction="column"
+                sx={{
+                    backgroundColor: "pink",
+                    display: open ? "" : "none",
+                }}
+                onClick={() => setOpen(false)}
+            >
+                {children}
+            </Stack>
         </Box>
     );
 };

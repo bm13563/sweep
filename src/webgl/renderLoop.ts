@@ -7,9 +7,10 @@ import { Pseudolayer } from "../ui/mapPanel/layers/pseudolayer";
 export class RenderLoop {
     stopped = false;
     clock = new Date().getTime();
-    fps = 60;
+    fps = 24;
     contextCache: Record<string, CanvasRenderingContext2D> = {};
     programCache: Record<string, twgl.ProgramInfo> = {};
+    bufferCache: Record<string, string> = {};
     pseudolayer?: Pseudolayer | undefined;
     gl?: WebGLRenderingContext;
 
@@ -19,7 +20,6 @@ export class RenderLoop {
     }
 
     registerContext(context: Record<string, CanvasRenderingContext2D>): void {
-        console.log("register");
         this.contextCache = {
             ...this.contextCache,
             ...context,
@@ -33,6 +33,7 @@ export class RenderLoop {
     render(gl: WebGLRenderingContext): void {
         let textureCleanup: WebGLTexture[] = [];
         let textureInputTracker: Record<string, WebGLTexture> = {};
+        const quadVertices = twgl.primitives.createXYQuadBufferInfo(gl);
 
         const flipProgram = twgl.createProgramInfo(gl, [
             flipVertex,
@@ -44,7 +45,14 @@ export class RenderLoop {
             contexts: Record<string, CanvasRenderingContext2D>,
             programs: Record<string, twgl.ProgramInfo>
         ) => {
+            let breakout = false;
+
             const recurse = (pseudolayer: Pseudolayer): void => {
+                if (breakout) {
+                    console.log("breaking out");
+                    return;
+                }
+
                 let program: twgl.ProgramInfo;
                 const programHash = `
                     ${pseudolayer.config.shaders.vertexShader}
@@ -68,13 +76,17 @@ export class RenderLoop {
                     const child = pseudolayer.config.inputs[key];
 
                     if (isBaseLayer(child)) {
-                        const texture = twgl.createTexture(gl, {
-                            src: contexts[child.uid].canvas,
-                        });
-                        textureCleanup.push(texture);
-                        textureInputTracker[child.uid] = texture;
-                        uniforms[key] = texture;
-                        return draw(pseudolayer, program, uniforms, true);
+                        if (child.uid in contexts) {
+                            const texture = twgl.createTexture(gl, {
+                                src: contexts[child.uid].canvas,
+                            });
+                            textureCleanup.push(texture);
+                            textureInputTracker[child.uid] = texture;
+                            uniforms[key] = texture;
+                            return draw(pseudolayer, program, uniforms, true);
+                        } else {
+                            breakout = true;
+                        }
                     }
 
                     if (isPseudolayer(child)) {
@@ -114,7 +126,6 @@ export class RenderLoop {
             uniforms: Record<string, WebGLTexture | string>,
             useFramebuffer?: boolean
         ) => {
-            const quadVertices = twgl.primitives.createXYQuadBufferInfo(gl);
             const framebuffer = twgl.createFramebufferInfo(gl);
 
             twgl.resizeCanvasToDisplaySize(gl.canvas);
@@ -146,13 +157,11 @@ export class RenderLoop {
             if (elapsed > 1000 / this.fps) {
                 if (gl) {
                     if (this.pseudolayer) {
-                        if (Object.keys(this.contextCache).length) {
-                            manifest(
-                                this.pseudolayer,
-                                this.contextCache,
-                                this.programCache
-                            );
-                        }
+                        manifest(
+                            this.pseudolayer,
+                            this.contextCache,
+                            this.programCache
+                        );
                     } else {
                         gl.clearColor(1.0, 1.0, 1.0, 1.0);
                         gl.clear(gl.COLOR_BUFFER_BIT);
