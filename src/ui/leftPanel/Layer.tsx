@@ -1,11 +1,14 @@
 import { Box, Stack, Typography } from "@mui/material";
-import React, { useRef } from "react";
+import React, { ChangeEvent, useRef, useState } from "react";
 import { useDrag, useDrop, DropTargetMonitor } from "react-dnd";
+import InfoIcon from "@mui/icons-material/Info";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { XYCoord } from "dnd-core";
 import { UiLayer } from "../uiLayer";
+import { useAction } from "../actionPanel/ActionContext";
+import { ActionConfig } from "../actionPanel/Action";
 
 interface DragItem {
     index: number;
@@ -30,6 +33,9 @@ export const Layer = ({
 }): JSX.Element => {
     const ref = useRef<HTMLDivElement>(null);
     const layerId = uiLayer.uid;
+
+    const [displayAction, setDisplayAction] = useState(false);
+    const [json, setJson] = useState("");
 
     const [{ handlerId }, drop] = useDrop({
         accept: "layer",
@@ -84,6 +90,34 @@ export const Layer = ({
 
     drag(drop(ref));
 
+    const exportLayerInfo = () => {
+        const layerJson = JSON.stringify(activeUiLayer);
+        setJson(layerJson);
+        setDisplayAction(true);
+    };
+
+    const onClose = () => {
+        setDisplayAction(false);
+    };
+
+    const updateJson = (event: ChangeEvent<HTMLInputElement>) => {
+        setJson(event.target.value);
+    };
+
+    const config: ActionConfig = {
+        title: "Export",
+        onClose: onClose,
+        sections: [
+            {
+                type: "textField",
+                title: "Pseudolayer",
+                value: json,
+                onChange: updateJson,
+            },
+        ],
+    };
+    useAction({ newConfig: config, displayAction: displayAction });
+
     return (
         <Box
             ref={ref}
@@ -108,6 +142,7 @@ export const Layer = ({
                     </Typography>
                 </Box>
                 <Stack direction="row" spacing={1} sx={{ marginLeft: "auto" }}>
+                    <InfoIcon onClick={exportLayerInfo} />
                     <DeleteIcon onClick={removeUiLayer} />
                     {uiLayer.visible ? (
                         <VisibilityOffIcon onClick={changeVisibility} />

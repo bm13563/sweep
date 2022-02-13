@@ -20,7 +20,7 @@ export const ToolbarContainer = ({
             }}
         >
             <Stack direction="row" sx={{ height: "100%" }}>
-                <ToolbarMenu name="Image processing">
+                <ToolbarMenu name="Processing">
                     <RgbManipulation
                         uiLayers={uiLayers}
                         updateUiLayers={updateUiLayers}

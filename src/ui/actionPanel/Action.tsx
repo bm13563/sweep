@@ -9,13 +9,14 @@ import {
     TextField,
     Typography,
 } from "@mui/material";
-import React, { ChangeEvent, useEffect } from "react";
+import React, { ChangeEvent, ChangeEventHandler, useEffect } from "react";
 import CloseIcon from "@mui/icons-material/Close";
 
 export type ActionSection =
     | ActionSectionInput
     | ActionSectionDropdown
-    | ActionSectionSlider;
+    | ActionSectionSlider
+    | ActionSectionTextField;
 
 interface ActionSectionBase {
     title: string;
@@ -42,11 +43,16 @@ interface ActionSectionSlider extends ActionSectionBase {
     onChange?: (value: number) => void;
 }
 
+interface ActionSectionTextField extends ActionSectionBase {
+    type: "textField";
+    onChange: (event: ChangeEvent<HTMLInputElement>) => void;
+}
+
 export interface ActionConfig {
     title: string;
     sections: ActionSection[];
-    onSubmit: () => void;
     onClose: () => void;
+    onSubmit?: () => void;
     onMount?: () => void;
     onUnmount?: () => void;
 }
@@ -56,7 +62,10 @@ export const Action = ({ config }: { config: ActionConfig }): JSX.Element => {
         if (config.onUnmount) {
             config.onUnmount();
         }
-        config.onSubmit();
+
+        if (config.onSubmit) {
+            config.onSubmit();
+        }
     };
 
     const onCloseWithUnmount = () => {
@@ -95,9 +104,11 @@ export const Action = ({ config }: { config: ActionConfig }): JSX.Element => {
                         </Box>
                     );
                 })}
-                <Button onClick={onSubmitWithUnmount} variant="contained">
-                    Apply
-                </Button>
+                {config.onSubmit && (
+                    <Button onClick={onSubmitWithUnmount} variant="contained">
+                        Apply
+                    </Button>
+                )}
             </Stack>
         </Box>
     );
@@ -113,6 +124,9 @@ const actionParser = (actionSection: ActionSection) => {
         }
         case "slider": {
             return renderSlider(actionSection);
+        }
+        case "textField": {
+            return renderTextField(actionSection);
         }
     }
 };
@@ -169,6 +183,21 @@ const renderSlider = (config: ActionSectionSlider): JSX.Element => {
                 value={config.value ? parseFloat(config.value) : undefined}
                 valueLabelDisplay="auto"
                 onChange={terseOnChange}
+            />
+        </Box>
+    );
+};
+
+const renderTextField = (config: ActionSectionTextField): JSX.Element => {
+    return (
+        <Box>
+            <TextField
+                fullWidth
+                id="outlined-multiline-static"
+                multiline
+                rows={4}
+                value={config.value}
+                onChange={config.onChange}
             />
         </Box>
     );

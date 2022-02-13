@@ -8,6 +8,7 @@ import { generatePseudolayer } from "../mapPanel/layers/pseudolayer";
 import { baseVertex } from "../../webgl/shaders/base.vertex";
 import { baseFragment } from "../../webgl/shaders/base.fragment";
 import { generateLayer } from "../mapPanel/layers/layer";
+import { AddLayerFromConfig } from "./AddLayerFromConfig";
 
 export const LayerContainer = ({
     uiLayers,
@@ -17,6 +18,19 @@ export const LayerContainer = ({
     updateUiLayers: (uiLayer: UiLayer[]) => void;
 }): JSX.Element => {
     const { activeUiLayer } = getActiveUiLayer(uiLayers);
+
+    const addUiLayerFromConfig = (name: string, json: string) => {
+        const parsedLayer = JSON.parse(json);
+        const newUiLayer = generateUiLayer({
+            name: name,
+            pseudolayer: parsedLayer.config.pseudolayer,
+        });
+        updateUiLayers(
+            update(uiLayers, {
+                $unshift: [newUiLayer],
+            })
+        );
+    };
 
     const addUiLayer = ({ name, type, url }: AddLayerProps) => {
         const layer = generateLayer({ type: type, url: url });
@@ -92,6 +106,9 @@ export const LayerContainer = ({
                 <Stack direction="row" sx={{ alignItems: "center" }}>
                     <Typography variant="h4">Layers</Typography>
                     <Box sx={{ marginLeft: "auto" }}>
+                        <AddLayerFromConfig
+                            addLayerFromConfig={addUiLayerFromConfig}
+                        />
                         <AddLayer addUiLayer={addUiLayer} />
                     </Box>
                 </Stack>

@@ -45,11 +45,10 @@ export class RenderLoop {
             contexts: Record<string, CanvasRenderingContext2D>,
             programs: Record<string, twgl.ProgramInfo>
         ) => {
-            let breakout = false;
+            let killswitch = false;
 
             const recurse = (pseudolayer: Pseudolayer): void => {
-                if (breakout) {
-                    console.log("breaking out");
+                if (killswitch) {
                     return;
                 }
 
@@ -58,14 +57,14 @@ export class RenderLoop {
                     ${pseudolayer.config.shaders.vertexShader}
                     ${pseudolayer.config.shaders.fragmentShader}
                 `;
-                if (!(programHash in programs)) {
+                if (programHash in programs) {
+                    program = programs[programHash];
+                } else {
                     program = twgl.createProgramInfo(gl, [
                         pseudolayer.config.shaders.vertexShader,
                         pseudolayer.config.shaders.fragmentShader,
                     ]);
                     this.programCache[programHash] = program;
-                } else {
-                    program = programs[programHash];
                 }
 
                 const uniforms: Record<string, WebGLTexture> = {
@@ -85,7 +84,8 @@ export class RenderLoop {
                             uniforms[key] = texture;
                             return draw(pseudolayer, program, uniforms, true);
                         } else {
-                            breakout = true;
+                            console.log("Baselayer context not registered.");
+                            killswitch = true;
                         }
                     }
 
