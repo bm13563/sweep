@@ -1,5 +1,5 @@
 import { Box, Container, Stack, Typography } from "@mui/material";
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback, useContext, useEffect } from "react";
 import { Layer } from "./Layer";
 import { generateUiLayer, getActiveUiLayer, UiLayer } from "../uiLayer";
 import update from "immutability-helper";
@@ -9,6 +9,7 @@ import { baseVertex } from "../../webgl/shaders/base.vertex";
 import { baseFragment } from "../../webgl/shaders/base.fragment";
 import { generateLayer } from "../mapPanel/layers/layer";
 import { AddLayerFromConfig } from "./AddLayerFromConfig";
+import { ActionState } from "../actionPanel/ActionContext";
 
 export const LayerContainer = ({
     uiLayers,
@@ -18,6 +19,7 @@ export const LayerContainer = ({
     updateUiLayers: (uiLayer: UiLayer[]) => void;
 }): JSX.Element => {
     const { activeUiLayer } = getActiveUiLayer(uiLayers);
+    const { configState } = useContext(ActionState);
 
     const addUiLayerFromConfig = (name: string, json: string) => {
         const parsedLayer = JSON.parse(json);
@@ -100,6 +102,7 @@ export const LayerContainer = ({
                 backgroundColor: "red",
                 height: "100%",
                 textAlign: "left",
+                pointerEvents: configState ? "none" : "auto",
             }}
         >
             <Stack spacing={2} sx={{ height: "100%", width: "90%" }}>

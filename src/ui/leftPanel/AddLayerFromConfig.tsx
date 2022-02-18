@@ -1,7 +1,6 @@
 import React, { ChangeEvent, useState } from "react";
 import CodeIcon from "@mui/icons-material/Code";
 import { ActionConfig } from "../actionPanel/Action";
-import { SelectChangeEvent } from "@mui/material";
 import { useAction } from "../actionPanel/ActionContext";
 
 export const AddLayerFromConfig = ({
@@ -20,6 +19,8 @@ export const AddLayerFromConfig = ({
     const onSubmit = () => {
         addLayerFromConfig(layerName, json);
         setJson("");
+        setLayerName("");
+        setDisplayAction(false);
     };
 
     const onClose = () => {

@@ -65,7 +65,6 @@ export const ToolbarMenu = ({
             <Stack
                 direction="column"
                 sx={{
-                    backgroundColor: "pink",
                     display: open ? "" : "none",
                 }}
                 onClick={() => setOpen(false)}

@@ -84,7 +84,6 @@ export class RenderLoop {
                             uniforms[key] = texture;
                             return draw(pseudolayer, program, uniforms, true);
                         } else {
-                            console.log("Baselayer context not registered.");
                             killswitch = true;
                         }
                     }

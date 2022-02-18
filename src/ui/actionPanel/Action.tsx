@@ -9,7 +9,7 @@ import {
     TextField,
     Typography,
 } from "@mui/material";
-import React, { ChangeEvent, ChangeEventHandler, useEffect } from "react";
+import React, { ChangeEvent, useEffect } from "react";
 import CloseIcon from "@mui/icons-material/Close";
 
 export type ActionSection =

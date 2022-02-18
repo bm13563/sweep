@@ -72,13 +72,25 @@ export const PageContainer = (): JSX.Element => {
                     alignContent: "flex-start",
                 }}
             >
-                <Grid item xs={12} sx={{ height: "5%" }}>
+                <Grid
+                    item
+                    xs={12}
+                    sx={{
+                        height: "5%",
+                    }}
+                >
                     <ToolbarContainer
                         uiLayers={uiLayers}
                         updateUiLayers={updateUiLayers}
                     />
                 </Grid>
-                <Grid item sx={{ height: "95%", width: "15.625rem" }}>
+                <Grid
+                    item
+                    sx={{
+                        height: "95%",
+                        width: "15.625rem",
+                    }}
+                >
                     <LayerContainer
                         uiLayers={uiLayers}
                         updateUiLayers={updateUiLayers}

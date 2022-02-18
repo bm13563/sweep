@@ -91,7 +91,7 @@ export const Layer = ({
     drag(drop(ref));
 
     const exportLayerInfo = () => {
-        const layerJson = JSON.stringify(activeUiLayer);
+        const layerJson = JSON.stringify(uiLayer);
         setJson(layerJson);
         setDisplayAction(true);
     };

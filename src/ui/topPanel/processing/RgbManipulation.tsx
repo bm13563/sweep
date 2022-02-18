@@ -1,12 +1,12 @@
 import React, { useCallback, useState } from "react";
-import { ActionConfig } from "../actionPanel/Action";
-import { useAction } from "../actionPanel/ActionContext";
-import { getActiveUiLayer, UiLayer } from "../uiLayer";
-import { ToolbarMenuItem } from "./ToolbarMenuItem";
+import { ActionConfig } from "../../actionPanel/Action";
+import { useAction } from "../../actionPanel/ActionContext";
+import { getActiveUiLayer, UiLayer } from "../../uiLayer";
+import { ToolbarMenuItem } from "../ToolbarMenuItem";
 import update from "immutability-helper";
-import { generatePseudolayer } from "../mapPanel/layers/pseudolayer";
-import { baseVertex } from "../../webgl/shaders/base.vertex";
-import { adjustColorsFragment } from "../../webgl/shaders/adjustColors.fragment";
+import { generatePseudolayer } from "../../mapPanel/layers/pseudolayer";
+import { baseVertex } from "../../../webgl/shaders/base.vertex";
+import { adjustColorsFragment } from "../../../webgl/shaders/adjustColors.fragment";
 import throttle from "lodash.throttle";
 
 const defaultValues = {
@@ -171,12 +171,6 @@ export const RgbManipulation = ({
         title: "Update colours",
         onSubmit: onSubmit,
         onClose: onClose,
-        onMount: () => {
-            console.log("mount");
-        },
-        onUnmount: () => {
-            console.log("unmount");
-        },
         sections: [
             {
                 title: "red",
@@ -212,6 +206,7 @@ export const RgbManipulation = ({
 
     return (
         <ToolbarMenuItem
+            active={true}
             onClick={() => setDisplayAction(true)}
             name={"RGB Manipulation"}
         />

@@ -1,15 +1,24 @@
 import { Box, Typography } from "@mui/material";
-import React, { ReactNode } from "react";
+import React from "react";
 
 export const ToolbarMenuItem = ({
     onClick,
     name,
+    active,
 }: {
     onClick: () => void;
     name: string;
+    active: boolean;
 }): JSX.Element => {
     return (
-        <Box onClick={onClick} sx={{ height: "100%", padding: "0.2rem" }}>
+        <Box
+            onClick={active ? onClick : undefined}
+            sx={{
+                height: "100%",
+                padding: "0.2rem",
+                backgroundColor: active ? "pink" : "gray",
+            }}
+        >
             <Typography variant="caption">{name}</Typography>
         </Box>
     );
