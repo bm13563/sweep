@@ -20,6 +20,7 @@ const generateOlLayerFromConfig = (layer: Layer): OlLayerTypes => {
                     url: layer.config.url,
                     crossOrigin: "anonymous",
                     projection: getProjection("EPSG:3857"),
+                    transition: 0,
                 }),
                 zIndex: 0,
             });

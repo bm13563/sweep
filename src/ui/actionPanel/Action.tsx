@@ -55,6 +55,7 @@ export interface ActionConfig {
     onSubmit?: () => void;
     onMount?: () => void;
     onUnmount?: () => void;
+    errors?: string[];
 }
 
 export const Action = ({ config }: { config: ActionConfig }): JSX.Element => {
@@ -64,7 +65,7 @@ export const Action = ({ config }: { config: ActionConfig }): JSX.Element => {
         }
 
         if (config.onSubmit) {
-            config.onSubmit();
+            !(config.errors && config.errors.length > 0) && config.onSubmit();
         }
     };
 
@@ -91,6 +92,16 @@ export const Action = ({ config }: { config: ActionConfig }): JSX.Element => {
                         sx={{ marginLeft: "auto" }}
                     />
                 </Stack>
+                {config.errors && config.errors.length > 0 && (
+                    <Box
+                        sx={{
+                            marginBottom: "1rem",
+                            color: "red",
+                        }}
+                    >
+                        <Typography>{config.errors.join(",")}</Typography>
+                    </Box>
+                )}
                 {config.sections.map((section, index) => {
                     return (
                         <Box

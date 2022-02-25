@@ -2,7 +2,7 @@ import { v4 as uuidv4 } from "uuid";
 
 type LayerConfig = XyzConfig;
 
-interface XyzConfig {
+export interface XyzConfig {
     type: "XYZ";
     url: string;
 }

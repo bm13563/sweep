@@ -1,12 +1,12 @@
 import { v4 as uuidv4 } from "uuid";
 import { Layer } from "./layer";
 
-interface ShaderProps {
+export interface ShaderProps {
     vertexShader: string;
     fragmentShader: string;
 }
 
-interface PseudolayerConfig {
+export interface PseudolayerConfig {
     inputs: Record<string, Layer | Pseudolayer>;
     variables: Record<string, string>;
     shaders: ShaderProps;

@@ -1,13 +1,9 @@
 import { Box, Container, Stack, Typography } from "@mui/material";
 import React, { useCallback, useContext, useEffect } from "react";
 import { Layer } from "./Layer";
-import { generateUiLayer, getActiveUiLayer, UiLayer } from "../uiLayer";
+import { getActiveUiLayer, UiLayer } from "../uiLayer";
 import update from "immutability-helper";
-import { AddLayer, AddLayerProps } from "./AddLayer";
-import { generatePseudolayer } from "../mapPanel/layers/pseudolayer";
-import { baseVertex } from "../../webgl/shaders/base.vertex";
-import { baseFragment } from "../../webgl/shaders/base.fragment";
-import { generateLayer } from "../mapPanel/layers/layer";
+import { AddLayer } from "./AddLayer";
 import { AddLayerFromConfig } from "./AddLayerFromConfig";
 import { ActionState } from "../actionPanel/ActionContext";
 
@@ -20,37 +16,6 @@ export const LayerContainer = ({
 }): JSX.Element => {
     const { activeUiLayer } = getActiveUiLayer(uiLayers);
     const { configState } = useContext(ActionState);
-
-    const addUiLayerFromConfig = (name: string, json: string) => {
-        const parsedLayer = JSON.parse(json);
-        const newUiLayer = generateUiLayer({
-            name: name,
-            pseudolayer: parsedLayer.config.pseudolayer,
-        });
-        updateUiLayers(
-            update(uiLayers, {
-                $unshift: [newUiLayer],
-            })
-        );
-    };
-
-    const addUiLayer = ({ name, type, url }: AddLayerProps) => {
-        const layer = generateLayer({ type: type, url: url });
-        const pseudolayer = generatePseudolayer({
-            inputs: { u_image: layer },
-            variables: {},
-            shaders: { vertexShader: baseVertex, fragmentShader: baseFragment },
-        });
-        const uiLayer = generateUiLayer({
-            name: name,
-            pseudolayer: pseudolayer,
-        });
-        updateUiLayers(
-            update(uiLayers, {
-                $unshift: [uiLayer],
-            })
-        );
-    };
 
     const remove = (uiLayer: UiLayer) => {
         const indexToRemove = uiLayers.indexOf(uiLayer);
@@ -110,9 +75,13 @@ export const LayerContainer = ({
                     <Typography variant="h4">Layers</Typography>
                     <Box sx={{ marginLeft: "auto" }}>
                         <AddLayerFromConfig
-                            addLayerFromConfig={addUiLayerFromConfig}
+                            uiLayers={uiLayers}
+                            updateUiLayers={updateUiLayers}
                         />
-                        <AddLayer addUiLayer={addUiLayer} />
+                        <AddLayer
+                            uiLayers={uiLayers}
+                            updateUiLayers={updateUiLayers}
+                        />
                     </Box>
                 </Stack>
                 {uiLayers.map((uiLayer, index) => {

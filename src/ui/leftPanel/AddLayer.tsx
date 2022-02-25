@@ -3,6 +3,12 @@ import AddIcon from "@mui/icons-material/Add";
 import { ActionConfig } from "../actionPanel/Action";
 import { SelectChangeEvent } from "@mui/material";
 import { useAction } from "../actionPanel/ActionContext";
+import { baseFragment } from "../../webgl/shaders/base.fragment";
+import { baseVertex } from "../../webgl/shaders/base.vertex";
+import { generateLayer } from "../mapPanel/layers/layer";
+import { generatePseudolayer } from "../mapPanel/layers/pseudolayer";
+import { generateUiLayer, UiLayer } from "../uiLayer";
+import update from "immutability-helper";
 
 export interface AddLayerProps {
     name: string;
@@ -11,14 +17,34 @@ export interface AddLayerProps {
 }
 
 export const AddLayer = ({
-    addUiLayer,
+    uiLayers,
+    updateUiLayers,
 }: {
-    addUiLayer: (addLayerProps: AddLayerProps) => void;
+    uiLayers: UiLayer[];
+    updateUiLayers: (uiLayer: UiLayer[]) => void;
 }): JSX.Element => {
     const [displayAction, setDisplayAction] = useState(false);
     const [name, setName] = useState("");
     const [type, setType] = useState("XYZ");
     const [url, setUrl] = useState("");
+
+    const addUiLayer = ({ name, type, url }: AddLayerProps) => {
+        const layer = generateLayer({ type: type, url: url });
+        const pseudolayer = generatePseudolayer({
+            inputs: { u_image: layer },
+            variables: {},
+            shaders: { vertexShader: baseVertex, fragmentShader: baseFragment },
+        });
+        const uiLayer = generateUiLayer({
+            name: name,
+            pseudolayer: pseudolayer,
+        });
+        updateUiLayers(
+            update(uiLayers, {
+                $unshift: [uiLayer],
+            })
+        );
+    };
 
     const updateName = (event: ChangeEvent<HTMLInputElement>): void => {
         setName(event.target.value);
@@ -47,6 +73,10 @@ export const AddLayer = ({
     };
 
     const onClose = () => {
+        setDisplayAction(false);
+        setName("");
+        setUrl("");
+        setType("XYZ");
         setDisplayAction(false);
     };
 

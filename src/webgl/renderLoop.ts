@@ -7,7 +7,7 @@ import { Pseudolayer } from "../ui/mapPanel/layers/pseudolayer";
 export class RenderLoop {
     stopped = false;
     clock = new Date().getTime();
-    fps = 24;
+    fps = 30;
     contextCache: Record<string, CanvasRenderingContext2D> = {};
     programCache: Record<string, twgl.ProgramInfo> = {};
     bufferCache: Record<string, string> = {};
@@ -45,6 +45,8 @@ export class RenderLoop {
             contexts: Record<string, CanvasRenderingContext2D>,
             programs: Record<string, twgl.ProgramInfo>
         ) => {
+            twgl.resizeCanvasToDisplaySize(gl.canvas);
+            gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
             let killswitch = false;
 
             const recurse = (pseudolayer: Pseudolayer): void => {
@@ -125,10 +127,13 @@ export class RenderLoop {
             uniforms: Record<string, WebGLTexture | string>,
             useFramebuffer?: boolean
         ) => {
-            const framebuffer = twgl.createFramebufferInfo(gl);
+            const framebuffer = twgl.createFramebufferInfo(
+                gl,
+                undefined,
+                useFramebuffer ? undefined : 0,
+                useFramebuffer ? undefined : 0
+            );
 
-            twgl.resizeCanvasToDisplaySize(gl.canvas);
-            gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
             gl.useProgram(program.program);
             twgl.setBuffersAndAttributes(gl, program, quadVertices);
             twgl.setUniforms(program, uniforms);
@@ -149,9 +154,8 @@ export class RenderLoop {
         const loop = () => {
             if (this.stopped) return;
 
-            requestAnimationFrame(() => loop());
             const now = new Date().getTime();
-            const elapsed = new Date().getTime() - this.clock;
+            const elapsed = now - this.clock;
 
             if (elapsed > 1000 / this.fps) {
                 if (gl) {
@@ -162,12 +166,13 @@ export class RenderLoop {
                             this.programCache
                         );
                     } else {
-                        gl.clearColor(1.0, 1.0, 1.0, 1.0);
+                        gl.clearColor(0.9, 0.9, 0.9, 1.0);
                         gl.clear(gl.COLOR_BUFFER_BIT);
                     }
                 }
                 this.clock = now - (elapsed % (1000 / this.fps));
             }
+            requestAnimationFrame(() => loop());
         };
 
         loop();
