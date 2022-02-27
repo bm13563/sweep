@@ -1,14 +1,14 @@
 import { Box, Stack, Typography } from "@mui/material";
-import React, { ChangeEvent, useRef, useState } from "react";
+import React, { ChangeEvent, useCallback, useRef, useState } from "react";
 import { useDrag, useDrop, DropTargetMonitor } from "react-dnd";
-import InfoIcon from "@mui/icons-material/Info";
-import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
-import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
-import DeleteIcon from "@mui/icons-material/Delete";
 import { XYCoord } from "dnd-core";
-import { UiLayer } from "../uiLayer";
+import { getActiveUiLayer, UiLayer } from "../uiLayer";
 import { useAction } from "../actionPanel/ActionContext";
 import { ActionConfig } from "../actionPanel/Action";
+import update from "immutability-helper";
+import { Icon } from "../../components/Icon";
+import { RightAlignedStack } from "../../components/RightAlignedStack";
+import { Body1 } from "../../components/Typography";
 
 interface DragItem {
     index: number;
@@ -18,24 +18,62 @@ interface DragItem {
 
 export const Layer = ({
     uiLayer,
-    activeUiLayer,
+    uiLayers,
+    updateUiLayers,
     index,
-    updateVisibility,
-    remove,
-    move,
 }: {
     uiLayer: UiLayer;
-    activeUiLayer: UiLayer | undefined;
+    uiLayers: UiLayer[];
+    updateUiLayers: (uiLayer: UiLayer[]) => void;
     index: number;
-    updateVisibility: (uiLayer: UiLayer) => void;
-    remove: (uiLayer: UiLayer) => void;
-    move: (dragIndex: number, hoverIndex: number) => void;
 }): JSX.Element => {
     const ref = useRef<HTMLDivElement>(null);
     const layerId = uiLayer.uid;
 
+    const { activeUiLayer } = getActiveUiLayer(uiLayers);
+
     const [displayAction, setDisplayAction] = useState(false);
     const [json, setJson] = useState("");
+
+    const remove = (uiLayer: UiLayer) => {
+        const indexToRemove = uiLayers.indexOf(uiLayer);
+        updateUiLayers(
+            update(uiLayers, {
+                $splice: [[indexToRemove, 1]],
+            })
+        );
+    };
+
+    const updateVisibility = (uiLayer: UiLayer) => {
+        const indexToUpdate = uiLayers.indexOf(uiLayer);
+        updateUiLayers(
+            update(uiLayers, {
+                [indexToUpdate]: {
+                    visible: {
+                        $apply: function (visible) {
+                            return !visible;
+                        },
+                    },
+                },
+            })
+        );
+    };
+
+    const move = useCallback(
+        (dragIndex: number, hoverIndex: number) => {
+            if (uiLayers.length === 1) return;
+            const dragCard = uiLayers[dragIndex];
+            updateUiLayers(
+                update(uiLayers, {
+                    $splice: [
+                        [dragIndex, 1],
+                        [hoverIndex, 0, dragCard],
+                    ],
+                })
+            );
+        },
+        [uiLayers]
+    );
 
     const [{ handlerId }, drop] = useDrop({
         accept: "layer",
@@ -137,19 +175,17 @@ export const Layer = ({
         >
             <Stack direction="row">
                 <Box>
-                    <Typography variant="body1">
-                        {uiLayer.config.name}
-                    </Typography>
+                    <Body1>{uiLayer.config.name}</Body1>
                 </Box>
-                <Stack direction="row" spacing={1} sx={{ marginLeft: "auto" }}>
-                    <InfoIcon onClick={exportLayerInfo} />
-                    <DeleteIcon onClick={removeUiLayer} />
+                <RightAlignedStack spacing={1}>
+                    <Icon icon={"info"} onClick={exportLayerInfo} />
+                    <Icon icon={"delete"} onClick={removeUiLayer} />
                     {uiLayer.visible ? (
-                        <VisibilityOffIcon onClick={changeVisibility} />
+                        <Icon icon={"invisible"} onClick={changeVisibility} />
                     ) : (
-                        <RemoveRedEyeIcon onClick={changeVisibility} />
+                        <Icon icon={"visible"} onClick={changeVisibility} />
                     )}
-                </Stack>
+                </RightAlignedStack>
             </Stack>
         </Box>
     );

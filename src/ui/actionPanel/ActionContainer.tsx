@@ -10,7 +10,6 @@ export const ActionContainer = (): JSX.Element => {
         <Box
             sx={{
                 position: "absolute",
-                backgroundColor: "blue",
                 width: "20%",
                 zIndex: 2,
             }}

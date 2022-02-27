@@ -1,10 +1,10 @@
 import React, { ChangeEvent, useState } from "react";
-import CodeIcon from "@mui/icons-material/Code";
 import { ActionConfig } from "../actionPanel/Action";
 import { useAction } from "../actionPanel/ActionContext";
 import { generateUiLayer, UiLayer } from "../uiLayer";
 import update from "immutability-helper";
-import { uiLayerResolver } from "../../types";
+import { uiLayerResolver } from "../../resolvers";
+import { Icon } from "../../components/Icon";
 
 export const AddLayerFromConfig = ({
     uiLayers,
@@ -89,5 +89,5 @@ export const AddLayerFromConfig = ({
     };
     useAction({ newConfig: config, displayAction: displayAction });
 
-    return <CodeIcon onClick={() => setDisplayAction(true)} />;
+    return <Icon icon={"code"} onClick={() => setDisplayAction(true)} />;
 };

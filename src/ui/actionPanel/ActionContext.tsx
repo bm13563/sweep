@@ -34,7 +34,6 @@ export const useAction = ({
     const { configState, setConfigState } = useContext(ActionState);
 
     useEffect(() => {
-        //FIXME: better equality check
         if (
             displayAction &&
             JSON.stringify(newConfig) !== JSON.stringify(configState)

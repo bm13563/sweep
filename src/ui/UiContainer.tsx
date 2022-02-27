@@ -14,6 +14,7 @@ import { baseVertex } from "../webgl/shaders/base.vertex";
 import { baseFragment } from "../webgl/shaders/base.fragment";
 import { generateUiLayer, getActiveUiLayer, UiLayer } from "./uiLayer";
 import { blueFragment } from "../webgl/shaders/blue.fragment";
+import { colors } from "../themes";
 
 const view = defaultView();
 
@@ -76,6 +77,7 @@ export const PageContainer = (): JSX.Element => {
                     item
                     xs={12}
                     sx={{
+                        ...colors.background.default,
                         height: "5%",
                     }}
                 >
@@ -87,6 +89,7 @@ export const PageContainer = (): JSX.Element => {
                 <Grid
                     item
                     sx={{
+                        ...colors.background.default,
                         height: "95%",
                         width: "15.625rem",
                     }}
@@ -99,6 +102,7 @@ export const PageContainer = (): JSX.Element => {
                 <Grid
                     item
                     sx={{
+                        boxSizing: "border-box",
                         height: "95%",
                         width: "calc(100% - 15.625rem)",
                         display: "flex",

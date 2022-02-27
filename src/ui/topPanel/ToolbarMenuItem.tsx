@@ -1,5 +1,7 @@
 import { Box, Typography } from "@mui/material";
 import React from "react";
+import { Body2 } from "../../components/Typography";
+import { colors, spacing } from "../../themes";
 
 export const ToolbarMenuItem = ({
     onClick,
@@ -15,11 +17,15 @@ export const ToolbarMenuItem = ({
             onClick={active ? onClick : undefined}
             sx={{
                 height: "100%",
-                padding: "0.2rem",
-                backgroundColor: active ? "pink" : "gray",
+                width: "100%",
+                padding: spacing.spacing2,
+                ...(active
+                    ? colors.secondaryComponent.default
+                    : colors.secondaryComponent.disabled),
+                ...(active && colors.secondaryComponent.hover),
             }}
         >
-            <Typography variant="caption">{name}</Typography>
+            <Body2>{name}</Body2>
         </Box>
     );
 };

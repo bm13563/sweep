@@ -1,5 +1,4 @@
 import React, { ChangeEvent, useState } from "react";
-import AddIcon from "@mui/icons-material/Add";
 import { ActionConfig } from "../actionPanel/Action";
 import { SelectChangeEvent } from "@mui/material";
 import { useAction } from "../actionPanel/ActionContext";
@@ -9,6 +8,7 @@ import { generateLayer } from "../mapPanel/layers/layer";
 import { generatePseudolayer } from "../mapPanel/layers/pseudolayer";
 import { generateUiLayer, UiLayer } from "../uiLayer";
 import update from "immutability-helper";
+import { Icon } from "../../components/Icon";
 
 export interface AddLayerProps {
     name: string;
@@ -112,5 +112,5 @@ export const AddLayer = ({
     };
     useAction({ newConfig: config, displayAction: displayAction });
 
-    return <AddIcon onClick={addAction} />;
+    return <Icon icon={"add"} onClick={addAction} />;
 };

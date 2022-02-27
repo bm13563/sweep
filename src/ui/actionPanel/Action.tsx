@@ -1,6 +1,5 @@
 import {
     Box,
-    Button,
     MenuItem,
     Select,
     SelectChangeEvent,
@@ -10,7 +9,10 @@ import {
     Typography,
 } from "@mui/material";
 import React, { ChangeEvent, useEffect } from "react";
-import CloseIcon from "@mui/icons-material/Close";
+import { Button } from "../../components/Button";
+import { Header1 } from "../../components/Typography";
+import { Icon } from "../../components/Icon";
+import { colors, utility, spacing } from "../../themes";
 
 export type ActionSection =
     | ActionSectionInput
@@ -83,13 +85,20 @@ export const Action = ({ config }: { config: ActionConfig }): JSX.Element => {
     }, []);
 
     return (
-        <Box>
+        <Box
+            sx={{
+                padding: spacing.spacing4,
+                ...colors.background.default,
+                ...utility.radius,
+            }}
+        >
             <Stack spacing={0}>
                 <Stack direction="row" sx={{ marginBottom: "1rem" }}>
-                    <Typography variant="h4">{config.title}</Typography>
-                    <CloseIcon
+                    <Header1>{config.title}</Header1>
+                    <Icon
+                        icon={"close"}
                         onClick={onCloseWithUnmount}
-                        sx={{ marginLeft: "auto" }}
+                        alignRight={true}
                     />
                 </Stack>
                 {config.errors && config.errors.length > 0 && (
@@ -116,9 +125,7 @@ export const Action = ({ config }: { config: ActionConfig }): JSX.Element => {
                     );
                 })}
                 {config.onSubmit && (
-                    <Button onClick={onSubmitWithUnmount} variant="contained">
-                        Apply
-                    </Button>
+                    <Button text={"Apply"} onClick={onSubmitWithUnmount} />
                 )}
             </Stack>
         </Box>

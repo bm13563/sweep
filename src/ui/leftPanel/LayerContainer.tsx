@@ -1,11 +1,12 @@
 import { Box, Container, Stack, Typography } from "@mui/material";
-import React, { useCallback, useContext, useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import { Layer } from "./Layer";
-import { getActiveUiLayer, UiLayer } from "../uiLayer";
-import update from "immutability-helper";
+import { UiLayer } from "../uiLayer";
 import { AddLayer } from "./AddLayer";
 import { AddLayerFromConfig } from "./AddLayerFromConfig";
 import { ActionState } from "../actionPanel/ActionContext";
+import { RightAlignedStack } from "../../components/RightAlignedStack";
+import { Header1 } from "../../components/Typography";
 
 export const LayerContainer = ({
     uiLayers,
@@ -14,48 +15,7 @@ export const LayerContainer = ({
     uiLayers: UiLayer[];
     updateUiLayers: (uiLayer: UiLayer[]) => void;
 }): JSX.Element => {
-    const { activeUiLayer } = getActiveUiLayer(uiLayers);
     const { configState } = useContext(ActionState);
-
-    const remove = (uiLayer: UiLayer) => {
-        const indexToRemove = uiLayers.indexOf(uiLayer);
-        updateUiLayers(
-            update(uiLayers, {
-                $splice: [[indexToRemove, 1]],
-            })
-        );
-    };
-
-    const updateVisibility = (uiLayer: UiLayer) => {
-        const indexToUpdate = uiLayers.indexOf(uiLayer);
-        updateUiLayers(
-            update(uiLayers, {
-                [indexToUpdate]: {
-                    visible: {
-                        $apply: function (visible) {
-                            return !visible;
-                        },
-                    },
-                },
-            })
-        );
-    };
-
-    const move = useCallback(
-        (dragIndex: number, hoverIndex: number) => {
-            if (uiLayers.length === 1) return;
-            const dragCard = uiLayers[dragIndex];
-            updateUiLayers(
-                update(uiLayers, {
-                    $splice: [
-                        [dragIndex, 1],
-                        [hoverIndex, 0, dragCard],
-                    ],
-                })
-            );
-        },
-        [uiLayers]
-    );
 
     useEffect(() => {
         updateUiLayers(uiLayers);
@@ -64,7 +24,6 @@ export const LayerContainer = ({
     return (
         <Container
             sx={{
-                backgroundColor: "red",
                 height: "100%",
                 textAlign: "left",
                 pointerEvents: configState ? "none" : "auto",
@@ -72,8 +31,8 @@ export const LayerContainer = ({
         >
             <Stack spacing={2} sx={{ height: "100%", width: "90%" }}>
                 <Stack direction="row" sx={{ alignItems: "center" }}>
-                    <Typography variant="h4">Layers</Typography>
-                    <Box sx={{ marginLeft: "auto" }}>
+                    <Header1>Layers</Header1>
+                    <RightAlignedStack spacing={1}>
                         <AddLayerFromConfig
                             uiLayers={uiLayers}
                             updateUiLayers={updateUiLayers}
@@ -82,18 +41,16 @@ export const LayerContainer = ({
                             uiLayers={uiLayers}
                             updateUiLayers={updateUiLayers}
                         />
-                    </Box>
+                    </RightAlignedStack>
                 </Stack>
                 {uiLayers.map((uiLayer, index) => {
                     return (
                         <Layer
                             key={uiLayer.uid}
                             uiLayer={uiLayer}
-                            activeUiLayer={activeUiLayer}
+                            uiLayers={uiLayers}
+                            updateUiLayers={updateUiLayers}
                             index={index}
-                            updateVisibility={updateVisibility}
-                            remove={remove}
-                            move={move}
                         />
                     );
                 })}

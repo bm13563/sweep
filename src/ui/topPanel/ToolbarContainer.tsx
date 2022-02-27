@@ -1,5 +1,6 @@
 import { Box, Stack } from "@mui/material";
 import React, { useContext } from "react";
+import { colors } from "../../themes";
 import { ActionState } from "../actionPanel/ActionContext";
 import { UiLayer } from "../uiLayer";
 import { UndoRedo } from "./file/UndoRedo";
@@ -18,7 +19,6 @@ export const ToolbarContainer = ({
     return (
         <Box
             sx={{
-                backgroundColor: "purple",
                 height: "100%",
                 paddingLeft: "15.625rem",
                 pointerEvents: configState ? "none" : "auto",

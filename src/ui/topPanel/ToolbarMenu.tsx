@@ -6,6 +6,7 @@ import React, {
     ReactNode,
     useContext,
 } from "react";
+import { Button } from "../../components/Button";
 import { ActionState } from "../actionPanel/ActionContext";
 
 export const ToolbarMenu = ({
@@ -42,7 +43,6 @@ export const ToolbarMenu = ({
     return (
         <Box
             sx={{
-                backgroundColor: "blue",
                 zIndex: 2,
                 height: "100%",
                 width: "7.5rem",
@@ -51,17 +51,7 @@ export const ToolbarMenu = ({
             }}
             ref={menuRef}
         >
-            <Box
-                sx={{
-                    height: "100%",
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "center",
-                }}
-                onClick={() => setOpen(!open)}
-            >
-                <Typography variant="body2">{name}</Typography>
-            </Box>
+            <Button text={name} onClick={() => setOpen(!open)} />
             <Stack
                 direction="column"
                 sx={{
