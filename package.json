@@ -19,6 +19,8 @@
     "@types/styled-components": "^5.1.19",
     "@types/uuid": "^8.3.3",
     "@typescript-eslint/eslint-plugin": "^5.8.0",
+    "@unocss/preset-uno": "^0.28.1",
+    "@vitejs/plugin-react": "^1.2.0",
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^4.0.0",
@@ -33,19 +35,20 @@
     "react-dnd": "^14.0.5",
     "react-dnd-html5-backend": "^14.1.0",
     "react-dom": "^17.0.2",
-    "react-scripts": "4.0.3",
     "styled-components": "^5.3.3",
     "twgl.js": "^4.21.2",
     "typescript": "^4.1.2",
+    "unocss": "^0.28.1",
     "uuid": "^8.3.2",
+    "vite": "^2.8.6",
+    "vite-tsconfig-paths": "^3.4.1",
     "web-vitals": "^1.0.1",
     "zod": "^3.12.0"
   },
   "scripts": {
-    "start": "react-app-rewired start",
-    "build": "react-app-rewired build",
-    "test": "react-app-rewired test",
-    "eject": "react-scripts eject"
+    "start": "vite",
+    "build": "tsc && vite build",
+    "serve": "vite preview"
   },
   "browserslist": {
     "production": [
