@@ -29,7 +29,7 @@ export const LayerContainer = ({
                 pointerEvents: configState ? "none" : "auto",
             }}
         >
-            <Stack spacing={2} sx={{ height: "100%", width: "90%" }}>
+            <Stack spacing={2} sx={{ height: "100%", width: "95%" }}>
                 <Stack direction="row" sx={{ alignItems: "center" }}>
                     <Header1>Layers</Header1>
                     <RightAlignedStack spacing={1}>
