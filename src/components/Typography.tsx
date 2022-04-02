@@ -1,31 +1,21 @@
-import { Typography } from "@mui/material";
 import React, { ReactNode } from "react";
-import { colors } from "../themes";
 
 export const Header1 = ({
     children,
 }: {
     children?: ReactNode;
 }): JSX.Element => {
-    return (
-        <Typography variant="h4" color={colors.text.default.color}>
-            {children}
-        </Typography>
-    );
+    return <div className="font-sans text-xl text-slate-900">{children}</div>;
 };
 
 export const Body1 = ({ children }: { children?: ReactNode }): JSX.Element => {
-    return (
-        <Typography variant="body1" color={colors.text.default.color}>
-            {children}
-        </Typography>
-    );
+    return <div className="font-sans text-base text-slate-900">{children}</div>;
 };
 
-export const Body2 = ({ children }: { children?: ReactNode }): JSX.Element => {
-    return (
-        <Typography variant="caption" color={colors.text.default.color}>
-            {children}
-        </Typography>
-    );
+export const Subscript1 = ({
+    children,
+}: {
+    children?: ReactNode;
+}): JSX.Element => {
+    return <div className="font-sans text-sm text-slate-900">{children}</div>;
 };

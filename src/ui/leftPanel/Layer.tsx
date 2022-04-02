@@ -1,4 +1,3 @@
-import { Box, Stack, Typography } from "@mui/material";
 import React, { ChangeEvent, useCallback, useRef, useState } from "react";
 import { useDrag, useDrop, DropTargetMonitor } from "react-dnd";
 import { XYCoord } from "dnd-core";
@@ -7,8 +6,8 @@ import { useAction } from "../actionPanel/ActionContext";
 import { ActionConfig } from "../actionPanel/Action";
 import update from "immutability-helper";
 import { Icon } from "../../components/Icon";
-import { RightAlignedStack } from "../../components/RightAlignedStack";
 import { Body1 } from "../../components/Typography";
+import { HorizontalStack } from "../../components/HorizontalStack";
 
 interface DragItem {
     index: number;
@@ -157,36 +156,37 @@ export const Layer = ({
     useAction({ newConfig: config, displayAction: displayAction });
 
     return (
-        <Box
+        <div
             ref={ref}
             data-handler-id={handlerId}
-            sx={{
-                height: "5%",
-                backgroundColor: "green",
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                opacity: isDragging ? 0 : 1,
-                outline:
-                    uiLayer.uid === activeUiLayer?.uid
-                        ? "2px solid yellow"
-                        : "none",
-            }}
+            className={`flex flex-col justify-center h-10 bg-emerald-300 cursor-pointer ${
+                isDragging && "opacity-0"
+            } ${
+                uiLayer.uid === activeUiLayer?.uid &&
+                "border-solid border-2 border-orange-300"
+            }`}
         >
-            <Stack direction="row">
-                <Box>
-                    <Body1>{uiLayer.config.name}</Body1>
-                </Box>
-                <RightAlignedStack spacing={1}>
-                    <Icon icon={"info"} onClick={exportLayerInfo} />
-                    <Icon icon={"delete"} onClick={removeUiLayer} />
+            <HorizontalStack spacing={5} className="justify-between">
+                <Body1>{uiLayer.config.name}</Body1>
+                <HorizontalStack spacing={2}>
+                    <Icon
+                        className="i-mdi-code-braces"
+                        onClick={exportLayerInfo}
+                    />
+                    <Icon className="i-mdi-delete" onClick={removeUiLayer} />
                     {uiLayer.visible ? (
-                        <Icon icon={"invisible"} onClick={changeVisibility} />
+                        <Icon
+                            className="i-mdi-eye-off"
+                            onClick={changeVisibility}
+                        />
                     ) : (
-                        <Icon icon={"visible"} onClick={changeVisibility} />
+                        <Icon
+                            className="i-mdi-eye"
+                            onClick={changeVisibility}
+                        />
                     )}
-                </RightAlignedStack>
-            </Stack>
-        </Box>
+                </HorizontalStack>
+            </HorizontalStack>
+        </div>
     );
 };

@@ -89,5 +89,10 @@ export const AddLayerFromConfig = ({
     };
     useAction({ newConfig: config, displayAction: displayAction });
 
-    return <Icon icon={"code"} onClick={() => setDisplayAction(true)} />;
+    return (
+        <Icon
+            className="i-mdi-code-braces"
+            onClick={() => setDisplayAction(true)}
+        />
+    );
 };

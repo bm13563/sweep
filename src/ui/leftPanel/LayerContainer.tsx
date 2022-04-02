@@ -1,12 +1,12 @@
-import { Box, Container, Stack, Typography } from "@mui/material";
-import React, { useContext, useEffect } from "react";
+import React, { ReactElement, useContext, useEffect } from "react";
 import { Layer } from "./Layer";
 import { UiLayer } from "../uiLayer";
 import { AddLayer } from "./AddLayer";
 import { AddLayerFromConfig } from "./AddLayerFromConfig";
 import { ActionState } from "../actionPanel/ActionContext";
-import { RightAlignedStack } from "../../components/RightAlignedStack";
 import { Header1 } from "../../components/Typography";
+import { VerticalStack } from "../../components/VerticalStack";
+import { HorizontalStack } from "../../components/HorizontalStack";
 
 export const LayerContainer = ({
     uiLayers,
@@ -22,17 +22,11 @@ export const LayerContainer = ({
     });
 
     return (
-        <Container
-            sx={{
-                height: "100%",
-                textAlign: "left",
-                pointerEvents: configState ? "none" : "auto",
-            }}
-        >
-            <Stack spacing={2} sx={{ height: "100%", width: "95%" }}>
-                <Stack direction="row" sx={{ alignItems: "center" }}>
+        <div className={`h-full w-5/6 ${configState && "pointer-events-none"}`}>
+            <VerticalStack spacing={5}>
+                <HorizontalStack spacing={5} className="justify-between">
                     <Header1>Layers</Header1>
-                    <RightAlignedStack spacing={1}>
+                    <HorizontalStack spacing={2}>
                         <AddLayerFromConfig
                             uiLayers={uiLayers}
                             updateUiLayers={updateUiLayers}
@@ -41,20 +35,22 @@ export const LayerContainer = ({
                             uiLayers={uiLayers}
                             updateUiLayers={updateUiLayers}
                         />
-                    </RightAlignedStack>
-                </Stack>
-                {uiLayers.map((uiLayer, index) => {
-                    return (
-                        <Layer
-                            key={uiLayer.uid}
-                            uiLayer={uiLayer}
-                            uiLayers={uiLayers}
-                            updateUiLayers={updateUiLayers}
-                            index={index}
-                        />
-                    );
-                })}
-            </Stack>
-        </Container>
+                    </HorizontalStack>
+                </HorizontalStack>
+                {
+                    uiLayers.map((uiLayer, index) => {
+                        return (
+                            <Layer
+                                key={uiLayer.uid}
+                                uiLayer={uiLayer}
+                                uiLayers={uiLayers}
+                                updateUiLayers={updateUiLayers}
+                                index={index}
+                            />
+                        );
+                    }) as unknown as ReactElement
+                }
+            </VerticalStack>
+        </div>
     );
 };

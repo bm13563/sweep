@@ -96,9 +96,8 @@ export const Action = ({ config }: { config: ActionConfig }): JSX.Element => {
                 <Stack direction="row" sx={{ marginBottom: "1rem" }}>
                     <Header1>{config.title}</Header1>
                     <Icon
-                        icon={"close"}
+                        className="i-mdi-close ml-auto"
                         onClick={onCloseWithUnmount}
-                        alignRight={true}
                     />
                 </Stack>
                 {config.errors && config.errors.length > 0 && (

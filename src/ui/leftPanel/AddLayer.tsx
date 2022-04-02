@@ -112,5 +112,5 @@ export const AddLayer = ({
     };
     useAction({ newConfig: config, displayAction: displayAction });
 
-    return <Icon icon={"add"} onClick={addAction} />;
+    return <Icon className="i-mdi-add" onClick={addAction} />;
 };

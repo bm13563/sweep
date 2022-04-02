@@ -1,7 +1,9 @@
 import { defineConfig } from "vite";
 import tsConfigPaths from "vite-tsconfig-paths";
 import Unocss from 'unocss/vite';
-import { presetAttributify, presetUno } from "unocss";
+import { presetUno } from "unocss";
+import presetIcons from '@unocss/preset-icons'
+
 
 export default defineConfig({
     build: {
@@ -9,10 +11,25 @@ export default defineConfig({
     },
     plugins: [
         tsConfigPaths(),
-            Unocss({
-                presets: [
-                    presetUno(),
-                ],
-            }),
-        ]
-    });
+        Unocss({
+            presets: [
+                presetIcons({}),
+                presetUno(),
+            ],
+            variants: [
+                (matcher) => {
+                    if (!matcher.startsWith('children:'))
+                        return matcher
+                    return {
+                        matcher: matcher.slice(9),
+                        selector: s => `${s} > *`,
+                    }
+                }
+            ],
+            // seem to need self-executing function
+            safelist: (() =>  [
+                ...[...Array(10).keys()].flatMap((c) => [`mt-${c}`, `ml-${c}`, `h-${c}`, `w-${c}`]),
+            ])(),
+        }),
+    ],
+});

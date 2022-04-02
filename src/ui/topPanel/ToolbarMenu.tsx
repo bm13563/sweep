@@ -1,12 +1,6 @@
-import { Box, Stack, Typography } from "@mui/material";
-import React, {
-    useState,
-    useEffect,
-    useRef,
-    ReactNode,
-    useContext,
-} from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import { Button } from "../../components/Button";
+import { VerticalStack } from "../../components/VerticalStack";
 import { ActionState } from "../actionPanel/ActionContext";
 
 export const ToolbarMenu = ({
@@ -14,7 +8,7 @@ export const ToolbarMenu = ({
     children,
 }: {
     name: string;
-    children?: ReactNode | ReactNode[];
+    children?: JSX.Element | JSX.Element[];
 }): JSX.Element => {
     const menuRef = useRef<HTMLDivElement>(null);
     const { configState } = useContext(ActionState);
@@ -41,26 +35,11 @@ export const ToolbarMenu = ({
     }, [menuRef, configState]);
 
     return (
-        <Box
-            sx={{
-                zIndex: 2,
-                height: "100%",
-                width: "7.5rem",
-                marginRight: "2rem",
-                textAlign: "center",
-            }}
-            ref={menuRef}
-        >
+        <div ref={menuRef} className="mr-10 z-2 text-center">
             <Button text={name} onClick={() => setOpen(!open)} />
-            <Stack
-                direction="column"
-                sx={{
-                    display: open ? "" : "none",
-                }}
-                onClick={() => setOpen(false)}
-            >
+            <VerticalStack className={`${!open && "invisible"}`} spacing={2}>
                 {children}
-            </Stack>
-        </Box>
+            </VerticalStack>
+        </div>
     );
 };

@@ -1,7 +1,5 @@
-import { Box, Typography } from "@mui/material";
 import React from "react";
-import { Body2 } from "../../components/Typography";
-import { colors, spacing } from "../../themes";
+import { Subscript1 } from "../../components/Typography";
 
 export const ToolbarMenuItem = ({
     onClick,
@@ -13,19 +11,13 @@ export const ToolbarMenuItem = ({
     active: boolean;
 }): JSX.Element => {
     return (
-        <Box
-            onClick={active ? onClick : undefined}
-            sx={{
-                height: "100%",
-                width: "100%",
-                padding: spacing.spacing2,
-                ...(active
-                    ? colors.secondaryComponent.default
-                    : colors.secondaryComponent.disabled),
-                ...(active && colors.secondaryComponent.hover),
-            }}
+        <div
+            className={`h-full w-full bg-slate-50 hover:bg-slate:400 p-1 ${
+                !active && "pointer-events-none bg-slate-500"
+            }`}
+            onClick={onClick}
         >
-            <Body2>{name}</Body2>
-        </Box>
+            <Subscript1>{name}</Subscript1>
+        </div>
     );
 };
