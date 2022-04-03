@@ -31,8 +31,8 @@ export const AddLayerFromConfig = ({
         );
     };
 
-    const updateLayerName = (event: ChangeEvent<HTMLInputElement>): void => {
-        setLayerName(event.target.value);
+    const updateLayerName = (value: string): void => {
+        setLayerName(value);
     };
 
     const onSubmit = () => {
@@ -51,17 +51,15 @@ export const AddLayerFromConfig = ({
         setValidationError("");
     };
 
-    const updateJson = (event: ChangeEvent<HTMLInputElement>) => {
-        setJson(event.target.value);
+    const updateJson = (value: string) => {
+        setJson(value);
         try {
-            const { success } = uiLayerResolver.safeParse(
-                JSON.parse(event.target.value)
-            );
+            const { success } = uiLayerResolver.safeParse(JSON.parse(value));
             success
                 ? setValidationError("")
                 : setValidationError("JSON is not a valid pseudolayer");
         } catch (e) {
-            event.target.value === ""
+            value === ""
                 ? setValidationError("")
                 : setValidationError("Please submit valid JSON");
         }

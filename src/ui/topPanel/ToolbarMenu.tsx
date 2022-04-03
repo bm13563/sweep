@@ -1,6 +1,7 @@
-import React, { useState, useEffect, useRef, useContext } from "react";
+import React, { useState, useRef, useContext } from "react";
 import { Button } from "../../components/Button";
 import { VerticalStack } from "../../components/VerticalStack";
+import { HandleClickOutside } from "../../hooks/HandleClickOutside";
 import { ActionState } from "../actionPanel/ActionContext";
 
 export const ToolbarMenu = ({
@@ -15,24 +16,15 @@ export const ToolbarMenu = ({
 
     const [open, setOpen] = useState(false);
 
-    // FIXME: can this be a hook
-    useEffect(() => {
-        const handleClickOutside = (event: MouseEvent) => {
-            if (configState) return;
+    const clickOutsideCallback = () => {
+        setOpen(false);
+    };
 
-            if (
-                menuRef.current &&
-                !menuRef.current.contains(event.target as Node)
-            ) {
-                setOpen(false);
-            }
-        };
+    const exceptionCallback = () => {
+        return !!configState;
+    };
 
-        document.addEventListener("mousedown", handleClickOutside);
-        return () => {
-            document.removeEventListener("mousedown", handleClickOutside);
-        };
-    }, [menuRef, configState]);
+    HandleClickOutside(menuRef, clickOutsideCallback, exceptionCallback);
 
     return (
         <div ref={menuRef} className="mr-10 z-2 text-center">

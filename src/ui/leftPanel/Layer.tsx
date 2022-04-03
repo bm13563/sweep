@@ -137,8 +137,8 @@ export const Layer = ({
         setDisplayAction(false);
     };
 
-    const updateJson = (event: ChangeEvent<HTMLInputElement>) => {
-        setJson(event.target.value);
+    const updateJson = (value: string) => {
+        setJson(value);
     };
 
     const config: ActionConfig = {
@@ -162,8 +162,9 @@ export const Layer = ({
             className={`flex flex-col justify-center h-10 bg-emerald-300 cursor-pointer ${
                 isDragging && "opacity-0"
             } ${
-                uiLayer.uid === activeUiLayer?.uid &&
-                "border-solid border-2 border-orange-300"
+                uiLayer.uid === activeUiLayer?.uid
+                    ? "border border-orange-300"
+                    : "border"
             }`}
         >
             <HorizontalStack spacing={5} className="justify-between">

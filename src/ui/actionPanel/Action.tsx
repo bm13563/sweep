@@ -1,18 +1,13 @@
-import {
-    Box,
-    MenuItem,
-    Select,
-    SelectChangeEvent,
-    Slider,
-    Stack,
-    TextField,
-    Typography,
-} from "@mui/material";
-import React, { ChangeEvent, useEffect } from "react";
+import { Box, Slider } from "@mui/material";
+import React, { useEffect } from "react";
 import { Button } from "../../components/Button";
-import { Header1 } from "../../components/Typography";
+import { Body1, Header1 } from "../../components/Typography";
 import { Icon } from "../../components/Icon";
-import { colors, utility, spacing } from "../../themes";
+import { VerticalStack } from "../../components/VerticalStack";
+import { HorizontalStack } from "../../components/HorizontalStack";
+import { ErrorNotification } from "../../components/ErrorNotification";
+import { TextField2 } from "../../components/TextField";
+import { Dropdown2 } from "../../components/Dropdown";
 
 export type ActionSection =
     | ActionSectionInput
@@ -28,13 +23,13 @@ interface ActionSectionBase {
 
 interface ActionSectionInput extends ActionSectionBase {
     type: "input";
-    onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
+    onChange?: (value: string) => void;
 }
 
 interface ActionSectionDropdown extends ActionSectionBase {
     type: "dropdown";
     items: string[];
-    onChange?: (event: SelectChangeEvent<string>) => void;
+    onChange: (value: string) => void;
 }
 
 interface ActionSectionSlider extends ActionSectionBase {
@@ -47,7 +42,7 @@ interface ActionSectionSlider extends ActionSectionBase {
 
 interface ActionSectionTextField extends ActionSectionBase {
     type: "textField";
-    onChange: (event: ChangeEvent<HTMLInputElement>) => void;
+    onChange: (value: string) => void;
 }
 
 export interface ActionConfig {
@@ -85,49 +80,39 @@ export const Action = ({ config }: { config: ActionConfig }): JSX.Element => {
     }, []);
 
     return (
-        <Box
-            sx={{
-                padding: spacing.spacing4,
-                ...colors.background.default,
-                ...utility.radius,
-            }}
-        >
-            <Stack spacing={0}>
-                <Stack direction="row" sx={{ marginBottom: "1rem" }}>
+        <div className="p-4 bg-emerald-400 border">
+            <VerticalStack>
+                <HorizontalStack className="justify-between mb-1">
                     <Header1>{config.title}</Header1>
                     <Icon
-                        className="i-mdi-close ml-auto"
+                        className="i-mdi-close"
                         onClick={onCloseWithUnmount}
                     />
-                </Stack>
-                {config.errors && config.errors.length > 0 && (
-                    <Box
-                        sx={{
-                            marginBottom: "1rem",
-                            color: "red",
-                        }}
-                    >
-                        <Typography>{config.errors.join(",")}</Typography>
-                    </Box>
-                )}
-                {config.sections.map((section, index) => {
-                    return (
-                        <Box
-                            key={index}
-                            sx={{
-                                marginBottom: "1rem",
-                            }}
-                        >
-                            <Typography>{section.title}</Typography>
-                            {actionParser(section)}
-                        </Box>
-                    );
-                })}
-                {config.onSubmit && (
-                    <Button text={"Apply"} onClick={onSubmitWithUnmount} />
-                )}
-            </Stack>
-        </Box>
+                </HorizontalStack>
+                <>
+                    {config.errors && config.errors.length > 0 && (
+                        <ErrorNotification
+                            errorText={config.errors.join(",")}
+                        />
+                    )}
+                </>
+                <>
+                    {config.sections.map((section, index) => {
+                        return (
+                            <div key={index} className="mb-1">
+                                <Body1>{section.title}</Body1>
+                                {actionParser(section)}
+                            </div>
+                        );
+                    })}
+                </>
+                <>
+                    {config.onSubmit && (
+                        <Button text={"Apply"} onClick={onSubmitWithUnmount} />
+                    )}
+                </>
+            </VerticalStack>
+        </div>
     );
 };
 
@@ -150,36 +135,12 @@ const actionParser = (actionSection: ActionSection) => {
 
 const renderInput = (config: ActionSectionInput) => {
     return (
-        <Box>
-            <TextField
-                fullWidth
-                defaultValue={config.value}
-                onChange={config.onChange}
-            >
-                {config.customChild}
-            </TextField>
-        </Box>
+        <TextField2 defaultValue={config.value} onChange={config.onChange} />
     );
 };
 
 const renderDropdown = (config: ActionSectionDropdown): JSX.Element => {
-    return (
-        <Box>
-            <Select
-                fullWidth
-                defaultValue={config.value}
-                onChange={config.onChange}
-            >
-                {config.items.map((item) => {
-                    return (
-                        <MenuItem key={item} value={item}>
-                            {item}
-                        </MenuItem>
-                    );
-                })}
-            </Select>
-        </Box>
-    );
+    return <Dropdown2 options={config.items} onChange={config.onChange} />;
 };
 
 const renderSlider = (config: ActionSectionSlider): JSX.Element => {
@@ -207,15 +168,10 @@ const renderSlider = (config: ActionSectionSlider): JSX.Element => {
 
 const renderTextField = (config: ActionSectionTextField): JSX.Element => {
     return (
-        <Box>
-            <TextField
-                fullWidth
-                id="outlined-multiline-static"
-                multiline
-                rows={4}
-                value={config.value}
-                onChange={config.onChange}
-            />
-        </Box>
+        <TextField2
+            lines={4}
+            defaultValue={config.value}
+            onChange={config.onChange}
+        />
     );
 };

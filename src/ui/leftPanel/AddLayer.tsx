@@ -46,16 +46,16 @@ export const AddLayer = ({
         );
     };
 
-    const updateName = (event: ChangeEvent<HTMLInputElement>): void => {
-        setName(event.target.value);
+    const updateLayerType = (value: string): void => {
+        setType(value);
     };
 
-    const updateLayerType = (event: SelectChangeEvent<string>): void => {
-        setType(event.target.value);
+    const updateName = (value: string): void => {
+        setName(value);
     };
 
-    const updateUrl = (event: ChangeEvent<HTMLInputElement>): void => {
-        setUrl(event.target.value);
+    const updateUrl = (value: string): void => {
+        setUrl(value);
     };
 
     const onSubmit = () => {
