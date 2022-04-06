@@ -1,4 +1,5 @@
 import React, { Children } from "react";
+import { StackBase } from "./StackBase";
 
 export const HorizontalStack = ({
     spacing = 0,
@@ -10,18 +11,12 @@ export const HorizontalStack = ({
     children?: JSX.Element | JSX.Element[];
 }): JSX.Element => {
     return (
-        <div className={`flex flex-row items-center ${className}`}>
-            {Children.map(children, (child, index) => {
-                return (
-                    <div
-                        className={`ml-${
-                            index == 0 ? "0" : String(spacing)
-                        } children:box-border`}
-                    >
-                        {child}
-                    </div>
-                );
-            })}
-        </div>
+        <StackBase
+            className={`children:ml-${String(
+                spacing
+            )} children:first:ml-0 flex flex-row items-center ${className}`}
+        >
+            {children}
+        </StackBase>
     );
 };

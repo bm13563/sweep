@@ -27,17 +27,32 @@ export const ActionStateProvider = ({
 export const useAction = ({
     newConfig,
     displayAction,
+    dependencies = [],
 }: {
     newConfig: ActionConfig | undefined;
     displayAction: boolean;
+    /* eslint-disable  @typescript-eslint/no-explicit-any */
+    dependencies?: any[];
 }): void => {
     const { configState, setConfigState } = useContext(ActionState);
+
+    /* eslint-disable  @typescript-eslint/no-explicit-any */
+    const [dependencyState, setDependencyState] = useState<any[]>([]);
+
+    const dependenciesHaveChanged = () => {
+        return JSON.stringify(dependencies) !== JSON.stringify(dependencyState);
+    };
+
+    const configHasChanged = () => {
+        return JSON.stringify(newConfig) !== JSON.stringify(configState);
+    };
 
     useEffect(() => {
         if (
             displayAction &&
-            JSON.stringify(newConfig) !== JSON.stringify(configState)
+            (dependenciesHaveChanged() || configHasChanged())
         ) {
+            dependencies && setDependencyState(dependencies);
             setConfigState && setConfigState(newConfig);
         }
     });

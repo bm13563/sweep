@@ -20,22 +20,3 @@ export const generateUiLayer = (config: UiLayerConfig): UiLayer => {
         config: config,
     };
 };
-
-export const getActiveUiLayer = (
-    uiLayers: UiLayer[]
-): { activeUiLayer: UiLayer | undefined; activeIndex: number | undefined } => {
-    const activeLayer = uiLayers.find((layer) => {
-        return layer.visible;
-    });
-    if (activeLayer) {
-        return {
-            activeUiLayer: activeLayer,
-            activeIndex: uiLayers.indexOf(activeLayer),
-        };
-    } else {
-        return {
-            activeUiLayer: undefined,
-            activeIndex: undefined,
-        };
-    }
-};

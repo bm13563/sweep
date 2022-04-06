@@ -1,13 +1,14 @@
 import React, { ChangeEvent, useCallback, useRef, useState } from "react";
 import { useDrag, useDrop, DropTargetMonitor } from "react-dnd";
 import { XYCoord } from "dnd-core";
-import { getActiveUiLayer, UiLayer } from "../uiLayer";
+import { UiLayer } from "../uiLayer";
 import { useAction } from "../actionPanel/ActionContext";
 import { ActionConfig } from "../actionPanel/Action";
 import update from "immutability-helper";
 import { Icon } from "../../components/Icon";
 import { Body1 } from "../../components/Typography";
 import { HorizontalStack } from "../../components/HorizontalStack";
+import { GetActiveUiLayer } from "../../hooks/GetActiveUiLayer";
 
 interface DragItem {
     index: number;
@@ -29,7 +30,7 @@ export const Layer = ({
     const ref = useRef<HTMLDivElement>(null);
     const layerId = uiLayer.uid;
 
-    const { activeUiLayer } = getActiveUiLayer(uiLayers);
+    const { activeUiLayer } = GetActiveUiLayer(uiLayers);
 
     const [displayAction, setDisplayAction] = useState(false);
     const [json, setJson] = useState("");
@@ -148,7 +149,7 @@ export const Layer = ({
             {
                 type: "textField",
                 title: "Pseudolayer",
-                value: json,
+                defaultValue: json,
                 onChange: updateJson,
             },
         ],

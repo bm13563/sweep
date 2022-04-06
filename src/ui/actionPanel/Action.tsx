@@ -1,4 +1,3 @@
-import { Box, Slider } from "@mui/material";
 import React, { useEffect } from "react";
 import { Button } from "../../components/Button";
 import { Body1, Header1 } from "../../components/Typography";
@@ -8,41 +7,47 @@ import { HorizontalStack } from "../../components/HorizontalStack";
 import { ErrorNotification } from "../../components/ErrorNotification";
 import { TextField2 } from "../../components/TextField";
 import { Dropdown2 } from "../../components/Dropdown";
+import { Slider2 } from "../../components/Slider";
+
+// HOW DO WE STOP THE APPLY BUTTON BEING CLICKED WHEN THE APPROPRIATE DATA IS NOT YET IN THE FIELDS?
 
 export type ActionSection =
     | ActionSectionInput
+    | ActionSectionTextField
     | ActionSectionDropdown
-    | ActionSectionSlider
-    | ActionSectionTextField;
+    | ActionSectionSlider;
 
 interface ActionSectionBase {
     title: string;
-    value?: string;
     customChild?: JSX.Element;
 }
 
 interface ActionSectionInput extends ActionSectionBase {
     type: "input";
+    defaultValue?: string;
+    onChange?: (value: string) => void;
+}
+
+interface ActionSectionTextField extends ActionSectionBase {
+    type: "textField";
+    defaultValue?: string;
     onChange?: (value: string) => void;
 }
 
 interface ActionSectionDropdown extends ActionSectionBase {
     type: "dropdown";
     items: string[];
+    defaultValue?: string;
     onChange: (value: string) => void;
 }
 
 interface ActionSectionSlider extends ActionSectionBase {
     type: "slider";
-    step: number;
+    step?: number;
     min?: number;
     max?: number;
-    onChange?: (value: number) => void;
-}
-
-interface ActionSectionTextField extends ActionSectionBase {
-    type: "textField";
-    onChange: (value: string) => void;
+    defaultValue?: number;
+    onChange?: (value: string) => void;
 }
 
 export interface ActionConfig {
@@ -135,7 +140,20 @@ const actionParser = (actionSection: ActionSection) => {
 
 const renderInput = (config: ActionSectionInput) => {
     return (
-        <TextField2 defaultValue={config.value} onChange={config.onChange} />
+        <TextField2
+            defaultValue={config.defaultValue}
+            onChange={config.onChange}
+        />
+    );
+};
+
+const renderTextField = (config: ActionSectionTextField): JSX.Element => {
+    return (
+        <TextField2
+            lines={6}
+            defaultValue={config.defaultValue}
+            onChange={config.onChange}
+        />
     );
 };
 
@@ -144,33 +162,12 @@ const renderDropdown = (config: ActionSectionDropdown): JSX.Element => {
 };
 
 const renderSlider = (config: ActionSectionSlider): JSX.Element => {
-    const terseOnChange = (
-        event: Event,
-        value: number | number[],
-        activeThumb: number
-    ) => {
-        config.onChange && typeof value === "number" && config.onChange(value);
-    };
     return (
-        <Box>
-            <Slider
-                key={config.title}
-                step={config.step}
-                min={config.min}
-                max={config.max}
-                value={config.value ? parseFloat(config.value) : undefined}
-                valueLabelDisplay="auto"
-                onChange={terseOnChange}
-            />
-        </Box>
-    );
-};
-
-const renderTextField = (config: ActionSectionTextField): JSX.Element => {
-    return (
-        <TextField2
-            lines={4}
-            defaultValue={config.value}
+        <Slider2
+            step={config.step}
+            min={config.min}
+            max={config.max}
+            defaultValue={config.defaultValue}
             onChange={config.onChange}
         />
     );

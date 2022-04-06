@@ -18,17 +18,28 @@ export default defineConfig({
             ],
             variants: [
                 (matcher) => {
-                    if (!matcher.startsWith('children:'))
+                    if (!matcher.startsWith("children:"))
                         return matcher
                     return {
-                        matcher: matcher.slice(9),
-                        selector: s => `${s} > *`,
+                        matcher: matcher.slice(12),
+                        selector: s => `${s}>*`,
+                    }
+                },
+                (matcher) => {
+                    // nth-child:1:blah-blah
+                    if (!matcher.startsWith("nth:")) {
+                        return matcher
+                    }
+                    const split = matcher.split(":")
+                    return {
+                        matcher: split[split.length - 1],
+                        selector: s => `${s}>*:nth-child(${split[1]})`
                     }
                 }
             ],
             // seem to need self-executing function
             safelist: (() =>  [
-                ...[...Array(10).keys()].flatMap((c) => [`mt-${c}`, `ml-${c}`, `h-${c}`, `w-${c}`]),
+                ...[...Array(10).keys()].flatMap((c) => [`children:mt-${c}`, `children:ml-${c}`, `h-${c}`, `w-${c}`]),
             ])(),
             shortcuts: {
                 border: "rounded border-solid border-1 border-slate-900 py-2 px-1",

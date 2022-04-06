@@ -74,13 +74,13 @@ export const AddLayerFromConfig = ({
             {
                 type: "input",
                 title: "Name",
-                value: layerName,
+                defaultValue: layerName,
                 onChange: updateLayerName,
             },
             {
                 type: "textField",
                 title: "Pseudolayer",
-                value: json,
+                defaultValue: json,
                 onChange: updateJson,
             },
         ],

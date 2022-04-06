@@ -12,9 +12,10 @@ import { generateLayer } from "./mapPanel/layers/layer";
 import { generatePseudolayer } from "./mapPanel/layers/pseudolayer";
 import { baseVertex } from "../webgl/shaders/base.vertex";
 import { baseFragment } from "../webgl/shaders/base.fragment";
-import { generateUiLayer, getActiveUiLayer, UiLayer } from "./uiLayer";
+import { generateUiLayer, UiLayer } from "./uiLayer";
 import { blueFragment } from "../webgl/shaders/blue.fragment";
 import { colors } from "../themes";
+import { GetActiveUiLayer } from "../hooks/GetActiveUiLayer";
 
 const view = defaultView();
 
@@ -52,7 +53,7 @@ export const PageContainer = (): JSX.Element => {
         newUiLayer,
         newUiLayer2,
     ]);
-    const { activeUiLayer } = getActiveUiLayer(uiLayers);
+    const { activeUiLayer } = GetActiveUiLayer(uiLayers);
 
     renderLoop.renderPseudolayer(
         activeUiLayer?.updatedPseudolayer || activeUiLayer?.config.pseudolayer

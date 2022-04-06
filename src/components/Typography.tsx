@@ -19,3 +19,11 @@ export const Subscript1 = ({
 }): JSX.Element => {
     return <div className="font-sans text-sm text-slate-900">{children}</div>;
 };
+
+export const Subscript2 = ({
+    children,
+}: {
+    children?: ReactNode;
+}): JSX.Element => {
+    return <div className="font-sans text-xs text-slate-900">{children}</div>;
+};

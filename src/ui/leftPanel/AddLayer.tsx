@@ -1,6 +1,5 @@
-import React, { ChangeEvent, useState } from "react";
+import React, { useState } from "react";
 import { ActionConfig } from "../actionPanel/Action";
-import { SelectChangeEvent } from "@mui/material";
 import { useAction } from "../actionPanel/ActionContext";
 import { baseFragment } from "../../webgl/shaders/base.fragment";
 import { baseVertex } from "../../webgl/shaders/base.vertex";
@@ -92,20 +91,20 @@ export const AddLayer = ({
             {
                 type: "input",
                 title: "Name",
-                value: name,
+                defaultValue: name,
                 onChange: updateName,
             },
             {
                 type: "dropdown",
                 title: "Layer type",
                 items: ["XYZ"],
-                value: type,
+                defaultValue: type,
                 onChange: updateLayerType,
             },
             {
                 type: "input",
                 title: "URL",
-                value: url,
+                defaultValue: url,
                 onChange: updateUrl,
             },
         ],

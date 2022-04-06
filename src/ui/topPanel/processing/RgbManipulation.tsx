@@ -1,13 +1,14 @@
-import React, { useCallback, useState } from "react";
+import React, { useState } from "react";
 import { ActionConfig } from "../../actionPanel/Action";
 import { useAction } from "../../actionPanel/ActionContext";
-import { getActiveUiLayer, UiLayer } from "../../uiLayer";
+import { UiLayer } from "../../uiLayer";
 import { ToolbarMenuItem } from "../ToolbarMenuItem";
 import update from "immutability-helper";
 import { generatePseudolayer } from "../../mapPanel/layers/pseudolayer";
 import { baseVertex } from "../../../webgl/shaders/base.vertex";
 import { adjustColorsFragment } from "../../../webgl/shaders/adjustColors.fragment";
 import throttle from "lodash.throttle";
+import { GetActiveUiLayer } from "../../../hooks/GetActiveUiLayer";
 
 const defaultValues = {
     red: "1",
@@ -32,41 +33,38 @@ export const RgbManipulation = ({
     const [sliderValues, setSliderValues] =
         useState<ColourProps>(defaultValues);
 
-    const { activeUiLayer, activeIndex } = getActiveUiLayer(uiLayers);
+    const { activeUiLayer, activeIndex } = GetActiveUiLayer(uiLayers);
 
-    const setRGBValues = useCallback(
-        throttle((colours: ColourProps) => {
-            if (!(activeUiLayer && activeIndex !== undefined)) return;
+    const setRGBValues = throttle((colours: ColourProps) => {
+        if (!(activeUiLayer && activeIndex !== undefined)) return;
 
-            const pseudolayer = generatePseudolayer({
-                inputs: {
-                    u_image: activeUiLayer.config.pseudolayer,
-                },
-                variables: {
-                    r_colour: colours.red,
-                    g_colour: colours.green,
-                    b_colour: colours.blue,
-                },
-                shaders: {
-                    vertexShader: baseVertex,
-                    fragmentShader: adjustColorsFragment,
-                },
-            });
+        const pseudolayer = generatePseudolayer({
+            inputs: {
+                u_image: activeUiLayer.config.pseudolayer,
+            },
+            variables: {
+                r_colour: colours.red,
+                g_colour: colours.green,
+                b_colour: colours.blue,
+            },
+            shaders: {
+                vertexShader: baseVertex,
+                fragmentShader: adjustColorsFragment,
+            },
+        });
 
-            updateUiLayers(
-                update(uiLayers, {
-                    [activeIndex]: {
-                        updatedPseudolayer: {
-                            $set: pseudolayer,
-                        },
+        updateUiLayers(
+            update(uiLayers, {
+                [activeIndex]: {
+                    updatedPseudolayer: {
+                        $set: pseudolayer,
                     },
-                })
-            );
+                },
+            })
+        );
 
-            setSliderState(colours);
-        }, 100),
-        [activeUiLayer]
-    );
+        setSliderState(colours);
+    }, 100);
 
     const setSliderState = (colours: ColourProps) => {
         if (!activeUiLayer) return;
@@ -137,33 +135,33 @@ export const RgbManipulation = ({
         setDisplayAction(false);
     };
 
-    const onRedChange = (value: number) => {
+    const onRedChange = (value: string) => {
         if (!activeUiLayer) return;
 
         setRGBValues({
-            red: `${value}`,
+            red: value,
             green: sliderValues.green,
             blue: sliderValues.blue,
         });
     };
 
-    const onGreenChange = (value: number) => {
+    const onGreenChange = (value: string) => {
         if (!activeUiLayer) return;
 
         setRGBValues({
             red: sliderValues.red,
-            green: `${value}`,
+            green: value,
             blue: sliderValues.blue,
         });
     };
 
-    const onBlueChange = (value: number) => {
+    const onBlueChange = (value: string) => {
         if (!activeUiLayer) return;
 
         setRGBValues({
             red: sliderValues.red,
             green: sliderValues.green,
-            blue: `${value}`,
+            blue: value,
         });
     };
 
@@ -176,7 +174,7 @@ export const RgbManipulation = ({
                 title: "red",
                 type: "slider",
                 step: 0.01,
-                value: sliderValues.red,
+                defaultValue: 1,
                 min: 0,
                 max: 5,
                 onChange: onRedChange,
@@ -185,7 +183,7 @@ export const RgbManipulation = ({
                 title: "green",
                 type: "slider",
                 step: 0.01,
-                value: sliderValues.green,
+                defaultValue: 1,
                 min: 0,
                 max: 5,
                 onChange: onGreenChange,
@@ -194,7 +192,7 @@ export const RgbManipulation = ({
                 title: "blue",
                 type: "slider",
                 step: 0.01,
-                value: sliderValues.blue,
+                defaultValue: 1,
                 min: 0,
                 max: 5,
                 onChange: onBlueChange,
@@ -202,7 +200,11 @@ export const RgbManipulation = ({
         ],
     };
 
-    useAction({ newConfig: config, displayAction: displayAction });
+    useAction({
+        newConfig: config,
+        displayAction: displayAction,
+        dependencies: [activeUiLayer],
+    });
 
     return (
         <ToolbarMenuItem
