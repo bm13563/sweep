@@ -1,4 +1,4 @@
-import React, { Children } from "react";
+import React from "react";
 import { StackBase } from "./StackBase";
 
 export const VerticalStack = ({

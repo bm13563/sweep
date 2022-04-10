@@ -4,7 +4,7 @@ import { HorizontalStack } from "./HorizontalStack";
 import { Body1 } from "./Typography";
 import { VerticalStack } from "./VerticalStack";
 
-export const Dropdown2 = ({
+export const Dropdown = ({
     options,
     onChange,
     defaultValue = "",

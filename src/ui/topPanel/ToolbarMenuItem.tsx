@@ -12,8 +12,8 @@ export const ToolbarMenuItem = ({
 }): JSX.Element => {
     return (
         <div
-            className={`h-full w-full bg-slate-50 hover:bg-slate:400 p-1 ${
-                !active && "pointer-events-none bg-slate-500"
+            className={`h-full w-full p-1 ${
+                !active ? "disabled" : "bg-slate-50 hover:bg-slate:400"
             }`}
             onClick={onClick}
         >

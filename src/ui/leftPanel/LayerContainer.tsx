@@ -1,12 +1,12 @@
-import React, { ReactElement, useContext, useEffect } from "react";
+import React, { ReactElement, useEffect } from "react";
 import { Layer } from "./Layer";
 import { UiLayer } from "../uiLayer";
 import { AddLayer } from "./AddLayer";
 import { AddLayerFromConfig } from "./AddLayerFromConfig";
-import { ActionState } from "../actionPanel/ActionContext";
 import { Header1 } from "../../components/Typography";
 import { VerticalStack } from "../../components/VerticalStack";
 import { HorizontalStack } from "../../components/HorizontalStack";
+import { HandleUi } from "../../hooks/HandleUi";
 
 export const LayerContainer = ({
     uiLayers,
@@ -15,14 +15,16 @@ export const LayerContainer = ({
     uiLayers: UiLayer[];
     updateUiLayers: (uiLayer: UiLayer[]) => void;
 }): JSX.Element => {
-    const { configState } = useContext(ActionState);
+    const isDisplayed = HandleUi((state) => state.isDisplayed);
 
     useEffect(() => {
         updateUiLayers(uiLayers);
     });
 
     return (
-        <div className={`h-full w-5/6 ${configState && "pointer-events-none"}`}>
+        <div
+            className={`h-full w-5/6 ${isDisplayed() && "pointer-events-none"}`}
+        >
             <VerticalStack spacing={5}>
                 <HorizontalStack spacing={5} className="justify-between">
                     <Header1>Layers</Header1>

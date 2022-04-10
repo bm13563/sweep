@@ -1,10 +1,17 @@
-import React, { ChangeEvent, useState } from "react";
-import { ActionConfig } from "../actionPanel/Action";
-import { useAction } from "../actionPanel/ActionContext";
+import React, { useEffect, useState } from "react";
 import { generateUiLayer, UiLayer } from "../uiLayer";
 import update from "immutability-helper";
 import { uiLayerResolver } from "../../resolvers";
 import { Icon } from "../../components/Icon";
+import { HorizontalStack } from "../../components/HorizontalStack";
+import { PrimaryButton } from "../../components/PrimaryButton";
+import { TextField } from "../../components/TextField";
+import { Header1, Body1 } from "../../components/Typography";
+import { VerticalStack } from "../../components/VerticalStack";
+import { HandleUi } from "../../hooks/HandleUi";
+import shallow from "zustand/shallow";
+import { ErrorNotification } from "../../components/ErrorNotification";
+import { SecondaryButton } from "../../components/SecondaryButton";
 
 export const AddLayerFromConfig = ({
     uiLayers,
@@ -13,10 +20,29 @@ export const AddLayerFromConfig = ({
     uiLayers: UiLayer[];
     updateUiLayers: (uiLayer: UiLayer[]) => void;
 }): JSX.Element => {
-    const [displayAction, setDisplayAction] = useState(false);
-    const [layerName, setLayerName] = useState("");
+    const [name, setName] = useState("");
     const [json, setJson] = useState("");
     const [validationError, setValidationError] = useState("");
+    const [displayUi, setDisplayUi] = useState(false);
+    const { bindUi, unbindUi } = HandleUi(
+        (state) => ({
+            bindUi: state.bindUi,
+            unbindUi: state.unbindUi,
+        }),
+        shallow
+    );
+
+    const allowSubmit = !!(
+        name != "" &&
+        json != "" &&
+        validationError.length === 0
+    );
+
+    const clearFields = () => {
+        setJson("");
+        setName("");
+        setValidationError("");
+    };
 
     const addLayerFromConfig = (name: string, json: string) => {
         const parsedLayer = JSON.parse(json);
@@ -31,24 +57,21 @@ export const AddLayerFromConfig = ({
         );
     };
 
-    const updateLayerName = (value: string): void => {
-        setLayerName(value);
+    const updateName = (value: string): void => {
+        setName(value);
     };
 
     const onSubmit = () => {
-        addLayerFromConfig(layerName, json);
-        setJson("");
-        setLayerName("");
-        setDisplayAction(false);
-        setValidationError("");
+        addLayerFromConfig(name, json);
+        clearFields();
+        unbindUi();
+        setDisplayUi(false);
     };
 
     const onClose = () => {
-        setDisplayAction(false);
-        setJson("");
-        setLayerName("");
-        setDisplayAction(false);
-        setValidationError("");
+        clearFields();
+        unbindUi();
+        setDisplayUi(false);
     };
 
     const updateJson = (value: string) => {
@@ -65,32 +88,45 @@ export const AddLayerFromConfig = ({
         }
     };
 
-    const config: ActionConfig = {
-        title: "Export",
-        onClose: onClose,
-        onSubmit: onSubmit,
-        errors: validationError === "" ? undefined : [validationError],
-        sections: [
-            {
-                type: "input",
-                title: "Name",
-                defaultValue: layerName,
-                onChange: updateLayerName,
-            },
-            {
-                type: "textField",
-                title: "Pseudolayer",
-                defaultValue: json,
-                onChange: updateJson,
-            },
-        ],
+    useEffect(() => {
+        displayUi && bindUi(AddLayerFromConfigUi());
+    }, [displayUi, name, json, validationError]);
+
+    const AddLayerFromConfigUi = (): JSX.Element => {
+        return (
+            <VerticalStack spacing={2}>
+                <HorizontalStack className="justify-between mb-1">
+                    <Header1>Add Layer</Header1>
+                    <Icon className="i-mdi-close" onClick={onClose} />
+                </HorizontalStack>
+                <>
+                    {validationError.length > 0 && (
+                        <ErrorNotification errorText={validationError} />
+                    )}
+                </>
+                <Body1>Name</Body1>
+                <TextField value={name} onChange={updateName} />
+                <Body1>Pseudolayer JSON</Body1>
+                <TextField lines={4} value={json} onChange={updateJson} />
+                <HorizontalStack
+                    spacing={5}
+                    className="items-center justify-around children:w-25"
+                >
+                    <PrimaryButton
+                        text="Apply"
+                        onClick={onSubmit}
+                        active={allowSubmit}
+                    />
+                    <SecondaryButton text="Clear" onClick={clearFields} />
+                </HorizontalStack>
+            </VerticalStack>
+        );
     };
-    useAction({ newConfig: config, displayAction: displayAction });
 
     return (
         <Icon
             className="i-mdi-code-braces"
-            onClick={() => setDisplayAction(true)}
+            onClick={() => setDisplayUi(true)}
         />
     );
 };

@@ -1,14 +1,21 @@
-import React, { useState } from "react";
-import { ActionConfig } from "../../actionPanel/Action";
-import { useAction } from "../../actionPanel/ActionContext";
+import React, { useEffect, useState } from "react";
 import { UiLayer } from "../../uiLayer";
 import { ToolbarMenuItem } from "../ToolbarMenuItem";
-import update from "immutability-helper";
 import { generatePseudolayer } from "../../mapPanel/layers/pseudolayer";
 import { baseVertex } from "../../../webgl/shaders/base.vertex";
 import { adjustColorsFragment } from "../../../webgl/shaders/adjustColors.fragment";
-import throttle from "lodash.throttle";
 import { GetActiveUiLayer } from "../../../hooks/GetActiveUiLayer";
+import { ErrorNotification } from "../../../components/ErrorNotification";
+import { HorizontalStack } from "../../../components/HorizontalStack";
+import { Icon } from "../../../components/Icon";
+import { PrimaryButton } from "../../../components/PrimaryButton";
+import { Header1, Body1 } from "../../../components/Typography";
+import { VerticalStack } from "../../../components/VerticalStack";
+import { HandleUi } from "../../../hooks/HandleUi";
+import { Slider } from "../../../components/Slider";
+import throttle from "lodash.throttle";
+import shallow from "zustand/shallow";
+import update from "immutability-helper";
 
 const defaultValues = {
     red: "1",
@@ -29,9 +36,17 @@ export const RgbManipulation = ({
     uiLayers: UiLayer[];
     updateUiLayers: (uiLayer: UiLayer[]) => void;
 }): JSX.Element => {
-    const [displayAction, setDisplayAction] = useState(false);
     const [sliderValues, setSliderValues] =
         useState<ColourProps>(defaultValues);
+    const [error, setError] = useState<string>();
+    const [displayUi, setDisplayUi] = useState(false);
+    const { bindUi, unbindUi } = HandleUi(
+        (state) => ({
+            bindUi: state.bindUi,
+            unbindUi: state.unbindUi,
+        }),
+        shallow
+    );
 
     const { activeUiLayer, activeIndex } = GetActiveUiLayer(uiLayers);
 
@@ -127,16 +142,19 @@ export const RgbManipulation = ({
 
     const onSubmit = () => {
         apply();
-        setDisplayAction(false);
+        unbindUi();
+        setDisplayUi(false);
     };
 
     const onClose = () => {
         reset();
-        setDisplayAction(false);
+        unbindUi();
+        setDisplayUi(false);
     };
 
     const onRedChange = (value: string) => {
         if (!activeUiLayer) return;
+        setError(undefined);
 
         setRGBValues({
             red: value,
@@ -147,6 +165,7 @@ export const RgbManipulation = ({
 
     const onGreenChange = (value: string) => {
         if (!activeUiLayer) return;
+        setError(undefined);
 
         setRGBValues({
             red: sliderValues.red,
@@ -157,6 +176,7 @@ export const RgbManipulation = ({
 
     const onBlueChange = (value: string) => {
         if (!activeUiLayer) return;
+        setError(undefined);
 
         setRGBValues({
             red: sliderValues.red,
@@ -165,51 +185,64 @@ export const RgbManipulation = ({
         });
     };
 
-    const config: ActionConfig = {
-        title: "Update colours",
-        onSubmit: onSubmit,
-        onClose: onClose,
-        sections: [
-            {
-                title: "red",
-                type: "slider",
-                step: 0.01,
-                defaultValue: 1,
-                min: 0,
-                max: 5,
-                onChange: onRedChange,
-            },
-            {
-                title: "green",
-                type: "slider",
-                step: 0.01,
-                defaultValue: 1,
-                min: 0,
-                max: 5,
-                onChange: onGreenChange,
-            },
-            {
-                title: "blue",
-                type: "slider",
-                step: 0.01,
-                defaultValue: 1,
-                min: 0,
-                max: 5,
-                onChange: onBlueChange,
-            },
-        ],
+    const onError = (message: string | undefined) => {
+        setError(message);
     };
 
-    useAction({
-        newConfig: config,
-        displayAction: displayAction,
-        dependencies: [activeUiLayer],
-    });
+    useEffect(() => {
+        displayUi && bindUi(RgbManipulationUi());
+    }, [displayUi, sliderValues, error]);
+
+    const RgbManipulationUi = (): JSX.Element => {
+        return (
+            <VerticalStack spacing={2}>
+                <HorizontalStack className="justify-between mb-1">
+                    <Header1>Adjust RGB</Header1>
+                    <Icon className="i-mdi-close" onClick={onClose} />
+                </HorizontalStack>
+                <>{error && <ErrorNotification errorText={error} />}</>
+                <Body1>Red</Body1>
+                <Slider
+                    step={0.01}
+                    min={0}
+                    max={3}
+                    defaultValue={1}
+                    onChange={onRedChange}
+                    onError={onError}
+                />
+                <Body1>Green</Body1>
+                <Slider
+                    step={0.01}
+                    min={0}
+                    max={3}
+                    defaultValue={1}
+                    onChange={onGreenChange}
+                    onError={onError}
+                />
+                <Body1>Blue</Body1>
+                <Slider
+                    step={0.01}
+                    min={0}
+                    max={3}
+                    defaultValue={1}
+                    onChange={onBlueChange}
+                    onError={onError}
+                />
+                <div className="flex flex-col justify-center items-center children:w-25">
+                    <PrimaryButton
+                        text="Apply"
+                        onClick={onSubmit}
+                        active={!error}
+                    />
+                </div>
+            </VerticalStack>
+        );
+    };
 
     return (
         <ToolbarMenuItem
             active={true}
-            onClick={() => setDisplayAction(true)}
+            onClick={() => setDisplayUi(true)}
             name={"RGB Manipulation"}
         />
     );

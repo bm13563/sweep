@@ -1,12 +1,9 @@
 import React, { useContext, useState } from "react";
 import { RenderLoopContext } from "../App";
-import { Grid } from "@mui/material";
 import { LayerContainer } from "./leftPanel/LayerContainer";
 import { MapContainer } from "./mapPanel/MapContainer";
 import { Canvas } from "./mapPanel/Canvas";
-import { ActionContainer } from "./actionPanel/ActionContainer";
 import { defaultView } from "../utils/utils";
-import { ActionStateProvider } from "./actionPanel/ActionContext";
 import { ToolbarContainer } from "./topPanel/ToolbarContainer";
 import { generateLayer } from "./mapPanel/layers/layer";
 import { generatePseudolayer } from "./mapPanel/layers/pseudolayer";
@@ -14,8 +11,8 @@ import { baseVertex } from "../webgl/shaders/base.vertex";
 import { baseFragment } from "../webgl/shaders/base.fragment";
 import { generateUiLayer, UiLayer } from "./uiLayer";
 import { blueFragment } from "../webgl/shaders/blue.fragment";
-import { colors } from "../themes";
 import { GetActiveUiLayer } from "../hooks/GetActiveUiLayer";
+import { Action } from "./actionPanel/Action";
 
 const view = defaultView();
 
@@ -64,58 +61,31 @@ export const PageContainer = (): JSX.Element => {
     };
 
     return (
-        <ActionStateProvider>
-            <Grid
-                container
-                spacing={0}
-                sx={{
-                    height: "calc(100vh - 16px)",
-                    margin: "0px",
-                    alignContent: "flex-start",
-                }}
-            >
-                <Grid
-                    item
-                    xs={12}
-                    sx={{
-                        ...colors.background.default,
-                        height: "5%",
-                    }}
-                >
-                    <ToolbarContainer
-                        uiLayers={uiLayers}
-                        updateUiLayers={updateUiLayers}
-                    />
-                </Grid>
-                <Grid
-                    item
-                    sx={{
-                        ...colors.background.default,
-                        height: "95%",
-                        width: "15.625rem",
-                    }}
-                >
-                    <LayerContainer
-                        uiLayers={uiLayers}
-                        updateUiLayers={updateUiLayers}
-                    />
-                </Grid>
-                <Grid
-                    item
-                    sx={{
-                        boxSizing: "border-box",
-                        height: "95%",
-                        width: "calc(100% - 15.625rem)",
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                    }}
-                >
-                    <ActionContainer />
-                    <MapContainer view={view} activeUiLayer={activeUiLayer} />
-                    <Canvas />
-                </Grid>
-            </Grid>
-        </ActionStateProvider>
+        <div
+            className="grid content-start"
+            style={{
+                height: "calc(100vh - 16px)",
+                gridTemplateRows: "[r1] 5% [r2] 95% [rend]",
+                gridTemplateColumns: "[c1] 15.625rem [c2] auto [cend]",
+            }}
+        >
+            <div className="row-start-1 col-start-2">
+                <ToolbarContainer
+                    uiLayers={uiLayers}
+                    updateUiLayers={updateUiLayers}
+                />
+            </div>
+            <div className="row-start-2 col-start-1">
+                <LayerContainer
+                    uiLayers={uiLayers}
+                    updateUiLayers={updateUiLayers}
+                />
+            </div>
+            <div className="row-start-2 col-start-2 flex justify-center items-center">
+                <Action />
+                <MapContainer view={view} activeUiLayer={activeUiLayer} />
+                <Canvas />
+            </div>
+        </div>
     );
 };

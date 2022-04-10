@@ -1,13 +1,15 @@
 import React, { useEffect, useRef } from "react";
 import { Body1 } from "./Typography";
 
-export const TextField2 = ({
+export const TextField = ({
+    value,
     defaultValue = "",
     lines = 1,
     editable = true,
     onChange,
     className,
 }: {
+    value?: string;
     defaultValue?: string;
     lines?: number;
     editable?: boolean;
@@ -21,16 +23,22 @@ export const TextField2 = ({
         if (divRef.current) divRef.current.textContent = defaultValue;
     }, []);
 
+    useEffect(() => {
+        if (divRef.current && value !== undefined) {
+            divRef.current.textContent = value;
+        }
+    });
+
     return (
         <div className={`${className}`}>
             <Body1>
                 <div
                     ref={divRef}
-                    onInput={(e) =>
+                    onInput={(e) => {
                         onChange &&
-                        onChange(e.currentTarget.textContent as string)
-                    }
-                    className={`border overflow-y-auto break-words`}
+                            onChange(e.currentTarget.textContent as string);
+                    }}
+                    className={`border overflow-y-auto whitespace-pre-wrap break-words`}
                     style={{
                         lineHeight: `${baseLineHeight}`,
                         height: `${lines * baseLineHeight}em`,

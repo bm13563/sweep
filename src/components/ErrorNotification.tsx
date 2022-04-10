@@ -1,5 +1,5 @@
 import React from "react";
-import { Body1 } from "./Typography";
+import { Subscript2 } from "./Typography";
 
 export const ErrorNotification = ({
     errorText,
@@ -9,8 +9,8 @@ export const ErrorNotification = ({
     className?: string;
 }): JSX.Element => {
     return (
-        <div className={`bg-red-300 border ${className}`}>
-            <Body1>{errorText}</Body1>
+        <div className={`bg-red-300 border text-center ${className}`}>
+            <Subscript2>{errorText}</Subscript2>
         </div>
     );
 };

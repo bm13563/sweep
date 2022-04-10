@@ -3,7 +3,6 @@ import Map from "ol/Map";
 import View from "ol/View";
 import { Controls } from "./controls";
 import { unByKey } from "ol/Observable";
-import { Box } from "@mui/material";
 import { Layer } from "./layers/layer";
 import { XYZ } from "ol/source";
 import OLTileLayer from "ol/layer/Tile";
@@ -76,16 +75,8 @@ export const MapLayer = ({
     }, [olLayer]);
 
     return (
-        <Box
-            sx={{
-                position: "absolute",
-                height: "100%",
-                width: "100%",
-                opacity: 0,
-            }}
-            ref={mapRef}
-        >
+        <div ref={mapRef} className="absolute h-full w-full opacity-0">
             <Controls />
-        </Box>
+        </div>
     );
 };

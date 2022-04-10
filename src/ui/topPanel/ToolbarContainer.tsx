@@ -1,7 +1,6 @@
-import { Box, Stack } from "@mui/material";
-import React, { ReactElement, useContext } from "react";
-import { GetActiveUiLayer } from "../../hooks/GetActiveUiLayer";
-import { ActionState } from "../actionPanel/ActionContext";
+import React from "react";
+import { HorizontalStack } from "../../components/HorizontalStack";
+import { HandleUi } from "../../hooks/HandleUi";
 import { UiLayer } from "../uiLayer";
 import { UndoRedo } from "./file/UndoRedo";
 import { RgbManipulation } from "./processing/RgbManipulation";
@@ -14,17 +13,14 @@ export const ToolbarContainer = ({
     uiLayers: UiLayer[];
     updateUiLayers: (uiLayer: UiLayer[]) => void;
 }): JSX.Element => {
-    const { configState } = useContext(ActionState);
+    const isDisplayed = HandleUi((state) => state.isDisplayed);
 
     return (
-        <Box
-            sx={{
-                height: "100%",
-                paddingLeft: "15.625rem",
-                pointerEvents: configState ? "none" : "auto",
-            }}
-        >
-            <Stack direction="row" sx={{ height: "100%" }}>
+        <div className={`h-full ${isDisplayed() && "pointer-events-none"}`}>
+            <HorizontalStack
+                spacing={5}
+                className="h-full children:flex children:h-full"
+            >
                 <ToolbarMenu name="File">
                     <UndoRedo
                         uiLayers={uiLayers}
@@ -37,7 +33,7 @@ export const ToolbarContainer = ({
                         updateUiLayers={updateUiLayers}
                     />
                 </ToolbarMenu>
-            </Stack>
-        </Box>
+            </HorizontalStack>
+        </div>
     );
 };

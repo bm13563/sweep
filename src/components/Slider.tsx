@@ -2,12 +2,13 @@ import React, { useEffect, useRef, useState } from "react";
 import { HorizontalStack } from "./HorizontalStack";
 import { Subscript2 } from "./Typography";
 
-export const Slider2 = ({
+export const Slider = ({
     defaultValue = 0,
     min = 0,
     max = 100,
     step = 1,
     onChange,
+    onError,
     className,
 }: {
     defaultValue?: number;
@@ -15,18 +16,44 @@ export const Slider2 = ({
     max?: number;
     step?: number;
     onChange?: (value: string) => void;
+    onError?: (message: string | undefined) => void;
     className?: string;
 }): JSX.Element => {
     const sliderRef = useRef<HTMLInputElement>(null);
-    const [value, setValue] = useState(String(defaultValue));
+    const valueRef = useRef<HTMLDivElement>(null);
+    const [targetValue, setTargetValue] = useState(String(defaultValue));
+
+    const isNumber = (value: string) => {
+        return !!isNaN(Number(value));
+    };
+
+    const isOutOfRange = (value: string) => {
+        return Number(value) < min || Number(value) > max;
+    };
+
+    const handleError = (message: string) => {
+        if (sliderRef.current) sliderRef.current.value = `${targetValue}`;
+        onError && onError(message);
+    };
+
+    const exceedsMaxLength = (value: string) => {
+        return value.length > 4;
+    };
 
     const updateValue = (value: string) => {
+        onError && onError(undefined);
+        if (value === "" || value.slice(-1) === ".") {
+            return;
+        }
+        if (valueRef.current) valueRef.current.textContent = `${value}`;
+        if (sliderRef.current) sliderRef.current.value = `${value}`;
         onChange && onChange(value);
-        setValue(value);
+        setTargetValue(value);
     };
 
     useEffect(() => {
-        if (sliderRef.current) sliderRef.current.value = `${defaultValue}`;
+        if (valueRef.current) valueRef.current.textContent = `${targetValue}`;
+        if (sliderRef.current) sliderRef.current.value = `${targetValue}`;
     }, []);
 
     return (
@@ -43,12 +70,51 @@ export const Slider2 = ({
                         min={min}
                         max={max}
                         step={step}
-                        className="w-full"
+                        className="w-full hover:cursor-pointer"
                         onChange={(e) => {
                             updateValue(e.currentTarget.value);
                         }}
                     />
-                    <div>{value}</div>
+                    <div
+                        ref={valueRef}
+                        onInput={(e) => {
+                            const value = e.currentTarget.textContent as string;
+
+                            if (isNumber(value)) {
+                                handleError("Input must be a number");
+                                return;
+                            }
+
+                            if (isOutOfRange(value)) {
+                                handleError("Input must be within range");
+                                return;
+                            }
+                            updateValue(value);
+                        }}
+                        onKeyDown={(e) => {
+                            const value = e.currentTarget.textContent as string;
+                            const selection =
+                                window.getSelection()?.toString().length ?? 0;
+
+                            if (
+                                exceedsMaxLength(value + ".") &&
+                                e.key != "Delete" &&
+                                e.key != "Backspace" &&
+                                e.key != "ArrowLeft" &&
+                                e.key != "ArrowRight" &&
+                                selection === 0
+                            ) {
+                                e.preventDefault();
+                            }
+
+                            if (e.key == "Enter") {
+                                valueRef.current?.blur();
+                                valueRef.current?.onselectionchange;
+                            }
+                        }}
+                        contentEditable
+                        className="inline-block rounded bg-white p-x-1 w-9 h-4 text-center hover:cursor-text"
+                    />
                 </HorizontalStack>
             </Subscript2>
         </div>

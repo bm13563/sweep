@@ -1,14 +1,17 @@
-import React, { ChangeEvent, useCallback, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useDrag, useDrop, DropTargetMonitor } from "react-dnd";
 import { XYCoord } from "dnd-core";
 import { UiLayer } from "../uiLayer";
-import { useAction } from "../actionPanel/ActionContext";
-import { ActionConfig } from "../actionPanel/Action";
-import update from "immutability-helper";
 import { Icon } from "../../components/Icon";
-import { Body1 } from "../../components/Typography";
+import { Body1, Header1 } from "../../components/Typography";
 import { HorizontalStack } from "../../components/HorizontalStack";
 import { GetActiveUiLayer } from "../../hooks/GetActiveUiLayer";
+import { PrimaryButton } from "../../components/PrimaryButton";
+import { TextField } from "../../components/TextField";
+import { VerticalStack } from "../../components/VerticalStack";
+import { HandleUi } from "../../hooks/HandleUi";
+import update from "immutability-helper";
+import shallow from "zustand/shallow";
 
 interface DragItem {
     index: number;
@@ -28,12 +31,20 @@ export const Layer = ({
     index: number;
 }): JSX.Element => {
     const ref = useRef<HTMLDivElement>(null);
+    const textFieldRef = useRef<HTMLDivElement>(null);
     const layerId = uiLayer.uid;
 
-    const { activeUiLayer } = GetActiveUiLayer(uiLayers);
-
-    const [displayAction, setDisplayAction] = useState(false);
+    const [displayUi, setDisplayUi] = useState(false);
     const [json, setJson] = useState("");
+    const { bindUi, unbindUi } = HandleUi(
+        (state) => ({
+            bindUi: state.bindUi,
+            unbindUi: state.unbindUi,
+        }),
+        shallow
+    );
+
+    const { activeUiLayer } = GetActiveUiLayer(uiLayers);
 
     const remove = (uiLayer: UiLayer) => {
         const indexToRemove = uiLayers.indexOf(uiLayer);
@@ -131,30 +142,52 @@ export const Layer = ({
     const exportLayerInfo = () => {
         const layerJson = JSON.stringify(uiLayer);
         setJson(layerJson);
-        setDisplayAction(true);
+        setDisplayUi(true);
+    };
+
+    const copy = () => {
+        navigator.clipboard.writeText(json);
+        textFieldRef.current && textFieldRef.current.click();
     };
 
     const onClose = () => {
-        setDisplayAction(false);
+        unbindUi();
+        setDisplayUi(false);
     };
 
     const updateJson = (value: string) => {
         setJson(value);
     };
 
-    const config: ActionConfig = {
-        title: "Export",
-        onClose: onClose,
-        sections: [
-            {
-                type: "textField",
-                title: "Pseudolayer",
-                defaultValue: json,
-                onChange: updateJson,
-            },
-        ],
+    useEffect(() => {
+        displayUi && bindUi(LayerUi());
+    }, [displayUi, json]);
+
+    const LayerUi = (): JSX.Element => {
+        return (
+            <VerticalStack spacing={2}>
+                <HorizontalStack className="justify-between mb-1">
+                    <Header1>Export Layer</Header1>
+                    <Icon className="i-mdi-close" onClick={onClose} />
+                </HorizontalStack>
+                <Body1>Name</Body1>
+                <div
+                    ref={textFieldRef}
+                    onClick={(event) => {
+                        const selection = window && window.getSelection();
+
+                        selection !== null &&
+                            selection.selectAllChildren(event.target as Node);
+                    }}
+                >
+                    <TextField lines={6} value={json} onChange={updateJson} />
+                </div>
+                <div className="flex flex-col justify-center items-center children:w-25">
+                    <PrimaryButton text="Copy" onClick={copy} />
+                </div>
+            </VerticalStack>
+        );
     };
-    useAction({ newConfig: config, displayAction: displayAction });
 
     return (
         <div

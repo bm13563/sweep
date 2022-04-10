@@ -1,8 +1,8 @@
 import React, { useState, useRef, useContext } from "react";
-import { Button } from "../../components/Button";
+import { PrimaryButton } from "../../components/PrimaryButton";
 import { VerticalStack } from "../../components/VerticalStack";
 import { HandleClickOutside } from "../../hooks/HandleClickOutside";
-import { ActionState } from "../actionPanel/ActionContext";
+import { HandleUi } from "../../hooks/HandleUi";
 
 export const ToolbarMenu = ({
     name,
@@ -12,7 +12,7 @@ export const ToolbarMenu = ({
     children?: JSX.Element | JSX.Element[];
 }): JSX.Element => {
     const menuRef = useRef<HTMLDivElement>(null);
-    const { configState } = useContext(ActionState);
+    const isDisplayed = HandleUi((state) => state.isDisplayed);
 
     const [open, setOpen] = useState(false);
 
@@ -21,14 +21,18 @@ export const ToolbarMenu = ({
     };
 
     const exceptionCallback = () => {
-        return !!configState;
+        return !!isDisplayed;
     };
 
     HandleClickOutside(menuRef, clickOutsideCallback, exceptionCallback);
 
     return (
         <div ref={menuRef} className="mr-10 z-2 text-center">
-            <Button text={name} onClick={() => setOpen(!open)} />
+            <PrimaryButton
+                text={name}
+                onClick={() => setOpen(!open)}
+                className="w-30"
+            />
             <VerticalStack className={`${!open && "invisible"}`} spacing={2}>
                 {children}
             </VerticalStack>

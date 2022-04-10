@@ -1,13 +1,20 @@
-import React, { useState } from "react";
-import { ActionConfig } from "../actionPanel/Action";
-import { useAction } from "../actionPanel/ActionContext";
+import React, { useEffect, useState } from "react";
 import { baseFragment } from "../../webgl/shaders/base.fragment";
 import { baseVertex } from "../../webgl/shaders/base.vertex";
 import { generateLayer } from "../mapPanel/layers/layer";
 import { generatePseudolayer } from "../mapPanel/layers/pseudolayer";
 import { generateUiLayer, UiLayer } from "../uiLayer";
-import update from "immutability-helper";
 import { Icon } from "../../components/Icon";
+import { HorizontalStack } from "../../components/HorizontalStack";
+import { Body1, Header1 } from "../../components/Typography";
+import { VerticalStack } from "../../components/VerticalStack";
+import { HandleUi } from "../../hooks/HandleUi";
+import { TextField } from "../../components/TextField";
+import { Dropdown } from "../../components/Dropdown";
+import { PrimaryButton } from "../../components/PrimaryButton";
+import update from "immutability-helper";
+import shallow from "zustand/shallow";
+import { SecondaryButton } from "../../components/SecondaryButton";
 
 export interface AddLayerProps {
     name: string;
@@ -22,10 +29,25 @@ export const AddLayer = ({
     uiLayers: UiLayer[];
     updateUiLayers: (uiLayer: UiLayer[]) => void;
 }): JSX.Element => {
-    const [displayAction, setDisplayAction] = useState(false);
     const [name, setName] = useState("");
     const [type, setType] = useState("XYZ");
     const [url, setUrl] = useState("");
+    const [displayUi, setDisplayUi] = useState(false);
+    const { bindUi, unbindUi } = HandleUi(
+        (state) => ({
+            bindUi: state.bindUi,
+            unbindUi: state.unbindUi,
+        }),
+        shallow
+    );
+
+    const allowSubmit = !!(name != "" && type != "" && url != "");
+
+    const clearFields = () => {
+        setName("");
+        setUrl("");
+        setType("XYZ");
+    };
 
     const addUiLayer = ({ name, type, url }: AddLayerProps) => {
         const layer = generateLayer({ type: type, url: url });
@@ -65,51 +87,48 @@ export const AddLayer = ({
             type: "XYZ",
             url: url,
         });
-        setName("");
-        setUrl("");
-        setType("XYZ");
-        setDisplayAction(false);
+        clearFields();
+        unbindUi();
+        setDisplayUi(false);
     };
 
     const onClose = () => {
-        setDisplayAction(false);
-        setName("");
-        setUrl("");
-        setType("XYZ");
-        setDisplayAction(false);
+        clearFields();
+        unbindUi();
+        setDisplayUi(false);
     };
 
-    const addAction = () => {
-        setDisplayAction(true);
+    useEffect(() => {
+        displayUi && bindUi(AddLayerUi());
+    }, [displayUi, allowSubmit, name, type, url]);
+
+    const AddLayerUi = (): JSX.Element => {
+        return (
+            <VerticalStack spacing={2}>
+                <HorizontalStack className="justify-between mb-1">
+                    <Header1>Add Layer</Header1>
+                    <Icon className="i-mdi-close" onClick={onClose} />
+                </HorizontalStack>
+                <Body1>Name</Body1>
+                <TextField value={name} onChange={updateName} />
+                <Body1>Type</Body1>
+                <Dropdown options={["XYZ"]} onChange={updateLayerType} />
+                <Body1>URL</Body1>
+                <TextField value={url} onChange={updateUrl} />
+                <HorizontalStack
+                    spacing={5}
+                    className="items-center justify-around children:w-25"
+                >
+                    <PrimaryButton
+                        text="Apply"
+                        onClick={onSubmit}
+                        active={allowSubmit}
+                    />
+                    <SecondaryButton text="Clear" onClick={clearFields} />
+                </HorizontalStack>
+            </VerticalStack>
+        );
     };
 
-    const config: ActionConfig = {
-        title: "Add layer",
-        onSubmit: onSubmit,
-        onClose: onClose,
-        sections: [
-            {
-                type: "input",
-                title: "Name",
-                defaultValue: name,
-                onChange: updateName,
-            },
-            {
-                type: "dropdown",
-                title: "Layer type",
-                items: ["XYZ"],
-                defaultValue: type,
-                onChange: updateLayerType,
-            },
-            {
-                type: "input",
-                title: "URL",
-                defaultValue: url,
-                onChange: updateUrl,
-            },
-        ],
-    };
-    useAction({ newConfig: config, displayAction: displayAction });
-
-    return <Icon className="i-mdi-add" onClick={addAction} />;
+    return <Icon className="i-mdi-add" onClick={() => setDisplayUi(true)} />;
 };

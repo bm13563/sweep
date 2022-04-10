@@ -43,6 +43,7 @@ export default defineConfig({
             ])(),
             shortcuts: {
                 border: "rounded border-solid border-1 border-slate-900 py-2 px-1",
+                disabled: "pointer-events-none bg-slate-500"
             },
         }),
     ],
