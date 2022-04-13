@@ -3,7 +3,8 @@ import { HorizontalStack } from "../../components/HorizontalStack";
 import { HandleUi } from "../../hooks/HandleUi";
 import { UiLayer } from "../uiLayer";
 import { UndoRedo } from "./file/UndoRedo";
-import { RgbManipulation } from "./processing/RgbManipulation";
+import { AdjustRgb } from "./processing/AdjustRgb";
+import { FilterAbsoluteRgb } from "./processing/FilterAbsoluteRgb";
 import { ToolbarMenu } from "./ToolbarMenu";
 
 export const ToolbarContainer = ({
@@ -13,10 +14,10 @@ export const ToolbarContainer = ({
     uiLayers: UiLayer[];
     updateUiLayers: (uiLayer: UiLayer[]) => void;
 }): JSX.Element => {
-    const isDisplayed = HandleUi((state) => state.isDisplayed);
+    const isDisplayed = HandleUi((state) => state.component);
 
     return (
-        <div className={`h-full ${isDisplayed() && "pointer-events-none"}`}>
+        <div className={`h-full ${!!isDisplayed && "pointer-events-none"}`}>
             <HorizontalStack
                 spacing={5}
                 className="h-full children:flex children:h-full"
@@ -28,7 +29,11 @@ export const ToolbarContainer = ({
                     />
                 </ToolbarMenu>
                 <ToolbarMenu name="Processing">
-                    <RgbManipulation
+                    <AdjustRgb
+                        uiLayers={uiLayers}
+                        updateUiLayers={updateUiLayers}
+                    />
+                    <FilterAbsoluteRgb
                         uiLayers={uiLayers}
                         updateUiLayers={updateUiLayers}
                     />

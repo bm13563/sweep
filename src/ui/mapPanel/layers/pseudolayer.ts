@@ -9,6 +9,7 @@ export interface ShaderProps {
 export interface PseudolayerConfig {
     inputs: Record<string, Layer | Pseudolayer>;
     variables: Record<string, string>;
+    dynamics: Record<string, string>;
     shaders: ShaderProps;
 }
 

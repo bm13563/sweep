@@ -2,6 +2,12 @@ import React, { useEffect, useRef, useState } from "react";
 import { HorizontalStack } from "./HorizontalStack";
 import { Subscript2 } from "./Typography";
 
+export interface SliderValueProps {
+    red: string;
+    green: string;
+    blue: string;
+}
+
 export const Slider = ({
     defaultValue = 0,
     min = 0,

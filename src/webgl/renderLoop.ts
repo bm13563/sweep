@@ -54,17 +54,27 @@ export class RenderLoop {
                     return;
                 }
 
+                let dynamicFragmentShader =
+                    pseudolayer.config.shaders.fragmentShader;
+                for (const key in pseudolayer.config.dynamics) {
+                    const re = new RegExp(`!#!{{${key}}}!#!`, "g");
+                    dynamicFragmentShader = dynamicFragmentShader.replace(
+                        re,
+                        pseudolayer.config.dynamics[key]
+                    );
+                }
                 let program: twgl.ProgramInfo;
+
                 const programHash = `
                     ${pseudolayer.config.shaders.vertexShader}
-                    ${pseudolayer.config.shaders.fragmentShader}
+                    ${dynamicFragmentShader}
                 `;
                 if (programHash in programs) {
                     program = programs[programHash];
                 } else {
                     program = twgl.createProgramInfo(gl, [
                         pseudolayer.config.shaders.vertexShader,
-                        pseudolayer.config.shaders.fragmentShader,
+                        dynamicFragmentShader,
                     ]);
                     this.programCache[programHash] = program;
                 }

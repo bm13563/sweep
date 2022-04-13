@@ -12,7 +12,7 @@ import { PrimaryButton } from "../../../components/PrimaryButton";
 import { Header1, Body1 } from "../../../components/Typography";
 import { VerticalStack } from "../../../components/VerticalStack";
 import { HandleUi } from "../../../hooks/HandleUi";
-import { Slider } from "../../../components/Slider";
+import { Slider, SliderValueProps } from "../../../components/Slider";
 import throttle from "lodash.throttle";
 import shallow from "zustand/shallow";
 import update from "immutability-helper";
@@ -23,13 +23,7 @@ const defaultValues = {
     blue: "1",
 };
 
-export interface ColourProps {
-    red: string;
-    green: string;
-    blue: string;
-}
-
-export const RgbManipulation = ({
+export const AdjustRgb = ({
     uiLayers,
     updateUiLayers,
 }: {
@@ -37,7 +31,7 @@ export const RgbManipulation = ({
     updateUiLayers: (uiLayer: UiLayer[]) => void;
 }): JSX.Element => {
     const [sliderValues, setSliderValues] =
-        useState<ColourProps>(defaultValues);
+        useState<SliderValueProps>(defaultValues);
     const [error, setError] = useState<string>();
     const [displayUi, setDisplayUi] = useState(false);
     const { bindUi, unbindUi } = HandleUi(
@@ -50,7 +44,7 @@ export const RgbManipulation = ({
 
     const { activeUiLayer, activeIndex } = GetActiveUiLayer(uiLayers);
 
-    const setRGBValues = throttle((colours: ColourProps) => {
+    const setRGBValues = throttle((colours: SliderValueProps) => {
         if (!(activeUiLayer && activeIndex !== undefined)) return;
 
         const pseudolayer = generatePseudolayer({
@@ -62,6 +56,7 @@ export const RgbManipulation = ({
                 g_colour: colours.green,
                 b_colour: colours.blue,
             },
+            dynamics: {},
             shaders: {
                 vertexShader: baseVertex,
                 fragmentShader: adjustColorsFragment,
@@ -79,9 +74,9 @@ export const RgbManipulation = ({
         );
 
         setSliderState(colours);
-    }, 100);
+    }, 250);
 
-    const setSliderState = (colours: ColourProps) => {
+    const setSliderState = (colours: SliderValueProps) => {
         if (!activeUiLayer) return;
 
         setSliderValues(
@@ -190,10 +185,10 @@ export const RgbManipulation = ({
     };
 
     useEffect(() => {
-        displayUi && bindUi(RgbManipulationUi());
+        displayUi && bindUi(AdjustRgbUi());
     }, [displayUi, sliderValues, error]);
 
-    const RgbManipulationUi = (): JSX.Element => {
+    const AdjustRgbUi = (): JSX.Element => {
         return (
             <VerticalStack spacing={2}>
                 <HorizontalStack className="justify-between mb-1">
@@ -243,7 +238,7 @@ export const RgbManipulation = ({
         <ToolbarMenuItem
             active={true}
             onClick={() => setDisplayUi(true)}
-            name={"RGB Manipulation"}
+            name={"Adjust RGB"}
         />
     );
 };

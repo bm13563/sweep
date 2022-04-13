@@ -24,12 +24,14 @@ const newLayer2 = generateLayer({
 const newPseudolayer2 = generatePseudolayer({
     inputs: { u_image: newLayer2 },
     variables: {},
+    dynamics: {},
     shaders: { vertexShader: baseVertex, fragmentShader: baseFragment },
 });
 
 const newPseudolayer3 = generatePseudolayer({
     inputs: { u_image: newPseudolayer2 },
     variables: {},
+    dynamics: {},
     shaders: { vertexShader: baseVertex, fragmentShader: blueFragment },
 });
 
@@ -75,7 +77,7 @@ export const PageContainer = (): JSX.Element => {
                     updateUiLayers={updateUiLayers}
                 />
             </div>
-            <div className="row-start-2 col-start-1">
+            <div className="row-start-2 col-start-1 flex flex-col items-center">
                 <LayerContainer
                     uiLayers={uiLayers}
                     updateUiLayers={updateUiLayers}

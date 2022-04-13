@@ -54,6 +54,7 @@ export const AddLayer = ({
         const pseudolayer = generatePseudolayer({
             inputs: { u_image: layer },
             variables: {},
+            dynamics: {},
             shaders: { vertexShader: baseVertex, fragmentShader: baseFragment },
         });
         const uiLayer = generateUiLayer({

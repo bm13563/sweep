@@ -3,14 +3,12 @@ import { Body1 } from "./Typography";
 
 export const TextField = ({
     value,
-    defaultValue = "",
     lines = 1,
     editable = true,
     onChange,
     className,
 }: {
-    value?: string;
-    defaultValue?: string;
+    value: string;
     lines?: number;
     editable?: boolean;
     onChange?: (value: string) => void;
@@ -18,10 +16,6 @@ export const TextField = ({
 }): JSX.Element => {
     const baseLineHeight = 1; // match leading-tight tailwind class
     const divRef = useRef<HTMLDivElement>(null);
-
-    useEffect(() => {
-        if (divRef.current) divRef.current.textContent = defaultValue;
-    }, []);
 
     useEffect(() => {
         if (divRef.current && value !== undefined) {

@@ -15,7 +15,7 @@ export const LayerContainer = ({
     uiLayers: UiLayer[];
     updateUiLayers: (uiLayer: UiLayer[]) => void;
 }): JSX.Element => {
-    const isDisplayed = HandleUi((state) => state.isDisplayed);
+    const isDisplayed = HandleUi((state) => state.component);
 
     useEffect(() => {
         updateUiLayers(uiLayers);
@@ -23,7 +23,7 @@ export const LayerContainer = ({
 
     return (
         <div
-            className={`h-full w-5/6 ${isDisplayed() && "pointer-events-none"}`}
+            className={`h-full w-5/6 ${!!isDisplayed && "pointer-events-none"}`}
         >
             <VerticalStack spacing={5}>
                 <HorizontalStack spacing={5} className="justify-between">

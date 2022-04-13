@@ -29,7 +29,7 @@ export const Dropdown = ({
     return (
         <div className={`cursor-pointer ${className}`}>
             <Body1>
-                <div className={`relative`}>
+                <div className={`relative`} ref={optionsRef}>
                     <div
                         onClick={() => {
                             setDisplayOptions(!displayOptions);
@@ -41,7 +41,7 @@ export const Dropdown = ({
                         </HorizontalStack>
                     </div>
                     {displayOptions && (
-                        <div ref={optionsRef}>
+                        <div>
                             <VerticalStack
                                 className={`flex bg-white absolute w-full rounded`}
                             >

@@ -12,9 +12,9 @@ export const ToolbarMenu = ({
     children?: JSX.Element | JSX.Element[];
 }): JSX.Element => {
     const menuRef = useRef<HTMLDivElement>(null);
-    const isDisplayed = HandleUi((state) => state.isDisplayed);
 
     const [open, setOpen] = useState(false);
+    const isDisplayed = HandleUi((state) => state.component);
 
     const clickOutsideCallback = () => {
         setOpen(false);
@@ -33,7 +33,7 @@ export const ToolbarMenu = ({
                 onClick={() => setOpen(!open)}
                 className="w-30"
             />
-            <VerticalStack className={`${!open && "invisible"}`} spacing={2}>
+            <VerticalStack className={`${!open && "invisible"}`}>
                 {children}
             </VerticalStack>
         </div>
