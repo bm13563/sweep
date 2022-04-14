@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { UiLayer } from "../../uiLayer";
 import { ToolbarMenuItem } from "../ToolbarMenuItem";
 import { generatePseudolayer } from "../../mapPanel/layers/pseudolayer";
 import { baseVertex } from "../../../webgl/shaders/base.vertex";
@@ -11,11 +10,13 @@ import { Icon } from "../../../components/Icon";
 import { PrimaryButton } from "../../../components/PrimaryButton";
 import { Header1, Body1 } from "../../../components/Typography";
 import { VerticalStack } from "../../../components/VerticalStack";
-import { HandleUi } from "../../../hooks/HandleUi";
+import { HandleUiState } from "../../../hooks/HandleUiState";
 import { Slider, SliderValueProps } from "../../../components/Slider";
+import { HandleUiLayerState } from "../../../hooks/HandleUiLayerState";
+import update from "immutability-helper";
 import throttle from "lodash.throttle";
 import shallow from "zustand/shallow";
-import update from "immutability-helper";
+import { RemovePendingLayerFromActiveUiLayer } from "../../../hooks/SetPseudolayerHooks";
 
 const defaultValues = {
     red: "1",
@@ -23,21 +24,22 @@ const defaultValues = {
     blue: "1",
 };
 
-export const AdjustRgb = ({
-    uiLayers,
-    updateUiLayers,
-}: {
-    uiLayers: UiLayer[];
-    updateUiLayers: (uiLayer: UiLayer[]) => void;
-}): JSX.Element => {
+export const AdjustRgb = (): JSX.Element => {
     const [sliderValues, setSliderValues] =
         useState<SliderValueProps>(defaultValues);
     const [error, setError] = useState<string>();
     const [displayUi, setDisplayUi] = useState(false);
-    const { bindUi, unbindUi } = HandleUi(
+    const { bindUi, unbindUi } = HandleUiState(
         (state) => ({
             bindUi: state.bindUi,
             unbindUi: state.unbindUi,
+        }),
+        shallow
+    );
+    const { uiLayers, setUiLayers } = HandleUiLayerState(
+        (state) => ({
+            uiLayers: state.uiLayers,
+            setUiLayers: state.setUiLayers,
         }),
         shallow
     );
@@ -63,10 +65,10 @@ export const AdjustRgb = ({
             },
         });
 
-        updateUiLayers(
+        setUiLayers(
             update(uiLayers, {
                 [activeIndex]: {
-                    updatedPseudolayer: {
+                    pendingPseudolayer: {
                         $set: pseudolayer,
                     },
                 },
@@ -76,27 +78,13 @@ export const AdjustRgb = ({
         setSliderState(colours);
     }, 250);
 
-    const setSliderState = (colours: SliderValueProps) => {
-        if (!activeUiLayer) return;
-
-        setSliderValues(
-            update(sliderValues, {
-                $set: {
-                    red: colours.red,
-                    green: colours.green,
-                    blue: colours.blue,
-                },
-            })
-        );
-    };
-
     const reset = () => {
         if (!(activeUiLayer && activeIndex !== undefined)) return;
 
-        updateUiLayers(
+        setUiLayers(
             update(uiLayers, {
                 [activeIndex]: {
-                    updatedPseudolayer: {
+                    pendingPseudolayer: {
                         $set: undefined,
                     },
                 },
@@ -110,14 +98,14 @@ export const AdjustRgb = ({
         if (
             !(
                 activeUiLayer &&
-                activeUiLayer.updatedPseudolayer &&
+                activeUiLayer.pendingPseudolayer &&
                 activeIndex !== undefined
             )
         )
             return;
 
-        const updatedUiLayer = activeUiLayer?.updatedPseudolayer;
-        updateUiLayers(
+        const updatedUiLayer = activeUiLayer?.pendingPseudolayer;
+        setUiLayers(
             update(uiLayers, {
                 [activeIndex]: {
                     config: {
@@ -125,7 +113,7 @@ export const AdjustRgb = ({
                             $set: updatedUiLayer,
                         },
                     },
-                    updatedPseudolayer: {
+                    pendingPseudolayer: {
                         $set: undefined,
                     },
                 },
@@ -145,6 +133,20 @@ export const AdjustRgb = ({
         reset();
         unbindUi();
         setDisplayUi(false);
+    };
+
+    const setSliderState = (colours: SliderValueProps) => {
+        if (!activeUiLayer) return;
+
+        setSliderValues(
+            update(sliderValues, {
+                $set: {
+                    red: colours.red,
+                    green: colours.green,
+                    blue: colours.blue,
+                },
+            })
+        );
     };
 
     const onRedChange = (value: string) => {

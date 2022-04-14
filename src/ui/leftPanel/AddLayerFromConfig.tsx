@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { generateUiLayer, UiLayer } from "../uiLayer";
+import { generateUiLayer } from "../uiLayer";
 import update from "immutability-helper";
 import { uiLayerResolver } from "../../resolvers";
 import { Icon } from "../../components/Icon";
@@ -8,26 +8,28 @@ import { PrimaryButton } from "../../components/PrimaryButton";
 import { TextField } from "../../components/TextField";
 import { Header1, Body1 } from "../../components/Typography";
 import { VerticalStack } from "../../components/VerticalStack";
-import { HandleUi } from "../../hooks/HandleUi";
+import { HandleUiState } from "../../hooks/HandleUiState";
 import shallow from "zustand/shallow";
 import { ErrorNotification } from "../../components/ErrorNotification";
 import { SecondaryButton } from "../../components/SecondaryButton";
+import { HandleUiLayerState } from "../../hooks/HandleUiLayerState";
 
-export const AddLayerFromConfig = ({
-    uiLayers,
-    updateUiLayers,
-}: {
-    uiLayers: UiLayer[];
-    updateUiLayers: (uiLayer: UiLayer[]) => void;
-}): JSX.Element => {
+export const AddLayerFromConfig = (): JSX.Element => {
     const [name, setName] = useState("");
     const [json, setJson] = useState("");
     const [validationError, setValidationError] = useState("");
     const [displayUi, setDisplayUi] = useState(false);
-    const { bindUi, unbindUi } = HandleUi(
+    const { bindUi, unbindUi } = HandleUiState(
         (state) => ({
             bindUi: state.bindUi,
             unbindUi: state.unbindUi,
+        }),
+        shallow
+    );
+    const { uiLayers, setUiLayers } = HandleUiLayerState(
+        (state) => ({
+            uiLayers: state.uiLayers,
+            setUiLayers: state.setUiLayers,
         }),
         shallow
     );
@@ -50,7 +52,7 @@ export const AddLayerFromConfig = ({
             name: name,
             pseudolayer: parsedLayer.config.pseudolayer,
         });
-        updateUiLayers(
+        setUiLayers(
             update(uiLayers, {
                 $unshift: [newUiLayer],
             })

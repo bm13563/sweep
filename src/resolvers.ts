@@ -34,6 +34,7 @@ export const pseudolayerConfigResolver: z.ZodSchema<PseudolayerConfig> = z.lazy(
         z.object({
             inputs: z.record(z.union([layerResolver, pseudolayerResolver])),
             variables: z.record(z.string()),
+            dynamics: z.record(z.string()),
             shaders: shaderPropsResolver,
         })
 );
@@ -58,6 +59,6 @@ export const uiLayerResolver: z.ZodSchema<UiLayer> = z.lazy(() =>
         uid: z.string(),
         visible: z.boolean(),
         config: uiLayerConfigResolver,
-        updatedPseudolayer: pseudolayerResolver.optional(),
+        pendingPseudolayer: pseudolayerResolver.optional(),
     })
 );

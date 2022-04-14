@@ -9,9 +9,10 @@ import { GetActiveUiLayer } from "../../hooks/GetActiveUiLayer";
 import { PrimaryButton } from "../../components/PrimaryButton";
 import { TextField } from "../../components/TextField";
 import { VerticalStack } from "../../components/VerticalStack";
-import { HandleUi } from "../../hooks/HandleUi";
+import { HandleUiState } from "../../hooks/HandleUiState";
 import update from "immutability-helper";
 import shallow from "zustand/shallow";
+import { HandleUiLayerState } from "../../hooks/HandleUiLayerState";
 
 interface DragItem {
     index: number;
@@ -22,12 +23,10 @@ interface DragItem {
 export const Layer = ({
     uiLayer,
     uiLayers,
-    updateUiLayers,
     index,
 }: {
     uiLayer: UiLayer;
     uiLayers: UiLayer[];
-    updateUiLayers: (uiLayer: UiLayer[]) => void;
     index: number;
 }): JSX.Element => {
     const ref = useRef<HTMLDivElement>(null);
@@ -36,19 +35,20 @@ export const Layer = ({
 
     const [displayUi, setDisplayUi] = useState(false);
     const [json, setJson] = useState("");
-    const { bindUi, unbindUi } = HandleUi(
+    const { bindUi, unbindUi } = HandleUiState(
         (state) => ({
             bindUi: state.bindUi,
             unbindUi: state.unbindUi,
         }),
         shallow
     );
+    const setUiLayers = HandleUiLayerState((state) => state.setUiLayers);
 
     const { activeUiLayer } = GetActiveUiLayer(uiLayers);
 
     const remove = (uiLayer: UiLayer) => {
         const indexToRemove = uiLayers.indexOf(uiLayer);
-        updateUiLayers(
+        setUiLayers(
             update(uiLayers, {
                 $splice: [[indexToRemove, 1]],
             })
@@ -57,7 +57,7 @@ export const Layer = ({
 
     const updateVisibility = (uiLayer: UiLayer) => {
         const indexToUpdate = uiLayers.indexOf(uiLayer);
-        updateUiLayers(
+        setUiLayers(
             update(uiLayers, {
                 [indexToUpdate]: {
                     visible: {
@@ -74,7 +74,7 @@ export const Layer = ({
         (dragIndex: number, hoverIndex: number) => {
             if (uiLayers.length === 1) return;
             const dragCard = uiLayers[dragIndex];
-            updateUiLayers(
+            setUiLayers(
                 update(uiLayers, {
                     $splice: [
                         [dragIndex, 1],

@@ -1,15 +1,18 @@
 import React, { useEffect, useState } from "react";
-import { UiLayer } from "../../uiLayer";
 import { ToolbarMenuItem } from "../ToolbarMenuItem";
 import update from "immutability-helper";
+import { HandleUiLayerState } from "../../../hooks/HandleUiLayerState";
+import shallow from "zustand/shallow";
 
-export const UndoRedo = ({
-    uiLayers,
-    updateUiLayers,
-}: {
-    uiLayers: UiLayer[];
-    updateUiLayers: (uiLayer: UiLayer[]) => void;
-}): JSX.Element => {
+export const UndoRedo = (): JSX.Element => {
+    const { uiLayers, setUiLayers } = HandleUiLayerState(
+        (state) => ({
+            uiLayers: state.uiLayers,
+            setUiLayers: state.setUiLayers,
+        }),
+        shallow
+    );
+
     const pseudolayers = uiLayers.map((uiLayer) => uiLayer.config.pseudolayer);
     const hashedUiLayers = JSON.stringify(uiLayers);
 
@@ -19,7 +22,7 @@ export const UndoRedo = ({
 
     const undo = () => {
         const newUiLayer = past[past.length - 1];
-        updateUiLayers(JSON.parse(newUiLayer));
+        setUiLayers(JSON.parse(newUiLayer));
         setPast(
             update(past, {
                 $splice: [[past.length - 1, 1]],
@@ -33,7 +36,7 @@ export const UndoRedo = ({
 
     const redo = () => {
         const newUiLayer = future[future.length - 1];
-        updateUiLayers(JSON.parse(newUiLayer));
+        setUiLayers(JSON.parse(newUiLayer));
         setFuture(
             update(future, {
                 $splice: [[future.length - 1, 1]],

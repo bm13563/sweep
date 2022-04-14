@@ -3,18 +3,19 @@ import { baseFragment } from "../../webgl/shaders/base.fragment";
 import { baseVertex } from "../../webgl/shaders/base.vertex";
 import { generateLayer } from "../mapPanel/layers/layer";
 import { generatePseudolayer } from "../mapPanel/layers/pseudolayer";
-import { generateUiLayer, UiLayer } from "../uiLayer";
+import { generateUiLayer } from "../uiLayer";
 import { Icon } from "../../components/Icon";
 import { HorizontalStack } from "../../components/HorizontalStack";
 import { Body1, Header1 } from "../../components/Typography";
 import { VerticalStack } from "../../components/VerticalStack";
-import { HandleUi } from "../../hooks/HandleUi";
+import { HandleUiState } from "../../hooks/HandleUiState";
 import { TextField } from "../../components/TextField";
 import { Dropdown } from "../../components/Dropdown";
 import { PrimaryButton } from "../../components/PrimaryButton";
 import update from "immutability-helper";
 import shallow from "zustand/shallow";
 import { SecondaryButton } from "../../components/SecondaryButton";
+import { HandleUiLayerState } from "../../hooks/HandleUiLayerState";
 
 export interface AddLayerProps {
     name: string;
@@ -22,21 +23,22 @@ export interface AddLayerProps {
     url: string;
 }
 
-export const AddLayer = ({
-    uiLayers,
-    updateUiLayers,
-}: {
-    uiLayers: UiLayer[];
-    updateUiLayers: (uiLayer: UiLayer[]) => void;
-}): JSX.Element => {
+export const AddLayer = (): JSX.Element => {
     const [name, setName] = useState("");
     const [type, setType] = useState("XYZ");
     const [url, setUrl] = useState("");
     const [displayUi, setDisplayUi] = useState(false);
-    const { bindUi, unbindUi } = HandleUi(
+    const { bindUi, unbindUi } = HandleUiState(
         (state) => ({
             bindUi: state.bindUi,
             unbindUi: state.unbindUi,
+        }),
+        shallow
+    );
+    const { uiLayers, setUiLayers } = HandleUiLayerState(
+        (state) => ({
+            uiLayers: state.uiLayers,
+            setUiLayers: state.setUiLayers,
         }),
         shallow
     );
@@ -61,7 +63,7 @@ export const AddLayer = ({
             name: name,
             pseudolayer: pseudolayer,
         });
-        updateUiLayers(
+        setUiLayers(
             update(uiLayers, {
                 $unshift: [uiLayer],
             })

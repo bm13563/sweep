@@ -9,15 +9,14 @@ import { Slider, SliderValueProps } from "../../../components/Slider";
 import { Header1, Body1 } from "../../../components/Typography";
 import { VerticalStack } from "../../../components/VerticalStack";
 import { GetActiveUiLayer } from "../../../hooks/GetActiveUiLayer";
-import { HandleUi } from "../../../hooks/HandleUi";
+import { HandleUiState } from "../../../hooks/HandleUiState";
 import { baseVertex } from "../../../webgl/shaders/base.vertex";
 import { maxRgbFragment } from "../../../webgl/shaders/maxRgb.fragment";
 import { generatePseudolayer } from "../../mapPanel/layers/pseudolayer";
-import { UiLayer } from "../../uiLayer";
 import update from "immutability-helper";
 import { ToolbarMenuItem } from "../ToolbarMenuItem";
 import { Dropdown } from "../../../components/Dropdown";
-import { reset } from "ol/transform";
+import { HandleUiLayerState } from "../../../hooks/HandleUiLayerState";
 
 type operatorTypes = "less than" | "greater than";
 
@@ -34,22 +33,23 @@ const operatorMapping = {
     "less than": "lessThan",
 };
 
-export const FilterAbsoluteRgb = ({
-    uiLayers,
-    updateUiLayers,
-}: {
-    uiLayers: UiLayer[];
-    updateUiLayers: (uiLayer: UiLayer[]) => void;
-}): JSX.Element => {
+export const FilterAbsoluteRgb = (): JSX.Element => {
     const [sliderValues, setSliderValues] =
         useState<SliderValueProps>(defaultValues);
     const [operator, setOperator] = useState<operatorTypes>(defaultOperator);
     const [error, setError] = useState<string>();
     const [displayUi, setDisplayUi] = useState(false);
-    const { bindUi, unbindUi } = HandleUi(
+    const { bindUi, unbindUi } = HandleUiState(
         (state) => ({
             bindUi: state.bindUi,
             unbindUi: state.unbindUi,
+        }),
+        shallow
+    );
+    const { uiLayers, setUiLayers } = HandleUiLayerState(
+        (state) => ({
+            uiLayers: state.uiLayers,
+            setUiLayers: state.setUiLayers,
         }),
         shallow
     );
@@ -78,10 +78,10 @@ export const FilterAbsoluteRgb = ({
                 },
             });
 
-            updateUiLayers(
+            setUiLayers(
                 update(uiLayers, {
                     [activeIndex]: {
-                        updatedPseudolayer: {
+                        pendingPseudolayer: {
                             $set: pseudolayer,
                         },
                     },
@@ -97,10 +97,10 @@ export const FilterAbsoluteRgb = ({
     const reset = () => {
         if (!(activeUiLayer && activeIndex !== undefined)) return;
 
-        updateUiLayers(
+        setUiLayers(
             update(uiLayers, {
                 [activeIndex]: {
-                    updatedPseudolayer: {
+                    pendingPseudolayer: {
                         $set: undefined,
                     },
                 },
@@ -115,14 +115,14 @@ export const FilterAbsoluteRgb = ({
         if (
             !(
                 activeUiLayer &&
-                activeUiLayer.updatedPseudolayer &&
+                activeUiLayer.pendingPseudolayer &&
                 activeIndex !== undefined
             )
         )
             return;
 
-        const updatedUiLayer = activeUiLayer?.updatedPseudolayer;
-        updateUiLayers(
+        const updatedUiLayer = activeUiLayer?.pendingPseudolayer;
+        setUiLayers(
             update(uiLayers, {
                 [activeIndex]: {
                     config: {
@@ -130,7 +130,7 @@ export const FilterAbsoluteRgb = ({
                             $set: updatedUiLayer,
                         },
                     },
-                    updatedPseudolayer: {
+                    pendingPseudolayer: {
                         $set: undefined,
                     },
                 },

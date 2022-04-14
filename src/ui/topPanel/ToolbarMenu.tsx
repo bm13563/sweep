@@ -2,7 +2,7 @@ import React, { useState, useRef, useContext } from "react";
 import { PrimaryButton } from "../../components/PrimaryButton";
 import { VerticalStack } from "../../components/VerticalStack";
 import { HandleClickOutside } from "../../hooks/HandleClickOutside";
-import { HandleUi } from "../../hooks/HandleUi";
+import { HandleUiState } from "../../hooks/HandleUiState";
 
 export const ToolbarMenu = ({
     name,
@@ -14,7 +14,7 @@ export const ToolbarMenu = ({
     const menuRef = useRef<HTMLDivElement>(null);
 
     const [open, setOpen] = useState(false);
-    const isDisplayed = HandleUi((state) => state.component);
+    const isDisplayed = HandleUiState((state) => state.component);
 
     const clickOutsideCallback = () => {
         setOpen(false);

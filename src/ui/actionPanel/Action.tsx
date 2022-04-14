@@ -1,8 +1,8 @@
 import React from "react";
-import { HandleUi } from "../../hooks/HandleUi";
+import { HandleUiState } from "../../hooks/HandleUiState";
 
 export const Action = ({ className }: { className?: string }): JSX.Element => {
-    const component = HandleUi((state) => state.component);
+    const component = HandleUiState((state) => state.component);
     return (
         <>
             {component && (
