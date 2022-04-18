@@ -1,4 +1,4 @@
-export const maxRgbFragment = `
+export const filterPercentageRgbFragment = `
 #version 300 es
 precision mediump float;
 
@@ -16,7 +16,11 @@ void main() {
     vec3 threshold = vec3(r_max, g_max, b_max);
     vec4 mask = tex;
 
-    if (any(!#!{{operator}}!#!(tex.rgb, threshold))) {
+    float sum = tex.r + tex.g + tex.b;
+    vec3 pSum = vec3(tex.r / sum, tex.g / sum, tex.b / sum); 
+    
+
+    if (any(!#!{{operator}}!#!(pSum, threshold))) {
         mask = vec4(0.0, 0.0, 0.0, 1.0);
     }
 

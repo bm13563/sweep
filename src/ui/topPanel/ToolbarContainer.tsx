@@ -4,6 +4,7 @@ import { HandleUiState } from "../../hooks/HandleUiState";
 import { UndoRedo } from "./file/UndoRedo";
 import { AdjustRgb } from "./processing/AdjustRgb";
 import { FilterAbsoluteRgb } from "./processing/FilterAbsoluteRgb";
+import { FilterPercentageRgb } from "./processing/FilterPercentageRgb";
 import { ToolbarMenu } from "./ToolbarMenu";
 
 export const ToolbarContainer = (): JSX.Element => {
@@ -21,6 +22,7 @@ export const ToolbarContainer = (): JSX.Element => {
                 <ToolbarMenu name="Processing">
                     <AdjustRgb />
                     <FilterAbsoluteRgb />
+                    <FilterPercentageRgb />
                 </ToolbarMenu>
             </HorizontalStack>
         </div>

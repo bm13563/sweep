@@ -1,29 +1,29 @@
 import throttle from "lodash.throttle";
 import React, { useEffect, useState } from "react";
 import shallow from "zustand/shallow";
+import { Dropdown } from "../../../components/Dropdown";
 import { ErrorNotification } from "../../../components/ErrorNotification";
 import { HorizontalStack } from "../../../components/HorizontalStack";
 import { Icon } from "../../../components/Icon";
 import { PrimaryButton } from "../../../components/PrimaryButton";
-import { Slider, SliderValueProps } from "../../../components/Slider";
+import { SliderValueProps, Slider } from "../../../components/Slider";
 import { Header1, Body1 } from "../../../components/Typography";
 import { VerticalStack } from "../../../components/VerticalStack";
 import { GetActiveUiLayer } from "../../../hooks/GetActiveUiLayer";
+import { HandleUiLayerState } from "../../../hooks/HandleUiLayerState";
 import { HandleUiState } from "../../../hooks/HandleUiState";
 import { baseVertex } from "../../../webgl/shaders/base.vertex";
-import { filterAbsoluteRgbFragment } from "../../../webgl/shaders/filterAbsoluteRgb";
 import { generatePseudolayer } from "../../mapPanel/layers/pseudolayer";
-import update from "immutability-helper";
 import { ToolbarMenuItem } from "../ToolbarMenuItem";
-import { Dropdown } from "../../../components/Dropdown";
-import { HandleUiLayerState } from "../../../hooks/HandleUiLayerState";
+import update from "immutability-helper";
+import { filterPercentageRgbFragment } from "../../../webgl/shaders/filterPercentageRgbFragment";
 
 type operatorTypes = "less than" | "greater than";
 
 const defaultValues = {
-    red: "255",
-    green: "255",
-    blue: "255",
+    red: "100",
+    green: "100",
+    blue: "100",
 };
 
 const defaultOperator = "greater than";
@@ -33,7 +33,7 @@ const operatorMapping = {
     "less than": "lessThan",
 };
 
-export const FilterAbsoluteRgb = (): JSX.Element => {
+export const FilterPercentageRgb = (): JSX.Element => {
     const [sliderValues, setSliderValues] =
         useState<SliderValueProps>(defaultValues);
     const [operator, setOperator] = useState<operatorTypes>(defaultOperator);
@@ -65,16 +65,16 @@ export const FilterAbsoluteRgb = (): JSX.Element => {
                     u_image: activeUiLayer.config.pseudolayer,
                 },
                 variables: {
-                    r_max: String(Number(colours.red) / 255),
-                    g_max: String(Number(colours.green) / 255),
-                    b_max: String(Number(colours.blue) / 255),
+                    r_max: String(Number(colours.red) / 100),
+                    g_max: String(Number(colours.green) / 100),
+                    b_max: String(Number(colours.blue) / 100),
                 },
                 dynamics: {
                     operator: operatorMapping[operator],
                 },
                 shaders: {
                     vertexShader: baseVertex,
-                    fragmentShader: filterAbsoluteRgbFragment,
+                    fragmentShader: filterPercentageRgbFragment,
                 },
             });
 
@@ -228,8 +228,8 @@ export const FilterAbsoluteRgb = (): JSX.Element => {
                 <Slider
                     step={1}
                     min={0}
-                    max={255}
-                    defaultValue={255}
+                    max={100}
+                    defaultValue={100}
                     onChange={onRedChange}
                     onError={onError}
                 />
@@ -237,8 +237,8 @@ export const FilterAbsoluteRgb = (): JSX.Element => {
                 <Slider
                     step={1}
                     min={0}
-                    max={255}
-                    defaultValue={255}
+                    max={100}
+                    defaultValue={100}
                     onChange={onGreenChange}
                     onError={onError}
                 />
@@ -246,8 +246,8 @@ export const FilterAbsoluteRgb = (): JSX.Element => {
                 <Slider
                     step={1}
                     min={0}
-                    max={255}
-                    defaultValue={255}
+                    max={100}
+                    defaultValue={100}
                     onChange={onBlueChange}
                     onError={onError}
                 />
@@ -267,12 +267,11 @@ export const FilterAbsoluteRgb = (): JSX.Element => {
             </VerticalStack>
         );
     };
-
     return (
         <ToolbarMenuItem
             active={true}
             onClick={() => setDisplayUi(true)}
-            name={"Filter Absolute RGB"}
+            name={"Filter Percentage RGB"}
         />
     );
 };
