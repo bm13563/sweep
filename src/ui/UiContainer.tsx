@@ -5,7 +5,6 @@ import { MapContainer } from "./mapPanel/MapContainer";
 import { Canvas } from "./mapPanel/Canvas";
 import { defaultView } from "../utils/utils";
 import { ToolbarContainer } from "./topPanel/ToolbarContainer";
-import { GetActiveUiLayer } from "../hooks/GetActiveUiLayer";
 import { Action } from "./actionPanel/Action";
 import { HandleUiLayerState } from "../hooks/HandleUiLayerState";
 
@@ -14,8 +13,7 @@ const view = defaultView();
 export const PageContainer = (): JSX.Element => {
     const renderLoop = useContext(RenderLoopContext);
 
-    const uiLayers = HandleUiLayerState((state) => state.uiLayers);
-    const { activeUiLayer } = GetActiveUiLayer(uiLayers);
+    const activeUiLayer = HandleUiLayerState((state) => state.activeUiLayer);
 
     renderLoop.renderPseudolayer(
         activeUiLayer?.pendingPseudolayer || activeUiLayer?.config.pseudolayer

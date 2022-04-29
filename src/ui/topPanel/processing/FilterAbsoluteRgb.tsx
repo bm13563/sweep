@@ -8,15 +8,18 @@ import { PrimaryButton } from "../../../components/PrimaryButton";
 import { Slider, SliderValueProps } from "../../../components/Slider";
 import { Header1, Body1 } from "../../../components/Typography";
 import { VerticalStack } from "../../../components/VerticalStack";
-import { GetActiveUiLayer } from "../../../hooks/GetActiveUiLayer";
 import { HandleUiState } from "../../../hooks/HandleUiState";
 import { baseVertex } from "../../../webgl/shaders/base.vertex";
 import { filterAbsoluteRgbFragment } from "../../../webgl/shaders/filterAbsoluteRgb";
 import { generatePseudolayer } from "../../mapPanel/layers/pseudolayer";
-import update from "immutability-helper";
 import { ToolbarMenuItem } from "../ToolbarMenuItem";
 import { Dropdown } from "../../../components/Dropdown";
 import { HandleUiLayerState } from "../../../hooks/HandleUiLayerState";
+import {
+    updatePendingPseudolayer,
+    discardPendingPseudolayer,
+    persistPendingPseudolayerAsUiLayer,
+} from "../../uiLayer";
 
 type operatorTypes = "less than" | "greater than";
 
@@ -46,15 +49,16 @@ export const FilterAbsoluteRgb = (): JSX.Element => {
         }),
         shallow
     );
-    const { uiLayers, setUiLayers } = HandleUiLayerState(
-        (state) => ({
-            uiLayers: state.uiLayers,
-            setUiLayers: state.setUiLayers,
-        }),
-        shallow
-    );
-
-    const { activeUiLayer, activeIndex } = GetActiveUiLayer(uiLayers);
+    const { uiLayers, activeUiLayer, activeIndex, setUiLayers } =
+        HandleUiLayerState(
+            (state) => ({
+                uiLayers: state.uiLayers,
+                activeUiLayer: state.activeUiLayer,
+                activeIndex: state.activeIndex,
+                setUiLayers: state.setUiLayers,
+            }),
+            shallow
+        );
 
     const setAbsoluteRgb = throttle(
         (colours: SliderValueProps, operator: operatorTypes) => {
@@ -79,13 +83,7 @@ export const FilterAbsoluteRgb = (): JSX.Element => {
             });
 
             setUiLayers(
-                update(uiLayers, {
-                    [activeIndex]: {
-                        pendingPseudolayer: {
-                            $set: pseudolayer,
-                        },
-                    },
-                })
+                updatePendingPseudolayer(uiLayers, activeIndex, pseudolayer)
             );
 
             setSliderValues(colours);
@@ -97,15 +95,7 @@ export const FilterAbsoluteRgb = (): JSX.Element => {
     const reset = () => {
         if (!(activeUiLayer && activeIndex !== undefined)) return;
 
-        setUiLayers(
-            update(uiLayers, {
-                [activeIndex]: {
-                    pendingPseudolayer: {
-                        $set: undefined,
-                    },
-                },
-            })
-        );
+        setUiLayers(discardPendingPseudolayer(uiLayers, activeIndex));
 
         setSliderValues(defaultValues);
         setOperator(defaultOperator);
@@ -121,20 +111,12 @@ export const FilterAbsoluteRgb = (): JSX.Element => {
         )
             return;
 
-        const updatedUiLayer = activeUiLayer?.pendingPseudolayer;
         setUiLayers(
-            update(uiLayers, {
-                [activeIndex]: {
-                    config: {
-                        pseudolayer: {
-                            $set: updatedUiLayer,
-                        },
-                    },
-                    pendingPseudolayer: {
-                        $set: undefined,
-                    },
-                },
-            })
+            persistPendingPseudolayerAsUiLayer(
+                uiLayers,
+                activeIndex,
+                activeUiLayer?.pendingPseudolayer
+            )
         );
 
         setSliderValues(defaultValues);

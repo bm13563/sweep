@@ -38,10 +38,22 @@ const newUiLayer2 = generateUiLayer({
 
 type HandleUiLayerStateProps = {
     uiLayers: UiLayer[];
+    activeUiLayer: UiLayer | undefined;
+    activeIndex: number | undefined;
     setUiLayers: (uiLayers: UiLayer[]) => void;
 };
 
 export const HandleUiLayerState = create<HandleUiLayerStateProps>((set) => ({
     uiLayers: [newUiLayer, newUiLayer2],
-    setUiLayers: (uiLayers: UiLayer[]) => set(() => ({ uiLayers })),
+    activeUiLayer: newUiLayer,
+    activeIndex: 0,
+    setUiLayers: (uiLayers: UiLayer[]) => {
+        const activeUiLayer = uiLayers.find((layer) => layer.visible);
+        const activeIndex = activeUiLayer
+            ? uiLayers.indexOf(activeUiLayer)
+            : undefined;
+        set(() => ({ uiLayers }));
+        set(() => ({ activeUiLayer }));
+        set(() => ({ activeIndex }));
+    },
 }));

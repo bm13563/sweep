@@ -3,7 +3,6 @@ import { ToolbarMenuItem } from "../ToolbarMenuItem";
 import { generatePseudolayer } from "../../mapPanel/layers/pseudolayer";
 import { baseVertex } from "../../../webgl/shaders/base.vertex";
 import { adjustColorsFragment } from "../../../webgl/shaders/adjustColors.fragment";
-import { GetActiveUiLayer } from "../../../hooks/GetActiveUiLayer";
 import { ErrorNotification } from "../../../components/ErrorNotification";
 import { HorizontalStack } from "../../../components/HorizontalStack";
 import { Icon } from "../../../components/Icon";
@@ -16,7 +15,11 @@ import { HandleUiLayerState } from "../../../hooks/HandleUiLayerState";
 import update from "immutability-helper";
 import throttle from "lodash.throttle";
 import shallow from "zustand/shallow";
-import { RemovePendingLayerFromActiveUiLayer } from "../../../hooks/SetPseudolayerHooks";
+import {
+    discardPendingPseudolayer,
+    persistPendingPseudolayerAsUiLayer,
+    updatePendingPseudolayer,
+} from "../../uiLayer";
 
 const defaultValues = {
     red: "1",
@@ -36,15 +39,16 @@ export const AdjustRgb = (): JSX.Element => {
         }),
         shallow
     );
-    const { uiLayers, setUiLayers } = HandleUiLayerState(
-        (state) => ({
-            uiLayers: state.uiLayers,
-            setUiLayers: state.setUiLayers,
-        }),
-        shallow
-    );
-
-    const { activeUiLayer, activeIndex } = GetActiveUiLayer(uiLayers);
+    const { uiLayers, setUiLayers, activeUiLayer, activeIndex } =
+        HandleUiLayerState(
+            (state) => ({
+                uiLayers: state.uiLayers,
+                activeUiLayer: state.activeUiLayer,
+                activeIndex: state.activeIndex,
+                setUiLayers: state.setUiLayers,
+            }),
+            shallow
+        );
 
     const setRGBValues = throttle((colours: SliderValueProps) => {
         if (!(activeUiLayer && activeIndex !== undefined)) return;
@@ -66,13 +70,7 @@ export const AdjustRgb = (): JSX.Element => {
         });
 
         setUiLayers(
-            update(uiLayers, {
-                [activeIndex]: {
-                    pendingPseudolayer: {
-                        $set: pseudolayer,
-                    },
-                },
-            })
+            updatePendingPseudolayer(uiLayers, activeIndex, pseudolayer)
         );
 
         setSliderState(colours);
@@ -81,15 +79,7 @@ export const AdjustRgb = (): JSX.Element => {
     const reset = () => {
         if (!(activeUiLayer && activeIndex !== undefined)) return;
 
-        setUiLayers(
-            update(uiLayers, {
-                [activeIndex]: {
-                    pendingPseudolayer: {
-                        $set: undefined,
-                    },
-                },
-            })
-        );
+        setUiLayers(discardPendingPseudolayer(uiLayers, activeIndex));
 
         setSliderState(defaultValues);
     };
@@ -104,20 +94,12 @@ export const AdjustRgb = (): JSX.Element => {
         )
             return;
 
-        const updatedUiLayer = activeUiLayer?.pendingPseudolayer;
         setUiLayers(
-            update(uiLayers, {
-                [activeIndex]: {
-                    config: {
-                        pseudolayer: {
-                            $set: updatedUiLayer,
-                        },
-                    },
-                    pendingPseudolayer: {
-                        $set: undefined,
-                    },
-                },
-            })
+            persistPendingPseudolayerAsUiLayer(
+                uiLayers,
+                activeIndex,
+                activeUiLayer?.pendingPseudolayer
+            )
         );
 
         setSliderState(defaultValues);

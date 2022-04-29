@@ -1,18 +1,15 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useRef } from "react";
 import { useDrag, useDrop, DropTargetMonitor } from "react-dnd";
 import { XYCoord } from "dnd-core";
 import { UiLayer } from "../uiLayer";
-import { Icon } from "../../components/Icon";
-import { Body1, Header1 } from "../../components/Typography";
+import { Body1 } from "../../components/Typography";
 import { HorizontalStack } from "../../components/HorizontalStack";
-import { GetActiveUiLayer } from "../../hooks/GetActiveUiLayer";
-import { PrimaryButton } from "../../components/PrimaryButton";
-import { TextField } from "../../components/TextField";
-import { VerticalStack } from "../../components/VerticalStack";
-import { HandleUiState } from "../../hooks/HandleUiState";
 import update from "immutability-helper";
 import shallow from "zustand/shallow";
 import { HandleUiLayerState } from "../../hooks/HandleUiLayerState";
+import { DeleteLayer } from "./DeleteLayer";
+import { ToggleLayer } from "./ToggleLayer";
+import { ExportLayer } from "./ExportLayer";
 
 interface DragItem {
     index: number;
@@ -22,53 +19,22 @@ interface DragItem {
 
 export const Layer = ({
     uiLayer,
-    uiLayers,
     index,
 }: {
     uiLayer: UiLayer;
-    uiLayers: UiLayer[];
     index: number;
 }): JSX.Element => {
     const ref = useRef<HTMLDivElement>(null);
-    const textFieldRef = useRef<HTMLDivElement>(null);
     const layerId = uiLayer.uid;
 
-    const [displayUi, setDisplayUi] = useState(false);
-    const [json, setJson] = useState("");
-    const { bindUi, unbindUi } = HandleUiState(
+    const { uiLayers, activeUiLayer, setUiLayers } = HandleUiLayerState(
         (state) => ({
-            bindUi: state.bindUi,
-            unbindUi: state.unbindUi,
+            uiLayers: state.uiLayers,
+            activeUiLayer: state.activeUiLayer,
+            setUiLayers: state.setUiLayers,
         }),
         shallow
     );
-    const setUiLayers = HandleUiLayerState((state) => state.setUiLayers);
-
-    const { activeUiLayer } = GetActiveUiLayer(uiLayers);
-
-    const remove = (uiLayer: UiLayer) => {
-        const indexToRemove = uiLayers.indexOf(uiLayer);
-        setUiLayers(
-            update(uiLayers, {
-                $splice: [[indexToRemove, 1]],
-            })
-        );
-    };
-
-    const updateVisibility = (uiLayer: UiLayer) => {
-        const indexToUpdate = uiLayers.indexOf(uiLayer);
-        setUiLayers(
-            update(uiLayers, {
-                [indexToUpdate]: {
-                    visible: {
-                        $apply: function (visible) {
-                            return !visible;
-                        },
-                    },
-                },
-            })
-        );
-    };
 
     const move = useCallback(
         (dragIndex: number, hoverIndex: number) => {
@@ -129,65 +95,7 @@ export const Layer = ({
         }),
     });
 
-    const changeVisibility = () => {
-        updateVisibility(uiLayer);
-    };
-
-    const removeUiLayer = () => {
-        remove(uiLayer);
-    };
-
     drag(drop(ref));
-
-    const exportLayerInfo = () => {
-        const layerJson = JSON.stringify(uiLayer);
-        setJson(layerJson);
-        setDisplayUi(true);
-    };
-
-    const copy = () => {
-        navigator.clipboard.writeText(json);
-        textFieldRef.current && textFieldRef.current.click();
-    };
-
-    const onClose = () => {
-        unbindUi();
-        setDisplayUi(false);
-    };
-
-    const updateJson = (value: string) => {
-        setJson(value);
-    };
-
-    useEffect(() => {
-        displayUi && bindUi(LayerUi());
-    }, [displayUi, json]);
-
-    const LayerUi = (): JSX.Element => {
-        return (
-            <VerticalStack spacing={2}>
-                <HorizontalStack className="justify-between mb-1">
-                    <Header1>Export Layer</Header1>
-                    <Icon className="i-mdi-close" onClick={onClose} />
-                </HorizontalStack>
-                <Body1>Name</Body1>
-                <div
-                    ref={textFieldRef}
-                    onClick={(event) => {
-                        const selection = window && window.getSelection();
-
-                        selection !== null &&
-                            selection.selectAllChildren(event.target as Node);
-                    }}
-                >
-                    <TextField lines={6} value={json} onChange={updateJson} />
-                </div>
-                <div className="flex flex-col justify-center items-center children:w-25">
-                    <PrimaryButton text="Copy" onClick={copy} />
-                </div>
-            </VerticalStack>
-        );
-    };
 
     return (
         <div
@@ -204,22 +112,9 @@ export const Layer = ({
             <HorizontalStack spacing={5} className="justify-between">
                 <Body1>{uiLayer.config.name}</Body1>
                 <HorizontalStack spacing={2}>
-                    <Icon
-                        className="i-mdi-code-braces"
-                        onClick={exportLayerInfo}
-                    />
-                    <Icon className="i-mdi-delete" onClick={removeUiLayer} />
-                    {uiLayer.visible ? (
-                        <Icon
-                            className="i-mdi-eye-off"
-                            onClick={changeVisibility}
-                        />
-                    ) : (
-                        <Icon
-                            className="i-mdi-eye"
-                            onClick={changeVisibility}
-                        />
-                    )}
+                    <ExportLayer uiLayer={uiLayer} />
+                    <DeleteLayer uiLayer={uiLayer} />
+                    <ToggleLayer uiLayer={uiLayer} />
                 </HorizontalStack>
             </HorizontalStack>
         </div>

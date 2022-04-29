@@ -41,7 +41,6 @@ export const LayerContainer = (): JSX.Element => {
                             <Layer
                                 key={uiLayer.uid}
                                 uiLayer={uiLayer}
-                                uiLayers={uiLayers}
                                 index={index}
                             />
                         );
