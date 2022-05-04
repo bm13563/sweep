@@ -1,0 +1,42 @@
+import React, { useContext } from "react";
+import { RenderLoopContext } from "../App";
+import { LayerContainer } from "./Sidebar/Sidebar";
+import { Viewport } from "./Viewport/Viewport";
+import { defaultView } from "../utils/utils";
+import { Toolbar } from "./Toolbar/Toolbar";
+import { Action } from "./Action/Action";
+import { useHandleUiLayerState } from "../hooks/useHandleUiLayerState";
+
+const view = defaultView();
+
+export const Layout = (): JSX.Element => {
+    const renderLoop = useContext(RenderLoopContext);
+
+    const activeUiLayer = useHandleUiLayerState((state) => state.activeUiLayer);
+
+    renderLoop.renderPseudolayer(
+        activeUiLayer?.pendingPseudolayer || activeUiLayer?.config.pseudolayer
+    );
+
+    return (
+        <div
+            className="grid content-start"
+            style={{
+                height: "calc(100vh - 16px)",
+                gridTemplateRows: "[r1] 5% [r2] 95% [rend]",
+                gridTemplateColumns: "[c1] 15.625rem [c2] auto [cend]",
+            }}
+        >
+            <div className="row-start-1 col-start-2">
+                <Toolbar />
+            </div>
+            <div className="row-start-2 col-start-1 flex flex-col items-center">
+                <LayerContainer />
+            </div>
+            <div className="row-start-2 col-start-2 flex justify-center items-center">
+                <Action />
+                <Viewport view={view} activeUiLayer={activeUiLayer} />
+            </div>
+        </div>
+    );
+};

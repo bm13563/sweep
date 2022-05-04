@@ -1,11 +1,11 @@
 import { z } from "zod";
-import { Layer, XyzConfig } from "./ui/mapPanel/layers/layer";
+import { Layer, XyzConfig } from "./primitives/baseLayer";
 import {
-    Pseudolayer,
-    PseudolayerConfig,
+    PseudoLayer,
+    PseudoLayerConfig,
     ShaderProps,
-} from "./ui/mapPanel/layers/pseudolayer";
-import { UiLayer, UiLayerConfig } from "./ui/uiLayer";
+} from "./primitives/pseudoLayer";
+import { UiLayer, UiLayerConfig } from "./primitives/uiLayer";
 
 export const xyzLayerResolver: z.ZodSchema<XyzConfig> = z.lazy(() =>
     z.object({
@@ -29,7 +29,7 @@ export const shaderPropsResolver: z.ZodSchema<ShaderProps> = z.lazy(() =>
     })
 );
 
-export const pseudolayerConfigResolver: z.ZodSchema<PseudolayerConfig> = z.lazy(
+export const pseudolayerConfigResolver: z.ZodSchema<PseudoLayerConfig> = z.lazy(
     () =>
         z.object({
             inputs: z.record(z.union([layerResolver, pseudolayerResolver])),
@@ -39,7 +39,7 @@ export const pseudolayerConfigResolver: z.ZodSchema<PseudolayerConfig> = z.lazy(
         })
 );
 
-export const pseudolayerResolver: z.ZodSchema<Pseudolayer> = z.lazy(() =>
+export const pseudolayerResolver: z.ZodSchema<PseudoLayer> = z.lazy(() =>
     z.object({
         uid: z.string(),
         type: z.literal("pseudolayer"),

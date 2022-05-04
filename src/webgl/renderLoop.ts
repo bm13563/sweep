@@ -2,7 +2,7 @@ import * as twgl from "twgl.js";
 import { isBaseLayer, isPseudolayer } from "../utils/utils";
 import { baseFragment } from "./shaders/base.fragment";
 import { flipVertex } from "./shaders/flip.vertex";
-import { Pseudolayer } from "../ui/mapPanel/layers/pseudolayer";
+import { PseudoLayer } from "../primitives/pseudoLayer";
 
 export class RenderLoop {
     stopped = false;
@@ -11,7 +11,7 @@ export class RenderLoop {
     contextCache: Record<string, CanvasRenderingContext2D> = {};
     programCache: Record<string, twgl.ProgramInfo> = {};
     bufferCache: Record<string, string> = {};
-    pseudolayer?: Pseudolayer | undefined;
+    pseudolayer?: PseudoLayer | undefined;
     gl?: WebGLRenderingContext;
 
     registerWebGl(gl: WebGLRenderingContext): void {
@@ -26,7 +26,7 @@ export class RenderLoop {
         };
     }
 
-    renderPseudolayer = (pseudolayer: Pseudolayer | undefined): void => {
+    renderPseudolayer = (pseudolayer: PseudoLayer | undefined): void => {
         this.pseudolayer = pseudolayer;
     };
 
@@ -41,7 +41,7 @@ export class RenderLoop {
         ]);
 
         const manifest = (
-            pseudolayer: Pseudolayer,
+            pseudolayer: PseudoLayer,
             contexts: Record<string, CanvasRenderingContext2D>,
             programs: Record<string, twgl.ProgramInfo>
         ) => {
@@ -49,7 +49,7 @@ export class RenderLoop {
             gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
             let killswitch = false;
 
-            const recurse = (pseudolayer: Pseudolayer): void => {
+            const recurse = (pseudolayer: PseudoLayer): void => {
                 if (killswitch) {
                     return;
                 }
@@ -132,7 +132,7 @@ export class RenderLoop {
         };
 
         const draw = (
-            pseudolayer: Pseudolayer,
+            pseudolayer: PseudoLayer,
             program: twgl.ProgramInfo,
             uniforms: Record<string, WebGLTexture | string>,
             useFramebuffer?: boolean

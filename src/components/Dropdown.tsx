@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import { HandleClickOutside } from "../hooks/HandleClickOutside";
+import { useHandleClickOutside } from "../hooks/useHandleClickOutside";
 import { HorizontalStack } from "./HorizontalStack";
 import { Body1 } from "./Typography";
 import { VerticalStack } from "./VerticalStack";
@@ -24,7 +24,7 @@ export const Dropdown = ({
         setDisplayOptions(false);
     };
 
-    HandleClickOutside(optionsRef, clickOutsideCallback);
+    useHandleClickOutside(optionsRef, clickOutsideCallback);
 
     return (
         <div className={`cursor-pointer ${className}`}>

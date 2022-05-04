@@ -1,24 +1,24 @@
 import { View } from "ol";
 import { fromLonLat, get as getProjection } from "ol/proj";
-import { Layer } from "../ui/mapPanel/layers/layer";
-import { Pseudolayer } from "../ui/mapPanel/layers/pseudolayer";
+import { Layer } from "../primitives/baseLayer";
+import { PseudoLayer } from "../primitives/pseudoLayer";
 
 export const isPseudolayer = (
-    layer: Layer | Pseudolayer
-): layer is Pseudolayer => {
+    layer: Layer | PseudoLayer
+): layer is PseudoLayer => {
     return layer.type === "pseudolayer";
 };
 
-export const isBaseLayer = (layer: Layer | Pseudolayer): layer is Layer => {
+export const isBaseLayer = (layer: Layer | PseudoLayer): layer is Layer => {
     return layer.type === "baseLayer";
 };
 
 export const findMapLayers = (
-    pseudolayer: Pseudolayer | undefined
+    pseudolayer: PseudoLayer | undefined
 ): Layer[] => {
     const mapLayers: Layer[] = [];
 
-    const recurse = (layer: Pseudolayer | Layer): void => {
+    const recurse = (layer: PseudoLayer | Layer): void => {
         if (isBaseLayer(layer)) {
             mapLayers.push(layer);
         } else if (isPseudolayer(layer)) {
