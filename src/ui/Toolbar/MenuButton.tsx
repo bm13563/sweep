@@ -1,41 +1,37 @@
-import React, { useState, useRef, useContext } from "react";
+import React, { useState, useRef } from "react";
 import { PrimaryButton } from "../../components/PrimaryButton";
 import { VerticalStack } from "../../components/VerticalStack";
 import { useHandleClickOutside } from "../../hooks/useHandleClickOutside";
-import { useHandleUiState } from "../../hooks/useHandleUiState";
 
 export const MenuButton = ({
-    name,
-    children,
+  name,
+  children,
 }: {
-    name: string;
-    children?: JSX.Element | JSX.Element[];
+  name: string;
+  children?: JSX.Element | JSX.Element[];
 }): JSX.Element => {
-    const menuRef = useRef<HTMLDivElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
 
-    const [open, setOpen] = useState(false);
-    const isDisplayed = useHandleUiState((state) => state.component);
+  const [open, setOpen] = useState(false);
 
-    const clickOutsideCallback = () => {
-        setOpen(false);
-    };
+  const closeOnClick = () => {
+    setOpen(false);
+  };
 
-    const exceptionCallback = () => {
-        return !!isDisplayed;
-    };
+  useHandleClickOutside(menuRef, closeOnClick);
 
-    useHandleClickOutside(menuRef, clickOutsideCallback, exceptionCallback);
-
-    return (
-        <div ref={menuRef} className="mr-10 z-2 text-center">
-            <PrimaryButton
-                text={name}
-                onClick={() => setOpen(!open)}
-                className="w-30"
-            />
-            <VerticalStack className={`${!open && "invisible"}`}>
-                {children}
-            </VerticalStack>
-        </div>
-    );
+  return (
+    <div className="mr-5 z-2 text-center">
+      <div className="h-full" ref={menuRef}>
+        <PrimaryButton
+          text={name}
+          onClick={() => setOpen(!open)}
+          className="w-30"
+        />
+      </div>
+      <VerticalStack className={`${!open && "invisible"}`}>
+        {children}
+      </VerticalStack>
+    </div>
+  );
 };

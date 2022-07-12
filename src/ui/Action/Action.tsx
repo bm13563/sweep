@@ -1,17 +1,8 @@
 import React from "react";
-import { useHandleUiState } from "../../hooks/useHandleUiState";
+import { useToggleActionState } from "../../hooks/useToggleActionState";
 
-export const Action = ({ className }: { className?: string }): JSX.Element => {
-    const component = useHandleUiState((state) => state.component);
-    return (
-        <>
-            {component && (
-                <div
-                    className={`absolute w-1/6 z-2 p-4 bg-emerald-400 border ${className}`}
-                >
-                    {component}
-                </div>
-            )}
-        </>
-    );
+export const Action = () => {
+  const component = useToggleActionState((state) => state.component);
+
+  return <div className="w-full">{component}</div>;
 };

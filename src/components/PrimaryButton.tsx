@@ -1,24 +1,24 @@
 import React from "react";
-import { Button } from "./Button";
+import { Button, ButtonEvent } from "./Button";
 
 export const PrimaryButton = ({
-    text,
-    onClick,
-    active = true,
-    className,
+  text,
+  onClick,
+  active = true,
+  className,
 }: {
-    text: string;
-    onClick: () => void;
-    active?: boolean;
-    className?: string;
+  text: string;
+  onClick: (event: ButtonEvent) => void;
+  active?: boolean;
+  className?: string;
 }): JSX.Element => {
-    return (
-        <Button
-            text={text}
-            onClick={onClick}
-            className={`${
-                active ? "bg-purple-600 hover:bg-purple-800" : "disabled"
-            } ${className}`}
-        />
-    );
+  return (
+    <Button
+      text={text}
+      onClick={onClick}
+      className={`${
+        active ? "bg-purple-600 hover:bg-purple-800" : "disabled"
+      } ${className}`}
+    />
+  );
 };

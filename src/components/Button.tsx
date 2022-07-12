@@ -1,21 +1,22 @@
 import React from "react";
-import { Body1 } from "./Typography";
+
+export type ButtonEvent = React.MouseEvent<HTMLDivElement, MouseEvent>;
 
 export const Button = ({
-    text,
-    onClick,
-    className,
+  text,
+  onClick,
+  className,
 }: {
-    text: string;
-    onClick: () => void;
-    className?: string;
+  text: string;
+  onClick: (event: ButtonEvent) => void;
+  className?: string;
 }): JSX.Element => {
-    return (
-        <div
-            className={`h-full flex flex-col justify-center items-center rounded cursor-pointer ${className}`}
-            onClick={onClick}
-        >
-            <Body1>{text}</Body1>
-        </div>
-    );
+  return (
+    <div
+      className={`h-full flex flex-col justify-center items-center rounded cursor-pointer ${className}`}
+      onClick={onClick}
+    >
+      <div className="body1">{text}</div>
+    </div>
+  );
 };

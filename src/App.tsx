@@ -8,12 +8,12 @@ const renderLoop = new RenderLoop();
 export const RenderLoopContext = createContext(renderLoop);
 
 const App = (): JSX.Element => {
-    return (
-        <div>
-            <DndProvider backend={HTML5Backend}>
-                <Layout />
-            </DndProvider>
-        </div>
-    );
+  return (
+    <div>
+      <DndProvider backend={HTML5Backend}>
+        <Layout />
+      </DndProvider>
+    </div>
+  );
 };
 export default App;

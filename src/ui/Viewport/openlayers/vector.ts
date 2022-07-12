@@ -3,9 +3,9 @@ import Feature from "ol/Feature";
 import Geometry from "ol/geom/Geometry";
 
 export const vector = (
-    features: Feature<Geometry>[]
+  features: Feature<Geometry>[]
 ): VectorSource<Geometry> => {
-    return new VectorSource({
-        features,
-    });
+  return new VectorSource({
+    features,
+  });
 };
