@@ -21,12 +21,12 @@ export const MenuButton = ({
   useHandleClickOutside(menuRef, closeOnClick);
 
   return (
-    <div className="mr-5 z-2 text-center">
-      <div className="h-full" ref={menuRef}>
+    <div className="mr-2 z-2 text-center">
+      <div className="" ref={menuRef}>
         <PrimaryButton
           text={name}
           onClick={() => setOpen(!open)}
-          className="w-30"
+          className="w-25 h-full subscript1 bg-items-primary hover:bg-items-accent"
         />
       </div>
       <VerticalStack className={`${!open && "invisible"}`}>

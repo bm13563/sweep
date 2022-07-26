@@ -121,6 +121,9 @@ export const AddLayerFromConfig = (): JSX.Element => {
   };
 
   return (
-    <Icon className="i-mdi-code-braces" onClick={() => setDisplayUi(true)} />
+    <Icon
+      className="i-mdi-code-braces text-text-primary"
+      onClick={() => setDisplayUi(true)}
+    />
   );
 };

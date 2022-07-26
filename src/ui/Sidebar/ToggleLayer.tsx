@@ -32,9 +32,15 @@ export const ToggleLayer = ({ uiLayer }: { uiLayer: UiLayer }): JSX.Element => {
   return (
     <>
       {uiLayer.visible ? (
-        <Icon className="i-mdi-eye-off" onClick={updateVisibility} />
+        <Icon
+          className="i-mdi-eye-off text-text-primary"
+          onClick={updateVisibility}
+        />
       ) : (
-        <Icon className="i-mdi-eye" onClick={updateVisibility} />
+        <Icon
+          className="i-mdi-eye text-text-primary"
+          onClick={updateVisibility}
+        />
       )}
     </>
   );

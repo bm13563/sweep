@@ -247,7 +247,7 @@ export const FilterAbsoluteRgb = (): JSX.Element => {
     <MenuItem
       active={true}
       onClick={() => setDisplayUi(true)}
-      name={"Filter Absolute RGB"}
+      name={"Filter RGB"}
     />
   );
 };

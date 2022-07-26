@@ -128,5 +128,10 @@ export const AddLayer = (): JSX.Element => {
     );
   };
 
-  return <Icon className="i-mdi-add" onClick={() => setDisplayUi(true)} />;
+  return (
+    <Icon
+      className="i-mdi-add text-text-primary"
+      onClick={() => setDisplayUi(true)}
+    />
+  );
 };

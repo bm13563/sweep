@@ -6,12 +6,13 @@ import { FilterAbsoluteRgb } from "./processing/FilterAbsoluteRgb";
 import { FilterPercentageRgb } from "./processing/FilterPercentageRgb";
 import { MenuButton } from "./MenuButton";
 import { ThreeXKernal } from "./processing/ThreeXKernal";
+import { BandCalculator } from "./tools/BandCalculator";
 
 export const Toolbar = (): JSX.Element => {
   return (
-    <div className={`h-full`}>
+    <div className="h-5 bg-background-primary">
       <HorizontalStack
-        spacing={5}
+        spacing={0}
         className="h-full children:flex children:h-full"
       >
         <MenuButton name="File">
@@ -22,6 +23,9 @@ export const Toolbar = (): JSX.Element => {
           <FilterAbsoluteRgb />
           <FilterPercentageRgb />
           <ThreeXKernal />
+        </MenuButton>
+        <MenuButton name="Tools">
+          <BandCalculator />
         </MenuButton>
       </HorizontalStack>
     </div>

@@ -13,10 +13,10 @@ export const Button = ({
 }): JSX.Element => {
   return (
     <div
-      className={`h-full flex flex-col justify-center items-center rounded cursor-pointer ${className}`}
+      className={`h-full flex flex-col justify-center items-center rounded-sm cursor-pointer ${className}`}
       onClick={onClick}
     >
-      <div className="body1">{text}</div>
+      <div>{text}</div>
     </div>
   );
 };

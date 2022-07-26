@@ -12,7 +12,7 @@ export const Icon = ({
   return (
     <div
       onClick={onClick}
-      className={`flex align-middle inline-block cursor-pointer text-slate-900 ${className} 
+      className={`flex align-middle inline-block cursor-pointer ${className} 
       h-${String(size)} w-${String(size)}`}
     />
   );

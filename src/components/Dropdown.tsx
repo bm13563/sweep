@@ -7,11 +7,13 @@ export const Dropdown = ({
   options,
   onChange,
   defaultValue = "",
+  displayNumber = 10,
   className,
 }: {
   options: string[];
   onChange: (value: string) => void;
   defaultValue?: string;
+  displayNumber?: number;
   className?: string;
 }): JSX.Element => {
   const optionsRef = useRef<HTMLDivElement>(null);
@@ -33,14 +35,16 @@ export const Dropdown = ({
             setDisplayOptions(!displayOptions);
           }}
         >
-          <HorizontalStack className="border flex flew-row justify-between leading-none">
+          <HorizontalStack className="border flex flew-row justify-between leading-none z-1">
             <>{value}</>
             <div className="i-mdi-menu-down"></div>
           </HorizontalStack>
         </div>
         {displayOptions && (
           <div>
-            <VerticalStack className={`flex bg-white absolute w-full rounded`}>
+            <VerticalStack
+              className={`flex bg-white absolute w-full rounded z-2`}
+            >
               {options?.map((option) => {
                 return (
                   <div

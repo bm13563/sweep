@@ -71,5 +71,10 @@ export const ExportLayer = ({ uiLayer }: { uiLayer: UiLayer }): JSX.Element => {
     );
   };
 
-  return <Icon className="i-mdi-code-braces" onClick={exportLayerInfo} />;
+  return (
+    <Icon
+      className="i-mdi-code-braces text-text-primary"
+      onClick={exportLayerInfo}
+    />
+  );
 };

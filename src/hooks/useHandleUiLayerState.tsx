@@ -47,7 +47,7 @@ type HandleUiLayerStateProps = {
 };
 
 export const useHandleUiLayerState = create<HandleUiLayerStateProps>((set) => ({
-  uiLayers: [offlineUiLayer, newUiLayer2],
+  uiLayers: [newUiLayer2, offlineUiLayer],
   activeUiLayer: offlineUiLayer,
   activeIndex: 0,
   setUiLayers: (uiLayers: UiLayer[]) => {

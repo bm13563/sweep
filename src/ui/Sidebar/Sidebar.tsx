@@ -22,8 +22,8 @@ export const Sidebar = (): JSX.Element => {
 
   return (
     <div className="w-full">
-      <VerticalStack spacing={5}>
-        <HorizontalStack spacing={5} className="justify-between">
+      <VerticalStack spacing={2}>
+        <HorizontalStack className="justify-between">
           <div className="header1">Layers</div>
           <HorizontalStack spacing={2}>
             <AddLayerFromConfig />

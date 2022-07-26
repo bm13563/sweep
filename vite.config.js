@@ -16,6 +16,12 @@ export default defineConfig({
                 presetIcons({}),
                 presetUno(),
             ],
+            rules: [
+              [/^text-(.*)$/, ([, c], { theme }) => {
+                if (theme.colors[c])
+                  return { color: theme.colors[c] }
+              }],
+            ],
             variants: [
                 (matcher) => {
                     if (!matcher.startsWith("children:"))
@@ -39,16 +45,36 @@ export default defineConfig({
             ],
             // seem to need self-executing function
             safelist: (() =>  [
-                ...[...Array(10).keys()].flatMap((c) => [`children:mt-${c}`, `children:ml-${c}`, `h-${c}`, `w-${c}`]),
+                ...[...Array(100).keys()].flatMap((c) => [`children:mt-${c}`, `children:ml-${c}`, `h-${c}`, `w-${c}`]),
             ])(),
             shortcuts: {
-                border: "rounded border-solid border-1 border-slate-900 py-2 px-1",
-                disabled: "pointer-events-none bg-slate-500",
-                header1: "font-sans text-xl text-slate-900",
-                body1: "font-sans text-base text-slate-900",
-                subscript1: "font-sans text-sm text-slate-900",
-                subscript2: "font-sans text-xs text-slate-900",
+                border: "rounded-sm border-solid border-border-primary border-1 py-2 px-1",
+                header1: "font-sans text-xl text-text-primary",
+                body1: "font-sans text-base text-text-primary",
+                subscript1: "font-sans text-sm text-text-primary",
+                subscript2: "font-sans text-xs text-text-primary",
             },
+            theme: {
+              colors: {
+                background: {
+                  primary: "#fafafa",
+                },
+                items: {
+                  primary: "#e6f2ff",
+                  accent: "#b3d7ff",
+                  disabled: "#949ca6"
+                },
+                text: {
+                  primary: "#2b2b2b",
+                  accent: "#9ca38f"
+                },
+                border: {
+                  primary: "#fafafa",
+                  secondary: "none",
+                  accent: "#b3d7ff",
+                }
+              }
+            }
         }),
     ],
 });

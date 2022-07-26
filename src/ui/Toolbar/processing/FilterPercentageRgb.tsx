@@ -246,7 +246,7 @@ export const FilterPercentageRgb = (): JSX.Element => {
     <MenuItem
       active={true}
       onClick={() => setDisplayUi(true)}
-      name={"Filter Percentage RGB"}
+      name={"Filter pc RGB"}
     />
   );
 };

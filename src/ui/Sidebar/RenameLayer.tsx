@@ -8,6 +8,9 @@ export const RenameLayer = ({
   toggleEditMode: () => void;
 }): JSX.Element => {
   return (
-    <Icon className="i-mdi-pencil" onClick={() => toggleEditMode()}></Icon>
+    <Icon
+      className="i-mdi-pencil text-text-primary"
+      onClick={() => toggleEditMode()}
+    ></Icon>
   );
 };

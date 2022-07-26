@@ -9,24 +9,24 @@ import React from "react";
 export const Overlay = ({
   display,
   children,
+  className,
 }: {
   display: number;
   children: JSX.Element[];
+  className: string;
 }) => {
   const childrenCopy: JSX.Element[] = [children[display]];
   children.forEach((child, index) => {
     index !== display && childrenCopy.push(child);
   });
 
-  const reverseChildrenCopy = childrenCopy.reverse();
-
   return (
-    <div className="h-full w-full relative overflow-hidden">
-      {React.Children.map(reverseChildrenCopy, (child) => {
-        return (
-          <div className="absolute top-0 left-0 bg-white w-full h-999">
-            {child}
-          </div>
+    <div className="flex w-full h-full">
+      {React.Children.map(childrenCopy, (child, index) => {
+        return index === 0 ? (
+          <div className={`w-full h-full ${className}`}>{child}</div>
+        ) : (
+          <div className="w-0 h-0 hidden">{child}</div>
         );
       })}
     </div>

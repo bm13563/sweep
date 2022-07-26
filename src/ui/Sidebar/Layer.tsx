@@ -11,6 +11,7 @@ import { ToggleLayer } from "./ToggleLayer";
 import { ExportLayer } from "./ExportLayer";
 import { RenameLayer } from "./RenameLayer";
 import { TextField } from "../../components/TextField";
+import { LayerMetadata } from "./LayerMetadata";
 
 interface DragItem {
   index: number;
@@ -113,15 +114,15 @@ export const Layer = ({
     <div
       ref={ref}
       data-handler-id={handlerId}
-      className={`flex flex-col justify-center h-10 bg-emerald-300 cursor-pointer ${
+      className={`flex flex-col justify-center h-8 bg-items-primary cursor-pointer ${
         isDragging && "opacity-0"
       } ${
         uiLayer.uid === activeUiLayer?.uid
-          ? "border border-orange-300"
+          ? "border border-border-accent"
           : "border"
       }`}
     >
-      <HorizontalStack spacing={5} className="justify-between">
+      <HorizontalStack className="justify-between">
         <TextField
           value={uiLayer.properties.name}
           className={`children:border-none ${
@@ -132,6 +133,7 @@ export const Layer = ({
         />
         <HorizontalStack spacing={1}>
           <RenameLayer toggleEditMode={toggleEditMode} />
+          <LayerMetadata uiLayer={uiLayer} index={index} />
           <ExportLayer uiLayer={uiLayer} />
           <DeleteLayer uiLayer={uiLayer} />
           <ToggleLayer uiLayer={uiLayer} />
