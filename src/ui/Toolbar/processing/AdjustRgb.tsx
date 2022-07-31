@@ -170,43 +170,45 @@ export const AdjustRgb = (): JSX.Element => {
 
   const AdjustRgbUi = (): JSX.Element => {
     return (
-      <VerticalStack spacing={2}>
-        <HorizontalStack className="justify-between mb-1">
+      <>
+        <HorizontalStack className="justify-between">
           <div className="header1">Adjust RGB</div>
-          <Icon className="i-mdi-close" onClick={onClose} />
+          <Icon title="Close" className="i-mdi-close" onClick={onClose} />
         </HorizontalStack>
         <>{error && <ErrorNotification errorText={error} />}</>
-        <div className="body1">Red</div>
-        <Slider
-          step={0.01}
-          min={0}
-          max={3}
-          defaultValue={1}
-          onChange={onRedChange}
-          onError={onError}
-        />
-        <div className="body1">Green</div>
-        <Slider
-          step={0.01}
-          min={0}
-          max={3}
-          defaultValue={1}
-          onChange={onGreenChange}
-          onError={onError}
-        />
-        <div className="body1">Blue</div>
-        <Slider
-          step={0.01}
-          min={0}
-          max={3}
-          defaultValue={1}
-          onChange={onBlueChange}
-          onError={onError}
-        />
-        <HorizontalStack className="flex flex-col justify-center items-center children:w-25">
-          <PrimaryButton text="Apply" onClick={onSubmit} active={!error} />
-        </HorizontalStack>
-      </VerticalStack>
+        <VerticalStack className="mt-2">
+          <div className="body1">Red</div>
+          <Slider
+            step={0.01}
+            min={0}
+            max={3}
+            defaultValue={1}
+            onChange={onRedChange}
+            onError={onError}
+          />
+          <div className="body1">Green</div>
+          <Slider
+            step={0.01}
+            min={0}
+            max={3}
+            defaultValue={1}
+            onChange={onGreenChange}
+            onError={onError}
+          />
+          <div className="body1">Blue</div>
+          <Slider
+            step={0.01}
+            min={0}
+            max={3}
+            defaultValue={1}
+            onChange={onBlueChange}
+            onError={onError}
+          />
+          <HorizontalStack className="flex flex-col justify-center items-center children:w-25">
+            <PrimaryButton text="Apply" onClick={onSubmit} active={!error} />
+          </HorizontalStack>
+        </VerticalStack>
+      </>
     );
   };
 

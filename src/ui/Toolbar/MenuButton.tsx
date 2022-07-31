@@ -26,7 +26,7 @@ export const MenuButton = ({
         <PrimaryButton
           text={name}
           onClick={() => setOpen(!open)}
-          className="w-25 h-full subscript1 bg-items-primary hover:bg-items-accent"
+          className="w-25 h-full subscript1"
         />
       </div>
       <VerticalStack className={`${!open && "invisible"}`}>

@@ -8,7 +8,9 @@ export const ErrorNotification = ({
   className?: string;
 }): JSX.Element => {
   return (
-    <div className={`bg-red-300 border text-center ${className}`}>
+    <div
+      className={`bg-blues-items-error border border-blues-border-primary px-1 py-2 text-center ${className}`}
+    >
       <div className="subscript2">{errorText}</div>
     </div>
   );

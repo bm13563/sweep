@@ -4,7 +4,6 @@ export const StackBase = ({
   className = "",
   children,
 }: {
-  spacing?: number;
   className?: string;
   children?: JSX.Element | JSX.Element[];
 }): JSX.Element => {

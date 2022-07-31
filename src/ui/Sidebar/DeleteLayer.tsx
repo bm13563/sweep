@@ -23,6 +23,10 @@ export const DeleteLayer = ({ uiLayer }: { uiLayer: UiLayer }): JSX.Element => {
     );
   };
   return (
-    <Icon className="i-mdi-delete text-text-primary" onClick={removeUiLayer} />
+    <Icon
+      title="Delete layer"
+      className="i-mdi-delete"
+      onClick={removeUiLayer}
+    />
   );
 };

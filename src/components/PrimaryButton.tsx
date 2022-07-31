@@ -16,7 +16,9 @@ export const PrimaryButton = ({
     <Button
       text={text}
       onClick={onClick}
-      className={`${active || "disabled"} ${className}`}
+      className={`bg-blues-items-primary hover:bg-blues-items-accent ${
+        active || "disabled"
+      } ${className}`}
     />
   );
 };

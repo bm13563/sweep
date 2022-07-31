@@ -29,7 +29,7 @@ export const TextField = ({
         onInput={(e) => {
           onChange && onChange(e.currentTarget.textContent as string);
         }}
-        className={`border overflow-y-auto whitespace-pre-wrap break-words`}
+        className={`border-solid border-blues-text-primary border-1 rounded-sm py-2 px-1 overflow-y-auto whitespace-pre-wrap break-words ${className}`}
         style={{
           lineHeight: `${baseLineHeight}`,
           height: `${lines * baseLineHeight}em`,

@@ -24,7 +24,7 @@ export interface AddLayerProps {
 
 export const AddLayer = (): JSX.Element => {
   const [name, setName] = useState("");
-  const [type, setType] = useState("XYZ");
+  const [type, setType] = useState("");
   const [url, setUrl] = useState("");
   const [displayUi, setDisplayUi] = useState(false);
   const { bindUi, unbindUi } = useToggleActionState(
@@ -106,31 +106,38 @@ export const AddLayer = (): JSX.Element => {
 
   const AddLayerUi = (): JSX.Element => {
     return (
-      <VerticalStack spacing={2}>
+      <>
         <HorizontalStack className="justify-between mb-1">
           <div className="header1">Add Layer</div>
-          <Icon className="i-mdi-close" onClick={onClose} />
+          <Icon title="Close" className="i-mdi-close" onClick={onClose} />
         </HorizontalStack>
-        <div className="body1">Name</div>
-        <TextField value={name} onChange={updateName} />
-        <div className="body1">Type</div>
-        <Dropdown options={["XYZ"]} onChange={updateLayerType} />
-        <div className="body1">URL</div>
-        <TextField value={url} onChange={updateUrl} />
-        <HorizontalStack
-          spacing={5}
-          className="items-center justify-around children:w-25"
-        >
-          <PrimaryButton text="Apply" onClick={onSubmit} active={allowSubmit} />
-          <SecondaryButton text="Clear" onClick={clearFields} />
-        </HorizontalStack>
-      </VerticalStack>
+        <VerticalStack spacing={1}>
+          <div className="body1">Name</div>
+          <TextField value={name} onChange={updateName} />
+          <div className="body1">Type</div>
+          <Dropdown options={["XYZ"]} onChange={updateLayerType} value={type} />
+          <div className="body1">URL</div>
+          <TextField value={url} onChange={updateUrl} />
+          <HorizontalStack
+            spacing={5}
+            className="items-center justify-around children:w-25"
+          >
+            <PrimaryButton
+              text="Apply"
+              onClick={onSubmit}
+              active={allowSubmit}
+            />
+            <SecondaryButton text="Clear" onClick={clearFields} />
+          </HorizontalStack>
+        </VerticalStack>
+      </>
     );
   };
 
   return (
     <Icon
-      className="i-mdi-add text-text-primary"
+      title="Add layer"
+      className="i-mdi-add"
       onClick={() => setDisplayUi(true)}
     />
   );

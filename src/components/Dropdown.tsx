@@ -6,19 +6,18 @@ import { VerticalStack } from "./VerticalStack";
 export const Dropdown = ({
   options,
   onChange,
-  defaultValue = "",
+  value = "",
   displayNumber = 10,
   className,
 }: {
   options: string[];
   onChange: (value: string) => void;
-  defaultValue?: string;
+  value: string;
   displayNumber?: number;
   className?: string;
 }): JSX.Element => {
   const optionsRef = useRef<HTMLDivElement>(null);
 
-  const [value, setValue] = useState(defaultValue);
   const [displayOptions, setDisplayOptions] = useState(false);
 
   const clickOutsideCallback = () => {
@@ -35,7 +34,7 @@ export const Dropdown = ({
             setDisplayOptions(!displayOptions);
           }}
         >
-          <HorizontalStack className="border flex flew-row justify-between leading-none z-1">
+          <HorizontalStack className="rounded-sm border-solid border-blues-text-primary border-1 py-2 px-1 flex flew-row justify-between leading-none z-1">
             <>{value}</>
             <div className="i-mdi-menu-down"></div>
           </HorizontalStack>
@@ -43,15 +42,14 @@ export const Dropdown = ({
         {displayOptions && (
           <div>
             <VerticalStack
-              className={`flex bg-white absolute w-full rounded z-2`}
+              className={`flex bg-blues-blues-background-secondary absolute w-full rounded-sm z-2`}
             >
               {options?.map((option) => {
                 return (
                   <div
                     key={option}
-                    className="hover:bg-slate-200 hover:rounded"
+                    className="hover:bg-blues-blues-background-accent hover:rounded-sm"
                     onClick={() => {
-                      setValue(option);
                       setDisplayOptions(false);
                       onChange(option);
                     }}

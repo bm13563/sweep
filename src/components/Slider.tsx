@@ -62,7 +62,7 @@ export const Slider = ({
   }, []);
 
   return (
-    <div className={`body1 py-2 px-1 ${className}`}>
+    <div className={`subscript1 py-2 px-1 ${className}`}>
       <HorizontalStack
         spacing={2}
         className="justify-between first:whitespace-nowrap nth:2:grow"
@@ -116,7 +116,7 @@ export const Slider = ({
             }
           }}
           contentEditable
-          className="inline-block rounded bg-white p-x-1 w-9 h-4 text-center hover:cursor-text"
+          className="h-full inline-block rounded-sm bg-white p-x-1 w-9 text-center hover:cursor-text"
         />
       </HorizontalStack>
     </div>

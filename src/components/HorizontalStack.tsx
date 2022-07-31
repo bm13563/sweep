@@ -14,7 +14,7 @@ export const HorizontalStack = ({
     <StackBase
       className={`children:ml-${String(
         spacing
-      )} children:first:ml-0 flex flex-row items-center ${className}`}
+      )} nth:1:ml-0 flex flex-row items-center ${className}`}
     >
       {children}
     </StackBase>

@@ -98,7 +98,7 @@ export const AddLayerFromConfig = (): JSX.Element => {
       <VerticalStack spacing={2}>
         <HorizontalStack className="justify-between mb-1">
           <div className="header1">Add Layer</div>
-          <Icon className="i-mdi-close" onClick={onClose} />
+          <Icon title="Close" className="i-mdi-close" onClick={onClose} />
         </HorizontalStack>
         <>
           {validationError.length > 0 && (
@@ -122,7 +122,8 @@ export const AddLayerFromConfig = (): JSX.Element => {
 
   return (
     <Icon
-      className="i-mdi-code-braces text-text-primary"
+      title="Add layer from config"
+      className="i-mdi-code-braces"
       onClick={() => setDisplayUi(true)}
     />
   );

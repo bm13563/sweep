@@ -104,7 +104,7 @@ export const LayerMetadata = ({
       <VerticalStack spacing={2}>
         <HorizontalStack className="justify-between mb-1">
           <div className="header1">Layer Metadata</div>
-          <Icon className="i-mdi-close" onClick={onClose} />
+          <Icon title="Close" className="i-mdi-close" onClick={onClose} />
         </HorizontalStack>
         <InfoBox
           text={`Web maps tend not to provide metadata, so it can be useful to label
@@ -130,7 +130,8 @@ export const LayerMetadata = ({
   };
   return (
     <Icon
-      className="i-mdi-information text-text-primary"
+      title="View layer metadata"
+      className="i-mdi-information"
       onClick={() => setDisplayUi(true)}
     />
   );

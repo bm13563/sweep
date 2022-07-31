@@ -10,7 +10,7 @@ import { BandCalculator } from "./tools/BandCalculator";
 
 export const Toolbar = (): JSX.Element => {
   return (
-    <div className="h-5 bg-background-primary">
+    <div className="h-5">
       <HorizontalStack
         spacing={0}
         className="h-full children:flex children:h-full"

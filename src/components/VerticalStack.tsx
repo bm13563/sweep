@@ -14,7 +14,7 @@ export const VerticalStack = ({
     <StackBase
       className={`children:mt-${String(
         spacing
-      )} children:first:mt-0 flex flex-col justify-center ${className}`}
+      )} nth:1:mt-0 flex flex-col justify-center ${className}`}
     >
       {children}
     </StackBase>

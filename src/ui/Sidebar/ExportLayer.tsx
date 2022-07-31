@@ -50,7 +50,7 @@ export const ExportLayer = ({ uiLayer }: { uiLayer: UiLayer }): JSX.Element => {
       <VerticalStack spacing={2}>
         <HorizontalStack className="justify-between mb-1">
           <div className="header1">Export Layer</div>
-          <Icon className="i-mdi-close" onClick={onClose} />
+          <Icon title="Close" className="i-mdi-close" onClick={onClose} />
         </HorizontalStack>
         <div className="body1">Name</div>
         <div
@@ -73,7 +73,8 @@ export const ExportLayer = ({ uiLayer }: { uiLayer: UiLayer }): JSX.Element => {
 
   return (
     <Icon
-      className="i-mdi-code-braces text-text-primary"
+      title="Export layer"
+      className="i-mdi-code-braces"
       onClick={exportLayerInfo}
     />
   );

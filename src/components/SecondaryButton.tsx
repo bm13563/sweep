@@ -17,7 +17,7 @@ export const SecondaryButton = ({
       text={text}
       onClick={onClick}
       className={`${
-        active ? "bg-blue-600 hover:bg-blue-800" : "disabled"
+        active ? "bg-blues-items-secondary hover:bg-blues-items-accent" : "disabled"
       } ${className}`}
     />
   );

@@ -1,17 +1,17 @@
-import React, { useCallback, useRef, useState } from "react";
-import { useDrag, useDrop, DropTargetMonitor } from "react-dnd";
 import { XYCoord } from "dnd-core";
-import { UiLayer } from "../../primitives/uiLayer";
-import { HorizontalStack } from "../../components/HorizontalStack";
 import update from "immutability-helper";
+import React, { useCallback, useRef, useState } from "react";
+import { DropTargetMonitor, useDrag, useDrop } from "react-dnd";
 import shallow from "zustand/shallow";
-import { useHandleUiLayerState } from "../../hooks/useHandleUiLayerState";
-import { DeleteLayer } from "./DeleteLayer";
-import { ToggleLayer } from "./ToggleLayer";
-import { ExportLayer } from "./ExportLayer";
-import { RenameLayer } from "./RenameLayer";
+import { HorizontalStack } from "../../components/HorizontalStack";
 import { TextField } from "../../components/TextField";
+import { useHandleUiLayerState } from "../../hooks/useHandleUiLayerState";
+import { UiLayer } from "../../primitives/uiLayer";
+import { DeleteLayer } from "./DeleteLayer";
+import { ExportLayer } from "./ExportLayer";
 import { LayerMetadata } from "./LayerMetadata";
+import { RenameLayer } from "./RenameLayer";
+import { ToggleLayer } from "./ToggleLayer";
 
 interface DragItem {
   index: number;
@@ -114,24 +114,20 @@ export const Layer = ({
     <div
       ref={ref}
       data-handler-id={handlerId}
-      className={`flex flex-col justify-center h-8 bg-items-primary cursor-pointer ${
+      className={`flex flex-col justify-center h-8 bg-blues-items-primary cursor-pointer ${
         isDragging && "opacity-0"
-      } ${
-        uiLayer.uid === activeUiLayer?.uid
-          ? "border border-border-accent"
-          : "border"
-      }`}
+      } ${uiLayer.uid === activeUiLayer?.uid && "border border-blues-border-accent"}`}
     >
       <HorizontalStack className="justify-between">
         <TextField
           value={uiLayer.properties.name}
           className={`children:border-none ${
-            editMode && "cursor-text bg-blue"
+            editMode && "cursor-text bg-blues-items-accent"
           }`}
           editable={editMode}
           onChange={updateLayerName}
         />
-        <HorizontalStack spacing={1}>
+        <HorizontalStack spacing={0.5}>
           <RenameLayer toggleEditMode={toggleEditMode} />
           <LayerMetadata uiLayer={uiLayer} index={index} />
           <ExportLayer uiLayer={uiLayer} />

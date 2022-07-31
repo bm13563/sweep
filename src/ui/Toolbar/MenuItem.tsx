@@ -13,8 +13,8 @@ export const MenuItem = ({
     <div
       className={`h-full w-full p-1 ${
         !active
-          ? "pointer-events-none bg-items-disabled"
-          : "bg-items-primary hover:bg-items-accent cursor-pointer"
+          ? "pointer-events-none bg-blues-items-disabled"
+          : "cursor-pointer bg-blues-items-primary hover:bg-blues-items-accent"
       }`}
       onClick={onClick}
     >
