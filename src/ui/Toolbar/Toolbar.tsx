@@ -7,6 +7,8 @@ import { FilterPercentageRgb } from "./processing/FilterPercentageRgb";
 import { MenuButton } from "./MenuButton";
 import { ThreeXKernal } from "./processing/ThreeXKernal";
 import { BandCalculator } from "./tools/BandCalculator";
+import { ExpandingMenuItem } from "./ExpandingMenuItem";
+import { Backlight } from "./file/Backlight";
 
 export const Toolbar = (): JSX.Element => {
   return (
@@ -17,6 +19,9 @@ export const Toolbar = (): JSX.Element => {
       >
         <MenuButton name="File">
           <UndoRedo />
+          <ExpandingMenuItem name="Backlight">
+            <Backlight />
+          </ExpandingMenuItem>
         </MenuButton>
         <MenuButton name="Processing">
           <AdjustRgb />

@@ -11,7 +11,7 @@ export const MenuItem = ({
 }): JSX.Element => {
   return (
     <div
-      className={`h-full w-full p-1 ${
+      className={`p-1 ${
         !active
           ? "pointer-events-none bg-blues-items-disabled"
           : "cursor-pointer bg-blues-items-primary hover:bg-blues-items-accent"

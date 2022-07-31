@@ -11,14 +11,12 @@ import { useToggleActionState } from "../hooks/useToggleActionState";
 import { Overlay } from "../components/Overlay";
 import { Icon } from "../components/Icon";
 import { useToggleSidebar } from "../hooks/useToggleSidebar";
-import { useTheme } from "../hooks/useTheme";
 
 const view = defaultView();
 
 export const Layout = (): JSX.Element => {
   const renderLoop = useContext(RenderLoopContext);
 
-  const $ = useTheme((state) => state.$);
   const component = useToggleActionState((state) => state.component);
   const activeUiLayer = useHandleUiLayerState((state) => state.activeUiLayer);
   const { sidebarOpen, setSidebarOpen } = useToggleSidebar(
@@ -45,9 +43,7 @@ export const Layout = (): JSX.Element => {
       }}
     >
       <div
-        className={`row-start-1 col-start-1 flex flex-col justify-center ${$(
-          "background-primary"
-        )}`}
+        className={`row-start-1 col-start-1 flex flex-col justify-center bg-blues-background-primary`}
       >
         <Icon
           title="Hide sidebar"
