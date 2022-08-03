@@ -13,7 +13,7 @@
     <link rel="manifest" href="/manifest.json" />
     <title>React App</title>
   </head>
-  <body class="ambient">
+  <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
     <script type="module" src="/src/index.tsx"></script>
@@ -24,22 +24,8 @@
       margin: 0;
       border: solid;
       border-width: 4px;
-    }
-
-    .ambient {
-      border-image: linear-gradient(#E67676, #F2F062, #A9E6E6, #7692E4) 5;
-      animation: ambient 5s linear infinite;
-    }
-
-    .none {
+      overflow: hidden;
       border-color: white;
-    }
-
-    @keyframes ambient {
-      25% {border-image: linear-gradient(#7692E4, #E67676, #F2F062, #A9E6E6) 5;}
-      50% {border-image: linear-gradient(#A9E6E6, #7692E4, #E67676, #F2F062) 5;}
-      75% {border-image: linear-gradient(#F2F062, #A9E6E6, #7692E4, #E67676) 5;}
-      100% {border-image: linear-gradient(#E67676, #F2F062, #A9E6E6, #7692E4) 5;}
     }
   </style>
 </html>

@@ -1,0 +1,15 @@
+.none {
+  border-color: white;
+}
+
+.ambient {
+  border-image: linear-gradient(#E67676, #F2F062, #A9E6E6, #7692E4) 5;
+  animation: ambient 5s linear infinite;
+}
+
+@keyframes ambient {
+  25% {border-image: linear-gradient(#7692E4, #E67676, #F2F062, #A9E6E6) 5;}
+  50% {border-image: linear-gradient(#A9E6E6, #7692E4, #E67676, #F2F062) 5;}
+  75% {border-image: linear-gradient(#F2F062, #A9E6E6, #7692E4, #E67676) 5;}
+  100% {border-image: linear-gradient(#E67676, #F2F062, #A9E6E6, #7692E4) 5;}
+}

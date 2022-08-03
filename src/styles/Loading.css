@@ -1,0 +1,71 @@
+.a1 {
+  background-color: #A9E6E6;
+  animation-name: radial-out;
+  animation-delay: 100ms;
+  animation-duration: 280ms;
+  animation-fill-mode: forwards;
+  animation-timing-function: ease-in-out;
+}
+
+.a2 {
+  background-color: #7692E4;
+  animation-name: radial-out;
+  animation-delay: 380ms;
+  animation-duration: 280ms;
+  animation-fill-mode: forwards;
+  animation-timing-function: ease-in-out;
+}
+
+.a3 {
+  background-color: #E67676;
+  animation-name: radial-out;
+  animation-delay: 660ms;
+  animation-duration: 280ms;
+  animation-fill-mode: forwards;
+  animation-timing-function: ease-in-out;
+}
+
+.a4 {
+  background-color: #F2F062;
+  animation-name: radial-out;
+  animation-delay: 940ms;
+  animation-duration: 280ms;
+  animation-fill-mode: forwards;
+  animation-timing-function: ease-in-out;
+}
+
+.a5 {
+  background-color: black;
+  animation-name: radial-out;
+  animation-delay: 1220ms;
+  animation-duration: 280ms;
+  animation-fill-mode: forwards;
+  animation-timing-function: ease-in-out;
+}
+
+.a6 {
+  background-color: white;
+  height: 100%;
+  width: 100%;
+}
+
+.a7 {
+  background-color: black;
+  height: 100%;
+  width: 100%;
+  animation-name: radial-in;
+  animation-delay: 550ms;
+  animation-duration: 550ms;
+  animation-fill-mode: forwards;
+  animation-timing-function: ease-in-out;
+}
+
+@keyframes radial-out {
+  from { height: 0; width: 0; }
+  to { height: 100%; width: 100%; }
+}
+
+@keyframes radial-in {
+  from { height: 100%; width: 100%; }
+  to { height: 0; width: 0; }
+}

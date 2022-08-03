@@ -1,15 +1,19 @@
 import { defineConfig } from "vite";
-import tsConfigPaths from "vite-tsconfig-paths";
 import Unocss from 'unocss/vite';
 import { presetUno } from "unocss";
 import presetIcons from '@unocss/preset-icons'
+import * as path from "path";
 
 export default defineConfig({
   build: {
     outDir: "build"
   },
+  resolve: {
+    alias: [
+      { find: '@', replacement: path.resolve(__dirname, 'src') },
+    ],
+  },
   plugins: [
-    tsConfigPaths(),
     Unocss({
       presets: [
         presetIcons({}),
