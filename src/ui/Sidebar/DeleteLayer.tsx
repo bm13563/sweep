@@ -1,12 +1,12 @@
+import { Icon } from "@/components/Icon";
+import { useUiLayerState } from "@/hooks/useUiLayerState";
+import { UiLayer } from "@/primitives/uiLayer";
+import update from "immutability-helper";
 import React from "react";
 import shallow from "zustand/shallow";
-import { Icon } from "../../components/Icon";
-import { useHandleUiLayerState } from "../../hooks/useHandleUiLayerState";
-import { UiLayer } from "../../primitives/uiLayer";
-import update from "immutability-helper";
 
 export const DeleteLayer = ({ uiLayer }: { uiLayer: UiLayer }): JSX.Element => {
-  const { uiLayers, setUiLayers } = useHandleUiLayerState(
+  const { uiLayers, setUiLayers } = useUiLayerState(
     (state) => ({
       uiLayers: state.uiLayers,
       setUiLayers: state.setUiLayers,

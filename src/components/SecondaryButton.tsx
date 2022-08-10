@@ -1,5 +1,5 @@
+import { Button } from "@/components/Button";
 import React from "react";
-import { Button } from "./Button";
 
 export const SecondaryButton = ({
   text,
@@ -17,7 +17,9 @@ export const SecondaryButton = ({
       text={text}
       onClick={onClick}
       className={`${
-        active ? "bg-blues-items-secondary hover:bg-blues-items-accent" : "disabled"
+        active
+          ? "bg-blues-items-secondary hover:bg-blues-items-accent"
+          : "disabled"
       } ${className}`}
     />
   );

@@ -1,10 +1,10 @@
+import { UiLayer } from "@/primitives/uiLayer";
+import { OfflineCanvas } from "@/ui/Viewport/OfflineCanvas";
+import { OpenlayersCanvas } from "@/ui/Viewport/OpenlayersCanvas";
+import { WebGlCanvas } from "@/ui/Viewport/WebGlCanvas";
+import { findMapLayers } from "@/utils/utils";
 import View from "ol/View";
 import React from "react";
-import { UiLayer } from "../../primitives/uiLayer";
-import { findMapLayers } from "../../utils/utils";
-import { OpenlayersCanvas } from "./OpenlayersCanvas";
-import { OfflineCanvas } from "./OfflineCanvas";
-import { WebGlCanvas } from "./WebGlCanvas";
 
 export const Viewport = ({
   view,

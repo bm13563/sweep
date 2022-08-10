@@ -1,6 +1,6 @@
+import { RenderLoopContext } from "@/App";
 import React, { useContext, useEffect, useRef } from "react";
 import * as twgl from "twgl.js";
-import { RenderLoopContext } from "../../App";
 
 export const WebGlCanvas = (): JSX.Element => {
   const canvasRef = useRef<HTMLCanvasElement>(

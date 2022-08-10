@@ -1,12 +1,12 @@
+import { HorizontalStack } from "@/components/HorizontalStack";
+import { Icon } from "@/components/Icon";
+import { PrimaryButton } from "@/components/PrimaryButton";
+import { TextField } from "@/components/TextField";
+import { VerticalStack } from "@/components/VerticalStack";
+import { useToggleActionState } from "@/hooks/useToggleActionState";
+import { UiLayer } from "@/primitives/uiLayer";
 import React, { useEffect, useRef, useState } from "react";
-import { Icon } from "../../components/Icon";
-import { UiLayer } from "../../primitives/uiLayer";
 import shallow from "zustand/shallow";
-import { HorizontalStack } from "../../components/HorizontalStack";
-import { PrimaryButton } from "../../components/PrimaryButton";
-import { TextField } from "../../components/TextField";
-import { VerticalStack } from "../../components/VerticalStack";
-import { useToggleActionState } from "../../hooks/useToggleActionState";
 
 export const ExportLayer = ({ uiLayer }: { uiLayer: UiLayer }): JSX.Element => {
   const ref = useRef<HTMLDivElement>(null);
@@ -62,7 +62,12 @@ export const ExportLayer = ({ uiLayer }: { uiLayer: UiLayer }): JSX.Element => {
               selection.selectAllChildren(event.target as Node);
           }}
         >
-          <TextField lines={6} value={json} onChange={updateJson} />
+          <TextField
+            lines={6}
+            value={json}
+            onChange={updateJson}
+            className="break-all"
+          />
         </div>
         <div className="flex flex-col justify-center items-center children:w-25">
           <PrimaryButton text="Copy" onClick={copy} />

@@ -1,8 +1,8 @@
+import { PseudoLayer } from "@/primitives/pseudoLayer";
+import { baseFragment } from "@/webgl/shaders/base.fragment";
+import { flipVertex } from "@/webgl/shaders/flip.vertex";
 import * as twgl from "twgl.js";
-import { PseudoLayer } from "../primitives/pseudoLayer";
 import { isBaseLayer, isPseudolayer } from "../utils/utils";
-import { baseFragment } from "./shaders/base.fragment";
-import { flipVertex } from "./shaders/flip.vertex";
 
 export class RenderLoop {
   stopped = false;

@@ -1,25 +1,25 @@
-import React, { useEffect, useState } from "react";
-import { MenuItem } from "../MenuItem";
-import { generatePseudoLayer } from "../../../primitives/pseudoLayer";
-import { baseVertex } from "../../../webgl/shaders/base.vertex";
-import { adjustColorsFragment } from "../../../webgl/shaders/adjustColors.fragment";
-import { ErrorNotification } from "../../../components/ErrorNotification";
-import { HorizontalStack } from "../../../components/HorizontalStack";
-import { PrimaryButton } from "../../../components/PrimaryButton";
-import { VerticalStack } from "../../../components/VerticalStack";
-import { useToggleActionState } from "../../../hooks/useToggleActionState";
-import { Slider, SliderValueProps } from "../../../components/Slider";
-import { useHandleUiLayerState } from "../../../hooks/useHandleUiLayerState";
-import update from "immutability-helper";
-import throttle from "lodash.throttle";
-import shallow from "zustand/shallow";
+import { ErrorNotification } from "@/components/ErrorNotification";
+import { HorizontalStack } from "@/components/HorizontalStack";
+import { Icon } from "@/components/Icon";
+import { InfoBox } from "@/components/InfoBox";
+import { PrimaryButton } from "@/components/PrimaryButton";
+import { Slider, SliderValueProps } from "@/components/Slider";
+import { VerticalStack } from "@/components/VerticalStack";
+import { useToggleActionState } from "@/hooks/useToggleActionState";
+import { useUiLayerState } from "@/hooks/useUiLayerState";
+import { generatePseudoLayer } from "@/primitives/pseudoLayer";
 import {
   discardPendingPseudolayer,
   persistPendingPseudolayerAsUiLayer,
   updatePendingPseudolayer,
-} from "../../../primitives/uiLayer";
-import { SecondaryButton } from "../../../components/SecondaryButton";
-import { Icon } from "../../../components/Icon";
+} from "@/primitives/uiLayer";
+import { MenuItem } from "@/ui/Toolbar/MenuItem";
+import { adjustColorsFragment } from "@/webgl/shaders/adjustColors.fragment";
+import { baseVertex } from "@/webgl/shaders/base.vertex";
+import update from "immutability-helper";
+import throttle from "lodash.throttle";
+import React, { useEffect, useState } from "react";
+import shallow from "zustand/shallow";
 
 const defaultValues = {
   red: "1",
@@ -39,16 +39,15 @@ export const AdjustRgb = (): JSX.Element => {
     }),
     shallow
   );
-  const { uiLayers, setUiLayers, activeUiLayer, activeIndex } =
-    useHandleUiLayerState(
-      (state) => ({
-        uiLayers: state.uiLayers,
-        activeUiLayer: state.activeUiLayer,
-        activeIndex: state.activeIndex,
-        setUiLayers: state.setUiLayers,
-      }),
-      shallow
-    );
+  const { uiLayers, setUiLayers, activeUiLayer, activeIndex } = useUiLayerState(
+    (state) => ({
+      uiLayers: state.uiLayers,
+      activeUiLayer: state.activeUiLayer,
+      activeIndex: state.activeIndex,
+      setUiLayers: state.setUiLayers,
+    }),
+    shallow
+  );
 
   const setRGBValues = throttle((colours: SliderValueProps) => {
     if (!(activeUiLayer && activeIndex !== undefined)) return;
@@ -177,6 +176,10 @@ export const AdjustRgb = (): JSX.Element => {
         </HorizontalStack>
         <>{error && <ErrorNotification errorText={error} />}</>
         <VerticalStack className="mt-2">
+          <InfoBox
+            text={`Web maps tend not to provide metadata, so it can be useful to label
+          data here yourself.`}
+          />
           <div className="body1">Red</div>
           <Slider
             step={0.01}

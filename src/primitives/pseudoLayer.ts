@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from "uuid";
-import { Layer } from "./baseLayer";
+import { Layer } from "@/primitives/baseLayer";
 
 export interface ShaderProps {
   vertexShader: string;

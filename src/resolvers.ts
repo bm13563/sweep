@@ -1,15 +1,15 @@
-import { z } from "zod";
 import {
   Layer,
-  XyzProperties,
   OfflineProperties,
-} from "./primitives/baseLayer";
+  XyzProperties,
+} from "@/primitives/baseLayer";
 import {
   PseudoLayer,
   PseudolayerProperties,
   ShaderProps,
-} from "./primitives/pseudoLayer";
-import { UiLayer, UiLayerProperties } from "./primitives/uiLayer";
+} from "@/primitives/pseudoLayer";
+import { UiLayer, UiLayerProperties } from "@/primitives/uiLayer";
+import { z } from "zod";
 
 export const xyzLayerResolver: z.ZodSchema<XyzProperties> = z.lazy(() =>
   z.object({

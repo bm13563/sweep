@@ -1,23 +1,23 @@
-import React, { useContext, useEffect, useState } from "react";
-import shallow from "zustand/shallow";
-import { RenderLoopContext } from "../../../App";
-import { ErrorNotification } from "../../../components/ErrorNotification";
-import { HorizontalStack } from "../../../components/HorizontalStack";
-import { Icon } from "../../../components/Icon";
-import { KernelInput } from "../../../components/KernelInput";
-import { PrimaryButton } from "../../../components/PrimaryButton";
-import { VerticalStack } from "../../../components/VerticalStack";
-import { useHandleUiLayerState } from "../../../hooks/useHandleUiLayerState";
-import { useToggleActionState } from "../../../hooks/useToggleActionState";
-import { generatePseudoLayer } from "../../../primitives/pseudoLayer";
+import { RenderLoopContext } from "@/App";
+import { ErrorNotification } from "@/components/ErrorNotification";
+import { HorizontalStack } from "@/components/HorizontalStack";
+import { Icon } from "@/components/Icon";
+import { KernelInput } from "@/components/KernelInput";
+import { PrimaryButton } from "@/components/PrimaryButton";
+import { VerticalStack } from "@/components/VerticalStack";
+import { useToggleActionState } from "@/hooks/useToggleActionState";
+import { useUiLayerState } from "@/hooks/useUiLayerState";
+import { generatePseudoLayer } from "@/primitives/pseudoLayer";
 import {
   persistPendingPseudolayerAsUiLayer,
   updatePendingPseudolayer,
-} from "../../../primitives/uiLayer";
-import { isNumber } from "../../../utils/utils";
-import { baseVertex } from "../../../webgl/shaders/base.vertex";
-import { threeXKernalFragment } from "../../../webgl/shaders/threeXKernel.fragment";
-import { MenuItem } from "../MenuItem";
+} from "@/primitives/uiLayer";
+import { MenuItem } from "@/ui/Toolbar/MenuItem";
+import { isNumber } from "@/utils/utils";
+import { baseVertex } from "@/webgl/shaders/base.vertex";
+import { threeXKernalFragment } from "@/webgl/shaders/threeXKernel.fragment";
+import React, { useContext, useEffect, useState } from "react";
+import shallow from "zustand/shallow";
 
 const defaultKernelValues = [
   ["0", "0", "0"],
@@ -40,16 +40,15 @@ export const ThreeXKernal = (): JSX.Element => {
     }),
     shallow
   );
-  const { uiLayers, setUiLayers, activeUiLayer, activeIndex } =
-    useHandleUiLayerState(
-      (state) => ({
-        uiLayers: state.uiLayers,
-        setUiLayers: state.setUiLayers,
-        activeUiLayer: state.activeUiLayer,
-        activeIndex: state.activeIndex,
-      }),
-      shallow
-    );
+  const { uiLayers, setUiLayers, activeUiLayer, activeIndex } = useUiLayerState(
+    (state) => ({
+      uiLayers: state.uiLayers,
+      setUiLayers: state.setUiLayers,
+      activeUiLayer: state.activeUiLayer,
+      activeIndex: state.activeIndex,
+    }),
+    shallow
+  );
 
   const setThreeXKernal = (kernel: string[][]) => {
     const flatKernel = kernel.flat();
@@ -121,7 +120,7 @@ export const ThreeXKernal = (): JSX.Element => {
       <VerticalStack spacing={2}>
         <HorizontalStack className="justify-between mb-1">
           <div className="header1">3x3 kernel</div>
-          <Icon className="i-mdi-close" onClick={onClose} />
+          <Icon className="i-mdi-close" title="Close" onClick={onClose} />
         </HorizontalStack>
         <>{error && <ErrorNotification errorText={error} />}</>
         <KernelInput

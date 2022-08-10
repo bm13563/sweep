@@ -1,24 +1,24 @@
-import throttle from "lodash.throttle";
-import React, { useEffect, useState } from "react";
-import shallow from "zustand/shallow";
-import { Dropdown } from "../../../components/Dropdown";
-import { ErrorNotification } from "../../../components/ErrorNotification";
-import { HorizontalStack } from "../../../components/HorizontalStack";
-import { Icon } from "../../../components/Icon";
-import { PrimaryButton } from "../../../components/PrimaryButton";
-import { SliderValueProps, Slider } from "../../../components/Slider";
-import { VerticalStack } from "../../../components/VerticalStack";
-import { useHandleUiLayerState } from "../../../hooks/useHandleUiLayerState";
-import { useToggleActionState } from "../../../hooks/useToggleActionState";
-import { baseVertex } from "../../../webgl/shaders/base.vertex";
-import { generatePseudoLayer } from "../../../primitives/pseudoLayer";
-import { MenuItem } from "../MenuItem";
-import { filterPercentageRgbFragment } from "../../../webgl/shaders/filterPercentageRgb.fragment";
+import { Dropdown } from "@/components/Dropdown";
+import { ErrorNotification } from "@/components/ErrorNotification";
+import { HorizontalStack } from "@/components/HorizontalStack";
+import { Icon } from "@/components/Icon";
+import { PrimaryButton } from "@/components/PrimaryButton";
+import { Slider, SliderValueProps } from "@/components/Slider";
+import { VerticalStack } from "@/components/VerticalStack";
+import { useToggleActionState } from "@/hooks/useToggleActionState";
+import { useUiLayerState } from "@/hooks/useUiLayerState";
+import { generatePseudoLayer } from "@/primitives/pseudoLayer";
 import {
   discardPendingPseudolayer,
   persistPendingPseudolayerAsUiLayer,
   updatePendingPseudolayer,
-} from "../../../primitives/uiLayer";
+} from "@/primitives/uiLayer";
+import { MenuItem } from "@/ui/Toolbar/MenuItem";
+import { baseVertex } from "@/webgl/shaders/base.vertex";
+import { filterPercentageRgbFragment } from "@/webgl/shaders/filterPercentageRgb.fragment";
+import throttle from "lodash.throttle";
+import React, { useEffect, useState } from "react";
+import shallow from "zustand/shallow";
 
 type operatorTypes = "less than" | "greater than";
 
@@ -48,16 +48,15 @@ export const FilterPercentageRgb = (): JSX.Element => {
     }),
     shallow
   );
-  const { uiLayers, activeUiLayer, activeIndex, setUiLayers } =
-    useHandleUiLayerState(
-      (state) => ({
-        uiLayers: state.uiLayers,
-        activeUiLayer: state.activeUiLayer,
-        activeIndex: state.activeIndex,
-        setUiLayers: state.setUiLayers,
-      }),
-      shallow
-    );
+  const { uiLayers, activeUiLayer, activeIndex, setUiLayers } = useUiLayerState(
+    (state) => ({
+      uiLayers: state.uiLayers,
+      activeUiLayer: state.activeUiLayer,
+      activeIndex: state.activeIndex,
+      setUiLayers: state.setUiLayers,
+    }),
+    shallow
+  );
 
   const setAbsoluteRgb = throttle(
     (colours: SliderValueProps, operator: operatorTypes) => {
@@ -200,7 +199,7 @@ export const FilterPercentageRgb = (): JSX.Element => {
       <VerticalStack spacing={2}>
         <HorizontalStack className="justify-between mb-1">
           <div className="header1">Filter absolute RGB</div>
-          <Icon className="i-mdi-close" onClick={onClose} />
+          <Icon className="i-mdi-close" title="Close" onClick={onClose} />
         </HorizontalStack>
         <>{error && <ErrorNotification errorText={error} />}</>
         <div className="body1">Red</div>

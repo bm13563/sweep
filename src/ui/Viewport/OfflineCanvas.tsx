@@ -1,6 +1,6 @@
+import { RenderLoopContext } from "@/App";
+import { Layer } from "@/primitives/baseLayer";
 import React, { useContext, useEffect, useRef } from "react";
-import { RenderLoopContext } from "../../App";
-import { Layer } from "../../primitives/baseLayer";
 
 export const OfflineCanvas = ({ layer }: { layer: Layer }) => {
   const renderLoop = useContext(RenderLoopContext);

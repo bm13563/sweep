@@ -1,17 +1,19 @@
+import { useUiLayerState } from "@/hooks/useUiLayerState";
+import { MenuItem } from "@/ui/Toolbar/MenuItem";
 import update from "immutability-helper";
 import React, { useEffect, useState } from "react";
 import shallow from "zustand/shallow";
-import { useHandleUiLayerState } from "../../../hooks/useHandleUiLayerState";
-import { MenuItem } from "../MenuItem";
 
 export const UndoRedo = (): JSX.Element => {
-  const { uiLayers, setUiLayers } = useHandleUiLayerState(
+  const { uiLayers, setUiLayers } = useUiLayerState(
     (state) => ({
       uiLayers: state.uiLayers,
       setUiLayers: state.setUiLayers,
     }),
     shallow
   );
+
+  // const { undoRedoState, setToolbarState } = useToolbarState();
 
   const pseudolayers = uiLayers.map(
     (uiLayer) => uiLayer.properties.pseudolayer

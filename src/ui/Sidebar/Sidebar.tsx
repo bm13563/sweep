@@ -1,14 +1,14 @@
+import { HorizontalStack } from "@/components/HorizontalStack";
+import { VerticalStack } from "@/components/VerticalStack";
+import { useUiLayerState } from "@/hooks/useUiLayerState";
+import { AddLayer } from "@/ui/Sidebar/AddLayer";
+import { AddLayerFromConfig } from "@/ui/Sidebar/AddLayerFromConfig";
+import { Layer } from "@/ui/Sidebar/Layer";
 import React, { ReactElement, useEffect } from "react";
-import { Layer } from "./Layer";
-import { AddLayer } from "./AddLayer";
-import { AddLayerFromConfig } from "./AddLayerFromConfig";
-import { VerticalStack } from "../../components/VerticalStack";
-import { HorizontalStack } from "../../components/HorizontalStack";
-import { useHandleUiLayerState } from "../../hooks/useHandleUiLayerState";
 import shallow from "zustand/shallow";
 
 export const Sidebar = (): JSX.Element => {
-  const { uiLayers, setUiLayers } = useHandleUiLayerState(
+  const { uiLayers, setUiLayers } = useUiLayerState(
     (state) => ({
       uiLayers: state.uiLayers,
       setUiLayers: state.setUiLayers,

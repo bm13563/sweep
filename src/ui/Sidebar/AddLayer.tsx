@@ -1,20 +1,20 @@
-import React, { useEffect, useState } from "react";
-import { baseFragment } from "../../webgl/shaders/base.fragment";
-import { baseVertex } from "../../webgl/shaders/base.vertex";
-import { generateLayer } from "../../primitives/baseLayer";
-import { generatePseudoLayer } from "../../primitives/pseudoLayer";
-import { generateUiLayer } from "../../primitives/uiLayer";
-import { Icon } from "../../components/Icon";
-import { HorizontalStack } from "../../components/HorizontalStack";
-import { VerticalStack } from "../../components/VerticalStack";
-import { useToggleActionState } from "../../hooks/useToggleActionState";
-import { TextField } from "../../components/TextField";
-import { Dropdown } from "../../components/Dropdown";
-import { PrimaryButton } from "../../components/PrimaryButton";
+import { Dropdown } from "@/components/Dropdown";
+import { HorizontalStack } from "@/components/HorizontalStack";
+import { Icon } from "@/components/Icon";
+import { PrimaryButton } from "@/components/PrimaryButton";
+import { SecondaryButton } from "@/components/SecondaryButton";
+import { TextField } from "@/components/TextField";
+import { VerticalStack } from "@/components/VerticalStack";
+import { useToggleActionState } from "@/hooks/useToggleActionState";
+import { useUiLayerState } from "@/hooks/useUiLayerState";
+import { generateLayer } from "@/primitives/baseLayer";
+import { generatePseudoLayer } from "@/primitives/pseudoLayer";
+import { generateUiLayer } from "@/primitives/uiLayer";
+import { baseFragment } from "@/webgl/shaders/base.fragment";
+import { baseVertex } from "@/webgl/shaders/base.vertex";
 import update from "immutability-helper";
+import React, { useEffect, useState } from "react";
 import shallow from "zustand/shallow";
-import { SecondaryButton } from "../../components/SecondaryButton";
-import { useHandleUiLayerState } from "../../hooks/useHandleUiLayerState";
 
 export interface AddLayerProps {
   name: string;
@@ -34,7 +34,7 @@ export const AddLayer = (): JSX.Element => {
     }),
     shallow
   );
-  const { uiLayers, setUiLayers } = useHandleUiLayerState(
+  const { uiLayers, setUiLayers } = useUiLayerState(
     (state) => ({
       uiLayers: state.uiLayers,
       setUiLayers: state.setUiLayers,

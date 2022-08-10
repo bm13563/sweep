@@ -1,16 +1,16 @@
+import { RenderLoopContext } from "@/App";
+import { Icon } from "@/components/Icon";
+import { Overlay } from "@/components/Overlay";
+import { useToggleActionState } from "@/hooks/useToggleActionState";
+import { useToggleSidebar } from "@/hooks/useToggleSidebar";
+import { useUiLayerState } from "@/hooks/useUiLayerState";
+import { Action } from "@/ui/Action/Action";
+import { Sidebar } from "@/ui/Sidebar/Sidebar";
+import { Toolbar } from "@/ui/Toolbar/Toolbar";
+import { Viewport } from "@/ui/Viewport/Viewport";
+import { defaultView } from "@/utils/utils";
 import React, { useContext } from "react";
 import shallow from "zustand/shallow";
-import { RenderLoopContext } from "../App";
-import { Sidebar } from "./Sidebar/Sidebar";
-import { Viewport } from "./Viewport/Viewport";
-import { defaultView } from "../utils/utils";
-import { Toolbar } from "./Toolbar/Toolbar";
-import { Action } from "./Action/Action";
-import { useHandleUiLayerState } from "../hooks/useHandleUiLayerState";
-import { useToggleActionState } from "../hooks/useToggleActionState";
-import { Overlay } from "../components/Overlay";
-import { Icon } from "../components/Icon";
-import { useToggleSidebar } from "../hooks/useToggleSidebar";
 
 const view = defaultView();
 
@@ -18,7 +18,7 @@ export const Layout = (): JSX.Element => {
   const renderLoop = useContext(RenderLoopContext);
 
   const component = useToggleActionState((state) => state.component);
-  const activeUiLayer = useHandleUiLayerState((state) => state.activeUiLayer);
+  const activeUiLayer = useUiLayerState((state) => state.activeUiLayer);
   const { sidebarOpen, setSidebarOpen } = useToggleSidebar(
     (state) => ({
       sidebarOpen: state.sidebarOpen,

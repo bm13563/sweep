@@ -1,5 +1,5 @@
-import React, { Children } from "react";
-import { StackBase } from "./StackBase";
+import React from "react";
+import { StackBase } from "@/components/StackBase";
 
 export const HorizontalStack = ({
   spacing = 0,

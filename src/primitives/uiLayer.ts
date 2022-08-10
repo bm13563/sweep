@@ -1,6 +1,6 @@
-import { v4 as uuidv4 } from "uuid";
-import { PseudoLayer } from "./pseudoLayer";
 import update from "immutability-helper";
+import { v4 as uuidv4 } from "uuid";
+import { PseudoLayer } from "@/primitives/pseudoLayer";
 
 export interface UiLayerProperties {
   name: string;

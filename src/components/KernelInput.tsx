@@ -1,6 +1,6 @@
-import React, { createRef, useEffect, useMemo, useState } from "react";
 import update from "immutability-helper";
-import { exceedsMaxLength, isNumber } from "../utils/utils";
+import React, { createRef, useEffect, useMemo, useState } from "react";
+import { exceedsMaxLength, isNumber } from "@/utils/utils";
 
 export const KernelInput = ({
   rows,

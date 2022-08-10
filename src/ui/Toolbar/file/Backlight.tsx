@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
-import { VerticalStack } from "../../../components/VerticalStack";
-import { MenuItem } from "../MenuItem";
+import { VerticalStack } from "@/components/VerticalStack";
 import "@/styles/Backlight.css";
+import { MenuItem } from "@/ui/Toolbar/MenuItem";
+import React, { useEffect, useState } from "react";
 
 export const Backlight = () => {
   const [backlight, setBacklight] = useState("ambient");

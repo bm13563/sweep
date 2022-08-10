@@ -1,5 +1,9 @@
 import React, { useEffect, useRef } from "react";
 
+// FIXME
+// Text boxes are currently broken:
+// 1. Don't current support enter due to focussing issues
+
 export const TextField = ({
   value,
   lines = 1,
@@ -20,21 +24,26 @@ export const TextField = ({
     if (divRef.current && value !== undefined) {
       divRef.current.textContent = value;
     }
-  });
+  }, [value]);
 
   return (
     <div className={`body1 ${className}`}>
       <div
         ref={divRef}
-        onInput={(e) => {
-          onChange && onChange(e.currentTarget.textContent as string);
-        }}
-        className={`border-solid border-blues-text-primary border-1 rounded-sm py-2 px-1 overflow-y-auto whitespace-pre-wrap break-words ${className}`}
+        className={`border-solid border-blues-text-primary border-1 rounded-sm py-2 px-1 overflow-y-auto ${className}`}
         style={{
           lineHeight: `${baseLineHeight}`,
           height: `${lines * baseLineHeight}em`,
+          wordBreak: "break-word",
         }}
         contentEditable={editable}
+        onKeyDown={(e) => {
+          if (e.key === "Enter") {
+            e.preventDefault();
+            return;
+          }
+          onChange && onChange(e.currentTarget.textContent as string);
+        }}
       />
     </div>
   );

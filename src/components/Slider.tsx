@@ -1,5 +1,5 @@
+import { HorizontalStack } from "@/components/HorizontalStack";
 import React, { useEffect, useRef, useState } from "react";
-import { HorizontalStack } from "./HorizontalStack";
 
 export interface SliderValueProps {
   red: string;

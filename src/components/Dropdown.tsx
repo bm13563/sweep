@@ -1,7 +1,7 @@
 import React, { useRef, useState } from "react";
-import { useHandleClickOutside } from "../hooks/useHandleClickOutside";
-import { HorizontalStack } from "./HorizontalStack";
-import { VerticalStack } from "./VerticalStack";
+import { useHandleClickOutside } from "@/hooks/useHandleClickOutside";
+import { HorizontalStack } from "@/components/HorizontalStack";
+import { VerticalStack } from "@/components/VerticalStack";
 
 export const Dropdown = ({
   options,

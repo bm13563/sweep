@@ -1,12 +1,12 @@
-import React from "react";
-import { Icon } from "../../components/Icon";
-import { UiLayer } from "../../primitives/uiLayer";
-import shallow from "zustand/shallow";
-import { useHandleUiLayerState } from "../../hooks/useHandleUiLayerState";
+import { Icon } from "@/components/Icon";
+import { useUiLayerState } from "@/hooks/useUiLayerState";
+import { UiLayer } from "@/primitives/uiLayer";
 import update from "immutability-helper";
+import React from "react";
+import shallow from "zustand/shallow";
 
 export const ToggleLayer = ({ uiLayer }: { uiLayer: UiLayer }): JSX.Element => {
-  const { uiLayers, setUiLayers } = useHandleUiLayerState(
+  const { uiLayers, setUiLayers } = useUiLayerState(
     (state) => ({
       uiLayers: state.uiLayers,
       setUiLayers: state.setUiLayers,

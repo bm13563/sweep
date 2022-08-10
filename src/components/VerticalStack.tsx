@@ -1,5 +1,5 @@
+import { StackBase } from "@/components/StackBase";
 import React from "react";
-import { StackBase } from "./StackBase";
 
 export const VerticalStack = ({
   spacing = 0,

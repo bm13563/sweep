@@ -1,5 +1,5 @@
+import { Icon } from "@/components/Icon";
 import React, { useState } from "react";
-import { Icon } from "../../components/Icon";
 
 export const RenameLayer = ({
   toggleEditMode,

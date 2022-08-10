@@ -1,7 +1,7 @@
+import { Layer } from "@/primitives/baseLayer";
+import { PseudoLayer } from "@/primitives/pseudoLayer";
 import { View } from "ol";
 import { fromLonLat, get as getProjection } from "ol/proj";
-import { Layer } from "../primitives/baseLayer";
-import { PseudoLayer } from "../primitives/pseudoLayer";
 
 export const isPseudolayer = (
   layer: Layer | PseudoLayer

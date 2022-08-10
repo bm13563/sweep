@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
 import "@/styles/Loading.css";
+import React, { useEffect, useState } from "react";
 
 export const Loading = ({ ready }: { ready: () => void }) => {
   const [overlay, setOverlay] = useState(false);

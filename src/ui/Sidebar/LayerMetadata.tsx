@@ -1,15 +1,15 @@
+import { HorizontalStack } from "@/components/HorizontalStack";
+import { Icon } from "@/components/Icon";
+import { InfoBox } from "@/components/InfoBox";
+import { PrimaryButton } from "@/components/PrimaryButton";
+import { TextField } from "@/components/TextField";
+import { VerticalStack } from "@/components/VerticalStack";
+import { useToggleActionState } from "@/hooks/useToggleActionState";
+import { useUiLayerState } from "@/hooks/useUiLayerState";
+import { UiLayer } from "@/primitives/uiLayer";
 import update from "immutability-helper";
 import React, { useEffect, useState } from "react";
 import shallow from "zustand/shallow";
-import { HorizontalStack } from "../../components/HorizontalStack";
-import { Icon } from "../../components/Icon";
-import { InfoBox } from "../../components/InfoBox";
-import { PrimaryButton } from "../../components/PrimaryButton";
-import { TextField } from "../../components/TextField";
-import { VerticalStack } from "../../components/VerticalStack";
-import { useHandleUiLayerState } from "../../hooks/useHandleUiLayerState";
-import { useToggleActionState } from "../../hooks/useToggleActionState";
-import { UiLayer } from "../../primitives/uiLayer";
 
 export const LayerMetadata = ({
   uiLayer,
@@ -35,7 +35,7 @@ export const LayerMetadata = ({
     uiLayer.properties.pseudolayer.metadata.band4
   );
 
-  const { uiLayers, setUiLayers } = useHandleUiLayerState(
+  const { uiLayers, setUiLayers } = useUiLayerState(
     (state) => ({
       uiLayers: state.uiLayers,
       setUiLayers: state.setUiLayers,

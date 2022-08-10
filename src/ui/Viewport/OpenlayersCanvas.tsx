@@ -1,3 +1,5 @@
+import { RenderLoopContext } from "@/App";
+import { Layer } from "@/primitives/baseLayer";
 import ImageLayer from "ol/layer/Image";
 import OLTileLayer from "ol/layer/Tile";
 import Map from "ol/Map";
@@ -7,8 +9,6 @@ import { XYZ } from "ol/source";
 import Static from "ol/source/ImageStatic";
 import View from "ol/View";
 import React, { useContext, useEffect, useRef, useState } from "react";
-import { RenderLoopContext } from "../../App";
-import { Layer } from "../../primitives/baseLayer";
 
 type OlLayerTypes = OLTileLayer<XYZ> | ImageLayer<Static>;
 

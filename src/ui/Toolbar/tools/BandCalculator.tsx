@@ -1,24 +1,22 @@
-import React, { useCallback, useEffect, useState } from "react";
+import { Dropdown } from "@/components/Dropdown";
+import { HorizontalStack } from "@/components/HorizontalStack";
+import { Icon } from "@/components/Icon";
+import { PrimaryButton } from "@/components/PrimaryButton";
+import { TextField } from "@/components/TextField";
+import { VerticalStack } from "@/components/VerticalStack";
+import { useToggleActionState } from "@/hooks/useToggleActionState";
+import { useUiLayerState } from "@/hooks/useUiLayerState";
+import { MenuItem } from "@/ui/Toolbar/MenuItem";
+import React, { useEffect, useState } from "react";
 import shallow from "zustand/shallow";
-import { Dropdown } from "../../../components/Dropdown";
-import { HorizontalStack } from "../../../components/HorizontalStack";
-import { Icon } from "../../../components/Icon";
-import { PrimaryButton } from "../../../components/PrimaryButton";
-import { SecondaryButton } from "../../../components/SecondaryButton";
-import { TextField } from "../../../components/TextField";
-import { VerticalStack } from "../../../components/VerticalStack";
-import { useHandleUiLayerState } from "../../../hooks/useHandleUiLayerState";
-import { useToggleActionState } from "../../../hooks/useToggleActionState";
-import { ShaderBuilder } from "../../../webgl/shaderBuilder";
-import { MenuItem } from "../MenuItem";
 
 const operators = ["(", ")", "+", "-", "*", "/"];
 
 export const BandCalculator = () => {
-  const build = new ShaderBuilder();
+  // const build = new ShaderBuilder();
 
   const [equation, setEquation] = useState("");
-  const [error, setError] = useState<string>();
+  // const [error, setError] = useState<string>();
   const [displayUi, setDisplayUi] = useState(false);
   const { bindUi, unbindUi } = useToggleActionState(
     (state) => ({
@@ -28,16 +26,15 @@ export const BandCalculator = () => {
     shallow
   );
 
-  const { uiLayers, setUiLayers, activeUiLayer, activeIndex } =
-    useHandleUiLayerState(
-      (state) => ({
-        uiLayers: state.uiLayers,
-        activeUiLayer: state.activeUiLayer,
-        activeIndex: state.activeIndex,
-        setUiLayers: state.setUiLayers,
-      }),
-      shallow
-    );
+  const { uiLayers } = useUiLayerState(
+    (state) => ({
+      uiLayers: state.uiLayers,
+      activeUiLayer: state.activeUiLayer,
+      activeIndex: state.activeIndex,
+      setUiLayers: state.setUiLayers,
+    }),
+    shallow
+  );
 
   const onClose = () => {
     setDisplayUi(false);

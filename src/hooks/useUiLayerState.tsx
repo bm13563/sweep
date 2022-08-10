@@ -39,14 +39,14 @@ const newUiLayer2 = generateUiLayer({
   pseudolayer: newPseudolayer2,
 });
 
-type HandleUiLayerStateProps = {
+type UiLayerStateProps = {
   uiLayers: UiLayer[];
   activeUiLayer: UiLayer | undefined;
   activeIndex: number | undefined;
   setUiLayers: (uiLayers: UiLayer[]) => void;
 };
 
-export const useHandleUiLayerState = create<HandleUiLayerStateProps>((set) => ({
+export const useUiLayerState = create<UiLayerStateProps>((set) => ({
   uiLayers: [newUiLayer2, offlineUiLayer],
   activeUiLayer: offlineUiLayer,
   activeIndex: 0,
@@ -55,8 +55,6 @@ export const useHandleUiLayerState = create<HandleUiLayerStateProps>((set) => ({
     const activeIndex = activeUiLayer
       ? uiLayers.indexOf(activeUiLayer)
       : undefined;
-    set(() => ({ uiLayers }));
-    set(() => ({ activeUiLayer }));
-    set(() => ({ activeIndex }));
+    set(() => ({ uiLayers, activeUiLayer, activeIndex }));
   },
 }));

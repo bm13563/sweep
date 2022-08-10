@@ -1,5 +1,5 @@
+import { Button, ButtonEvent } from "@/components/Button";
 import React from "react";
-import { Button, ButtonEvent } from "./Button";
 
 export const PrimaryButton = ({
   text,

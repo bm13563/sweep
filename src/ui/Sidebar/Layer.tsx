@@ -1,17 +1,17 @@
+import { HorizontalStack } from "@/components/HorizontalStack";
+import { TextField } from "@/components/TextField";
+import { useUiLayerState } from "@/hooks/useUiLayerState";
+import { UiLayer } from "@/primitives/uiLayer";
+import { DeleteLayer } from "@/ui/Sidebar/DeleteLayer";
+import { ExportLayer } from "@/ui/Sidebar/ExportLayer";
+import { LayerMetadata } from "@/ui/Sidebar/LayerMetadata";
+import { RenameLayer } from "@/ui/Sidebar/RenameLayer";
+import { ToggleLayer } from "@/ui/Sidebar/ToggleLayer";
 import { XYCoord } from "dnd-core";
 import update from "immutability-helper";
 import React, { useCallback, useRef, useState } from "react";
 import { DropTargetMonitor, useDrag, useDrop } from "react-dnd";
 import shallow from "zustand/shallow";
-import { HorizontalStack } from "../../components/HorizontalStack";
-import { TextField } from "../../components/TextField";
-import { useHandleUiLayerState } from "../../hooks/useHandleUiLayerState";
-import { UiLayer } from "../../primitives/uiLayer";
-import { DeleteLayer } from "./DeleteLayer";
-import { ExportLayer } from "./ExportLayer";
-import { LayerMetadata } from "./LayerMetadata";
-import { RenameLayer } from "./RenameLayer";
-import { ToggleLayer } from "./ToggleLayer";
 
 interface DragItem {
   index: number;
@@ -31,7 +31,7 @@ export const Layer = ({
 
   const [editMode, setEditMode] = useState(false);
 
-  const { uiLayers, activeUiLayer, setUiLayers } = useHandleUiLayerState(
+  const { uiLayers, activeUiLayer, setUiLayers } = useUiLayerState(
     (state) => ({
       uiLayers: state.uiLayers,
       activeUiLayer: state.activeUiLayer,
@@ -116,7 +116,10 @@ export const Layer = ({
       data-handler-id={handlerId}
       className={`flex flex-col justify-center h-8 bg-blues-items-primary cursor-pointer ${
         isDragging && "opacity-0"
-      } ${uiLayer.uid === activeUiLayer?.uid && "border border-blues-border-accent"}`}
+      } ${
+        uiLayer.uid === activeUiLayer?.uid &&
+        "border border-blues-border-accent"
+      }`}
     >
       <HorizontalStack className="justify-between">
         <TextField

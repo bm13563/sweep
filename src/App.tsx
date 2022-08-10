@@ -1,15 +1,15 @@
-import React, { createContext, useEffect, useState } from "react";
-import { Layout } from "./ui/Layout";
-import { RenderLoop } from "./webgl/renderLoop";
+import { Loading } from "@/Loading";
+import { Layout } from "@/ui/Layout";
+import { RenderLoop } from "@/webgl/renderLoop";
+import React, { createContext, useState } from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
-import { Loading } from "./Loading";
 
 const renderLoop = new RenderLoop();
 export const RenderLoopContext = createContext(renderLoop);
 
 const App = (): JSX.Element => {
-  const [ready, setReady] = useState(false);
+  const [ready, setReady] = useState(true);
   return (
     <div>
       {ready ? (
