@@ -1,14 +1,14 @@
+import { HorizontalStack } from "@/components/HorizontalStack";
+import { ExpandingMenuItem } from "@/ui/Toolbar/ExpandingMenuItem";
+import { Backlight } from "@/ui/Toolbar/file/Backlight";
+import { UndoRedo } from "@/ui/Toolbar/file/UndoRedo";
+import { MenuButton } from "@/ui/Toolbar/MenuButton";
+import { AdjustRgb } from "@/ui/Toolbar/processing/AdjustRgb";
+import { FilterAbsoluteRgb } from "@/ui/Toolbar/processing/FilterAbsoluteRgb";
+import { FilterPercentageRgb } from "@/ui/Toolbar/processing/FilterPercentageRgb";
+import { ThreeXKernal } from "@/ui/Toolbar/processing/ThreeXKernal";
+import { BandCalculator } from "@/ui/Toolbar/tools/BandCalculator";
 import React from "react";
-import { HorizontalStack } from "../../components/HorizontalStack";
-import { UndoRedo } from "./file/UndoRedo";
-import { AdjustRgb } from "./processing/AdjustRgb";
-import { FilterAbsoluteRgb } from "./processing/FilterAbsoluteRgb";
-import { FilterPercentageRgb } from "./processing/FilterPercentageRgb";
-import { MenuButton } from "./MenuButton";
-import { ThreeXKernal } from "./processing/ThreeXKernal";
-import { BandCalculator } from "./tools/BandCalculator";
-import { ExpandingMenuItem } from "./ExpandingMenuItem";
-import { Backlight } from "./file/Backlight";
 
 export const Toolbar = (): JSX.Element => {
   return (

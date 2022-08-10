@@ -1,5 +1,5 @@
+import { HorizontalStack } from "@/components/HorizontalStack";
 import React, { useState } from "react";
-import { HorizontalStack } from "../../components/HorizontalStack";
 
 export const ExpandingMenuItem = ({
   name,

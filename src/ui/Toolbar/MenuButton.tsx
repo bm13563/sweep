@@ -1,7 +1,7 @@
-import React, { useState, useRef } from "react";
-import { PrimaryButton } from "../../components/PrimaryButton";
-import { VerticalStack } from "../../components/VerticalStack";
-import { useHandleClickOutside } from "../../hooks/useHandleClickOutside";
+import { PrimaryButton } from "@/components/PrimaryButton";
+import { VerticalStack } from "@/components/VerticalStack";
+import { useHandleClickOutside } from "@/hooks/useHandleClickOutside";
+import React, { useRef, useState } from "react";
 
 export const MenuButton = ({
   name,
