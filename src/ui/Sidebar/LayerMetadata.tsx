@@ -1,10 +1,10 @@
 import { HorizontalStack } from "@/components/HorizontalStack";
 import { Icon } from "@/components/Icon";
-import { InfoBox } from "@/components/InfoBox";
+import { InfoBox } from "@/components/InfoNotification";
 import { PrimaryButton } from "@/components/PrimaryButton";
 import { TextField } from "@/components/TextField";
 import { VerticalStack } from "@/components/VerticalStack";
-import { useToggleActionState } from "@/hooks/useToggleActionState";
+import { useSidebarAction } from "@/hooks/useSidebarAction";
 import { useUiLayerState } from "@/hooks/useUiLayerState";
 import { UiLayer } from "@/primitives/uiLayer";
 import update from "immutability-helper";
@@ -43,7 +43,7 @@ export const LayerMetadata = ({
     shallow
   );
 
-  const { bindUi, unbindUi } = useToggleActionState(
+  const { bindUi, unbindUi } = useSidebarAction(
     (state) => ({
       bindUi: state.bindUi,
       unbindUi: state.unbindUi,

@@ -1,17 +1,12 @@
+import { HorizontalStack } from "@/components/HorizontalStack";
+import { Icon } from "@/components/Icon";
 import React from "react";
 
-export const ErrorNotification = ({
-  errorText,
-  className,
-}: {
-  errorText: string;
-  className?: string;
-}): JSX.Element => {
+export const ErrorNotification = ({ text }: { text: string }): JSX.Element => {
   return (
-    <div
-      className={`bg-blues-items-error border border-blues-border-primary px-1 py-2 text-center ${className}`}
-    >
-      <div className="subscript2">{errorText}</div>
-    </div>
+    <HorizontalStack className="space-between bg-blues-items-error rounded-sm p1">
+      <Icon className="i-mdi-alert" title="Information" clickable={false} />
+      <div className="subscript2 ml-1">{text}</div>
+    </HorizontalStack>
   );
 };

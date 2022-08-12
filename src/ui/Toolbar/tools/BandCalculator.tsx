@@ -4,7 +4,7 @@ import { Icon } from "@/components/Icon";
 import { PrimaryButton } from "@/components/PrimaryButton";
 import { TextField } from "@/components/TextField";
 import { VerticalStack } from "@/components/VerticalStack";
-import { useToggleActionState } from "@/hooks/useToggleActionState";
+import { useSidebarAction } from "@/hooks/useSidebarAction";
 import { useUiLayerState } from "@/hooks/useUiLayerState";
 import { MenuItem } from "@/ui/Toolbar/MenuItem";
 import React, { useEffect, useState } from "react";
@@ -18,7 +18,7 @@ export const BandCalculator = () => {
   const [equation, setEquation] = useState("");
   // const [error, setError] = useState<string>();
   const [displayUi, setDisplayUi] = useState(false);
-  const { bindUi, unbindUi } = useToggleActionState(
+  const { bindUi, unbindUi } = useSidebarAction(
     (state) => ({
       bindUi: state.bindUi,
       unbindUi: state.unbindUi,

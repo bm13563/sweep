@@ -3,7 +3,7 @@ import { Icon } from "@/components/Icon";
 import { PrimaryButton } from "@/components/PrimaryButton";
 import { TextField } from "@/components/TextField";
 import { VerticalStack } from "@/components/VerticalStack";
-import { useToggleActionState } from "@/hooks/useToggleActionState";
+import { useSidebarAction } from "@/hooks/useSidebarAction";
 import { UiLayer } from "@/primitives/uiLayer";
 import React, { useEffect, useRef, useState } from "react";
 import shallow from "zustand/shallow";
@@ -13,7 +13,7 @@ export const ExportLayer = ({ uiLayer }: { uiLayer: UiLayer }): JSX.Element => {
 
   const [displayUi, setDisplayUi] = useState(false);
   const [json, setJson] = useState("");
-  const { bindUi, unbindUi } = useToggleActionState(
+  const { bindUi, unbindUi } = useSidebarAction(
     (state) => ({
       bindUi: state.bindUi,
       unbindUi: state.unbindUi,

@@ -5,7 +5,7 @@ import { Icon } from "@/components/Icon";
 import { KernelInput } from "@/components/KernelInput";
 import { PrimaryButton } from "@/components/PrimaryButton";
 import { VerticalStack } from "@/components/VerticalStack";
-import { useToggleActionState } from "@/hooks/useToggleActionState";
+import { useSidebarAction } from "@/hooks/useSidebarAction";
 import { useUiLayerState } from "@/hooks/useUiLayerState";
 import { generatePseudoLayer } from "@/primitives/pseudoLayer";
 import {
@@ -33,7 +33,7 @@ export const ThreeXKernal = (): JSX.Element => {
     useState<string[][]>(defaultKernelValues);
   const [error, setError] = useState<string>();
 
-  const { bindUi, unbindUi } = useToggleActionState(
+  const { bindUi, unbindUi } = useSidebarAction(
     (state) => ({
       bindUi: state.bindUi,
       unbindUi: state.unbindUi,
@@ -122,7 +122,7 @@ export const ThreeXKernal = (): JSX.Element => {
           <div className="header1">3x3 kernel</div>
           <Icon className="i-mdi-close" title="Close" onClick={onClose} />
         </HorizontalStack>
-        <>{error && <ErrorNotification errorText={error} />}</>
+        <>{error && <ErrorNotification text={error} />}</>
         <KernelInput
           rows={3}
           cols={3}

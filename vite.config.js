@@ -4,6 +4,8 @@ import Unocss from 'unocss/vite';
 import { fileURLToPath, URL } from "url";
 import { defineConfig } from "vite";
 import tsconfigPaths from 'vite-tsconfig-paths';
+import react from '@vitejs/plugin-react'
+
 
 export default defineConfig({
   build: {
@@ -15,6 +17,7 @@ export default defineConfig({
     },
   },
   plugins: [
+    react(),
     tsconfigPaths(),
     Unocss({
       presets: [

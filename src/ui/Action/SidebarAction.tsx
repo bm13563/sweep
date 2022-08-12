@@ -1,9 +1,9 @@
-import { useToggleActionState } from "@/hooks/useToggleActionState";
+import { useSidebarAction } from "@/hooks/useSidebarAction";
 import { useToggleSidebar } from "@/hooks/useToggleSidebar";
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 
-export const Action = () => {
-  const component = useToggleActionState((state) => state.component);
+export const SidebarAction = () => {
+  const component = useSidebarAction((state) => state.component);
   const setSidebarOpen = useToggleSidebar((state) => state.setSidebarOpen);
 
   useEffect(() => {

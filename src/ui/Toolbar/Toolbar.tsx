@@ -7,8 +7,6 @@ import { AdjustRgb } from "@/ui/Toolbar/processing/AdjustRgb";
 import { FilterAbsoluteRgb } from "@/ui/Toolbar/processing/FilterAbsoluteRgb";
 import { FilterPercentageRgb } from "@/ui/Toolbar/processing/FilterPercentageRgb";
 import { ThreeXKernal } from "@/ui/Toolbar/processing/ThreeXKernal";
-import { BandCalculator } from "@/ui/Toolbar/tools/BandCalculator";
-import React from "react";
 
 export const Toolbar = (): JSX.Element => {
   return (
@@ -29,9 +27,9 @@ export const Toolbar = (): JSX.Element => {
           <FilterPercentageRgb />
           <ThreeXKernal />
         </MenuButton>
-        <MenuButton name="Tools">
+        {/* <MenuButton name="Tools">
           <BandCalculator />
-        </MenuButton>
+        </MenuButton> */}
       </HorizontalStack>
     </div>
   );

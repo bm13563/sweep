@@ -1,7 +1,7 @@
 import { Loading } from "@/Loading";
 import { Layout } from "@/ui/Layout";
 import { RenderLoop } from "@/webgl/renderLoop";
-import React, { createContext, useState } from "react";
+import { createContext, useState } from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 

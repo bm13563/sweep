@@ -5,7 +5,7 @@ import { PrimaryButton } from "@/components/PrimaryButton";
 import { SecondaryButton } from "@/components/SecondaryButton";
 import { TextField } from "@/components/TextField";
 import { VerticalStack } from "@/components/VerticalStack";
-import { useToggleActionState } from "@/hooks/useToggleActionState";
+import { useSidebarAction } from "@/hooks/useSidebarAction";
 import { useUiLayerState } from "@/hooks/useUiLayerState";
 import { generateUiLayer } from "@/primitives/uiLayer";
 import { uiLayerResolver } from "@/resolvers";
@@ -18,7 +18,7 @@ export const AddLayerFromConfig = (): JSX.Element => {
   const [json, setJson] = useState("");
   const [validationError, setValidationError] = useState("");
   const [displayUi, setDisplayUi] = useState(false);
-  const { bindUi, unbindUi } = useToggleActionState(
+  const { bindUi, unbindUi } = useSidebarAction(
     (state) => ({
       bindUi: state.bindUi,
       unbindUi: state.unbindUi,
@@ -102,7 +102,7 @@ export const AddLayerFromConfig = (): JSX.Element => {
         </HorizontalStack>
         <>
           {validationError.length > 0 && (
-            <ErrorNotification errorText={validationError} />
+            <ErrorNotification text={validationError} />
           )}
         </>
         <div className="body1">Name</div>

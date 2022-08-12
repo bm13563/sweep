@@ -1,15 +1,17 @@
 import { RenderLoopContext } from "@/App";
 import { Icon } from "@/components/Icon";
 import { Overlay } from "@/components/Overlay";
-import { useToggleActionState } from "@/hooks/useToggleActionState";
+import { useCentreAction } from "@/hooks/useCentreAction";
+import { useSidebarAction } from "@/hooks/useSidebarAction";
 import { useToggleSidebar } from "@/hooks/useToggleSidebar";
 import { useUiLayerState } from "@/hooks/useUiLayerState";
-import { Action } from "@/ui/Action/Action";
+import { CentreAction } from "@/ui/Action/CentreAction";
+import { SidebarAction } from "@/ui/Action/SidebarAction";
 import { Sidebar } from "@/ui/Sidebar/Sidebar";
 import { Toolbar } from "@/ui/Toolbar/Toolbar";
 import { Viewport } from "@/ui/Viewport/Viewport";
 import { defaultView } from "@/utils/utils";
-import React, { useContext } from "react";
+import { useContext } from "react";
 import shallow from "zustand/shallow";
 
 const view = defaultView();
@@ -17,7 +19,8 @@ const view = defaultView();
 export const Layout = (): JSX.Element => {
   const renderLoop = useContext(RenderLoopContext);
 
-  const component = useToggleActionState((state) => state.component);
+  const sidebarComponent = useSidebarAction((state) => state.component);
+  const centreComponent = useCentreAction((state) => state.component);
   const activeUiLayer = useUiLayerState((state) => state.activeUiLayer);
   const { sidebarOpen, setSidebarOpen } = useToggleSidebar(
     (state) => ({
@@ -56,14 +59,14 @@ export const Layout = (): JSX.Element => {
       </div>
       <div className="row-start-2 col-start-1 flex flex-col">
         <Overlay
-          display={component ? 1 : 0}
+          display={sidebarComponent ? 1 : 0}
           className="bg-blues-background-primary px-2"
         >
           <Sidebar key={"sidebar"} />
-          <Action key={"action"} />
+          <SidebarAction key={"action"} />
         </Overlay>
       </div>
-      <div className="row-start-2 col-start-2 flex justify-center items-center">
+      <div className="relative row-start-2 col-start-2 flex justify-center items-center">
         {!sidebarOpen && (
           <div className="absolute flex justify-center items-center left-0 z-4">
             <Icon
@@ -75,6 +78,13 @@ export const Layout = (): JSX.Element => {
           </div>
         )}
         <Viewport view={view} activeUiLayer={activeUiLayer} />
+        {centreComponent && (
+          <div className="absolute flex justify-center items-center w-full z-4">
+            <div className="bg-blue w-full">
+              <CentreAction />
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

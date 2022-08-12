@@ -5,7 +5,7 @@ import { PrimaryButton } from "@/components/PrimaryButton";
 import { SecondaryButton } from "@/components/SecondaryButton";
 import { TextField } from "@/components/TextField";
 import { VerticalStack } from "@/components/VerticalStack";
-import { useToggleActionState } from "@/hooks/useToggleActionState";
+import { useSidebarAction } from "@/hooks/useSidebarAction";
 import { useUiLayerState } from "@/hooks/useUiLayerState";
 import { generateLayer } from "@/primitives/baseLayer";
 import { generatePseudoLayer } from "@/primitives/pseudoLayer";
@@ -27,7 +27,7 @@ export const AddLayer = (): JSX.Element => {
   const [type, setType] = useState("");
   const [url, setUrl] = useState("");
   const [displayUi, setDisplayUi] = useState(false);
-  const { bindUi, unbindUi } = useToggleActionState(
+  const { bindUi, unbindUi } = useSidebarAction(
     (state) => ({
       bindUi: state.bindUi,
       unbindUi: state.unbindUi,

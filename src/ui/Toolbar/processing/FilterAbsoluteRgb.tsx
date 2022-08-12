@@ -5,7 +5,7 @@ import { Icon } from "@/components/Icon";
 import { PrimaryButton } from "@/components/PrimaryButton";
 import { Slider, SliderValueProps } from "@/components/Slider";
 import { VerticalStack } from "@/components/VerticalStack";
-import { useToggleActionState } from "@/hooks/useToggleActionState";
+import { useSidebarAction } from "@/hooks/useSidebarAction";
 import { useUiLayerState } from "@/hooks/useUiLayerState";
 import { generatePseudoLayer } from "@/primitives/pseudoLayer";
 import {
@@ -41,7 +41,7 @@ export const FilterAbsoluteRgb = (): JSX.Element => {
   const [operator, setOperator] = useState<operatorTypes>(defaultOperator);
   const [error, setError] = useState<string>();
   const [displayUi, setDisplayUi] = useState(false);
-  const { bindUi, unbindUi } = useToggleActionState(
+  const { bindUi, unbindUi } = useSidebarAction(
     (state) => ({
       bindUi: state.bindUi,
       unbindUi: state.unbindUi,
@@ -201,7 +201,7 @@ export const FilterAbsoluteRgb = (): JSX.Element => {
           <div className="header1">Filter absolute RGB</div>
           <Icon className="i-mdi-close" title="Close" onClick={onClose} />
         </HorizontalStack>
-        <>{error && <ErrorNotification errorText={error} />}</>
+        <>{error && <ErrorNotification text={error} />}</>
         <div className="body1">Red</div>
         <Slider
           step={1}

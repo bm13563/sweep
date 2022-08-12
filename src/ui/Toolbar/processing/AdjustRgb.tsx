@@ -1,11 +1,11 @@
 import { ErrorNotification } from "@/components/ErrorNotification";
 import { HorizontalStack } from "@/components/HorizontalStack";
 import { Icon } from "@/components/Icon";
-import { InfoBox } from "@/components/InfoBox";
+import { InfoBox } from "@/components/InfoNotification";
 import { PrimaryButton } from "@/components/PrimaryButton";
 import { Slider, SliderValueProps } from "@/components/Slider";
 import { VerticalStack } from "@/components/VerticalStack";
-import { useToggleActionState } from "@/hooks/useToggleActionState";
+import { useSidebarAction } from "@/hooks/useSidebarAction";
 import { useUiLayerState } from "@/hooks/useUiLayerState";
 import { generatePseudoLayer } from "@/primitives/pseudoLayer";
 import {
@@ -18,7 +18,7 @@ import { adjustColorsFragment } from "@/webgl/shaders/adjustColors.fragment";
 import { baseVertex } from "@/webgl/shaders/base.vertex";
 import update from "immutability-helper";
 import throttle from "lodash.throttle";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import shallow from "zustand/shallow";
 
 const defaultValues = {
@@ -32,7 +32,7 @@ export const AdjustRgb = (): JSX.Element => {
     useState<SliderValueProps>(defaultValues);
   const [error, setError] = useState<string>();
   const [displayUi, setDisplayUi] = useState(false);
-  const { bindUi, unbindUi } = useToggleActionState(
+  const { bindUi, unbindUi } = useSidebarAction(
     (state) => ({
       bindUi: state.bindUi,
       unbindUi: state.unbindUi,
@@ -174,7 +174,7 @@ export const AdjustRgb = (): JSX.Element => {
           <div className="header1">Adjust RGB</div>
           <Icon title="Close" className="i-mdi-close" onClick={onClose} />
         </HorizontalStack>
-        <>{error && <ErrorNotification errorText={error} />}</>
+        <>{error && <ErrorNotification text={error} />}</>
         <VerticalStack className="mt-2">
           <InfoBox
             text={`Web maps tend not to provide metadata, so it can be useful to label
