@@ -13,6 +13,8 @@ interface ToolbarStateProps {
 
 export const useToolbarState = create<ToolbarStateProps>((set) => ({
   undoRedoState: "",
+  // in theory it's fine to group these into one object
+  // because only one component that uses this hook will be using it
   setToolbarState: (
     key: keyof Omit<ToolbarStateProps, "setToolbarState">,
     newState: string

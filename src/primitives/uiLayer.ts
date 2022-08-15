@@ -1,7 +1,8 @@
+import { PseudoLayer } from "@/primitives/pseudoLayer";
 import update from "immutability-helper";
 import { v4 as uuidv4 } from "uuid";
-import { PseudoLayer } from "@/primitives/pseudoLayer";
 
+// name may need to be a pseudolayer property cos of undo/redo state
 export interface UiLayerProperties {
   name: string;
   pseudolayer: PseudoLayer;

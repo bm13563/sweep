@@ -1,14 +1,15 @@
 import { RenderLoopContext } from "@/App";
 import { Icon } from "@/components/Icon";
 import { Overlay } from "@/components/Overlay";
-import { useCentreAction } from "@/hooks/useCentreAction";
-import { useSidebarAction } from "@/hooks/useSidebarAction";
+import { useAction } from "@/hooks/useAction";
 import { useToggleSidebar } from "@/hooks/useToggleSidebar";
 import { useUiLayerState } from "@/hooks/useUiLayerState";
+import { useUndoRedoState } from "@/hooks/useUndoRedoState";
 import { CentreAction } from "@/ui/Action/CentreAction";
 import { SidebarAction } from "@/ui/Action/SidebarAction";
 import { Sidebar } from "@/ui/Sidebar/Sidebar";
 import { Toolbar } from "@/ui/Toolbar/Toolbar";
+import { Toolbar2 } from "@/ui/Toolbar/Toolbar2";
 import { Viewport } from "@/ui/Viewport/Viewport";
 import { defaultView } from "@/utils/utils";
 import { useContext } from "react";
@@ -19,8 +20,13 @@ const view = defaultView();
 export const Layout = (): JSX.Element => {
   const renderLoop = useContext(RenderLoopContext);
 
-  const sidebarComponent = useSidebarAction((state) => state.component);
-  const centreComponent = useCentreAction((state) => state.component);
+  const { sidebarAction, centreAction } = useAction(
+    (state) => ({
+      sidebarAction: state.sidebarAction,
+      centreAction: state.centreAction,
+    }),
+    shallow
+  );
   const activeUiLayer = useUiLayerState((state) => state.activeUiLayer);
   const { sidebarOpen, setSidebarOpen } = useToggleSidebar(
     (state) => ({
@@ -33,6 +39,8 @@ export const Layout = (): JSX.Element => {
   renderLoop.renderPseudolayer(
     activeUiLayer?.pendingPseudolayer || activeUiLayer?.properties.pseudolayer
   );
+
+  useUndoRedoState();
 
   return (
     <div
@@ -56,10 +64,11 @@ export const Layout = (): JSX.Element => {
       </div>
       <div className="row-start-1 col-start-2 flex items-center bg-blues-background-primary">
         <Toolbar />
+        {/* <Toolbar2 /> */}
       </div>
       <div className="row-start-2 col-start-1 flex flex-col">
         <Overlay
-          display={sidebarComponent ? 1 : 0}
+          display={sidebarAction ? 1 : 0}
           className="bg-blues-background-primary px-2"
         >
           <Sidebar key={"sidebar"} />
@@ -78,9 +87,9 @@ export const Layout = (): JSX.Element => {
           </div>
         )}
         <Viewport view={view} activeUiLayer={activeUiLayer} />
-        {centreComponent && (
+        {centreAction && (
           <div className="absolute flex justify-center items-center w-full z-4">
-            <div className="bg-blue w-full">
+            <div className="bg-blue w-2/6 left-2/6">
               <CentreAction />
             </div>
           </div>

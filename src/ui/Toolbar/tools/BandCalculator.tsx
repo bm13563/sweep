@@ -4,10 +4,10 @@ import { Icon } from "@/components/Icon";
 import { PrimaryButton } from "@/components/PrimaryButton";
 import { TextField } from "@/components/TextField";
 import { VerticalStack } from "@/components/VerticalStack";
-import { useSidebarAction } from "@/hooks/useSidebarAction";
+import { useAction } from "@/hooks/useAction";
 import { useUiLayerState } from "@/hooks/useUiLayerState";
 import { MenuItem } from "@/ui/Toolbar/MenuItem";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import shallow from "zustand/shallow";
 
 const operators = ["(", ")", "+", "-", "*", "/"];
@@ -18,10 +18,10 @@ export const BandCalculator = () => {
   const [equation, setEquation] = useState("");
   // const [error, setError] = useState<string>();
   const [displayUi, setDisplayUi] = useState(false);
-  const { bindUi, unbindUi } = useSidebarAction(
+  const { bindCentreAction, unbindCentreAction } = useAction(
     (state) => ({
-      bindUi: state.bindUi,
-      unbindUi: state.unbindUi,
+      bindCentreAction: state.bindCentreAction,
+      unbindCentreAction: state.unbindCentreAction,
     }),
     shallow
   );
@@ -38,7 +38,7 @@ export const BandCalculator = () => {
 
   const onClose = () => {
     setDisplayUi(false);
-    unbindUi();
+    unbindCentreAction();
   };
 
   const removeLast = () => {
@@ -53,8 +53,9 @@ export const BandCalculator = () => {
   };
 
   useEffect(() => {
-    displayUi && bindUi(BandCalculatorUi());
-  }, [displayUi, error, equation]);
+    console.log("effect");
+    displayUi && bindCentreAction(BandCalculatorUi());
+  }, [displayUi, equation]);
 
   const bandOptions: string[] = [];
   uiLayers.forEach((uiLayer) => {
@@ -71,12 +72,12 @@ export const BandCalculator = () => {
       <VerticalStack spacing={2}>
         <HorizontalStack className="justify-between mb-1">
           <div className="header1">Band Calculator</div>
-          <Icon className="i-mdi-close" onClick={onClose} />
+          <Icon className="i-mdi-close" title="Close" onClick={onClose} />
         </HorizontalStack>
         <div className="body1">Valid bands</div>
-        <Dropdown options={bandOptions} onChange={updateEquation}></Dropdown>
+        <Dropdown value="" options={bandOptions} onChange={updateEquation} />
         <div className="body1">Valid operators</div>
-        <Dropdown options={operators} onChange={updateEquation}></Dropdown>
+        <Dropdown value="" options={operators} onChange={updateEquation} />
         <div className="body1">Equation</div>
         <TextField value={equation} lines={5} className="pointer-events-none" />
         <HorizontalStack className="flex flex-row justify-between items-center children:w-25">

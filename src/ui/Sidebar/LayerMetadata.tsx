@@ -45,8 +45,8 @@ export const LayerMetadata = ({
 
   const { bindUi, unbindUi } = useSidebarAction(
     (state) => ({
-      bindUi: state.bindUi,
-      unbindUi: state.unbindUi,
+      bindUi: state.bindSidebarAction,
+      unbindUi: state.unbindSidebarAction,
     }),
     shallow
   );

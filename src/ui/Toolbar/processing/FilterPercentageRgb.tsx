@@ -16,8 +16,7 @@ import {
 import { MenuItem } from "@/ui/Toolbar/MenuItem";
 import { baseVertex } from "@/webgl/shaders/base.vertex";
 import { filterPercentageRgbFragment } from "@/webgl/shaders/filterPercentageRgb.fragment";
-import throttle from "lodash.throttle";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import shallow from "zustand/shallow";
 
 type operatorTypes = "less than" | "greater than";
@@ -43,8 +42,8 @@ export const FilterPercentageRgb = (): JSX.Element => {
   const [displayUi, setDisplayUi] = useState(false);
   const { bindUi, unbindUi } = useSidebarAction(
     (state) => ({
-      bindUi: state.bindUi,
-      unbindUi: state.unbindUi,
+      bindUi: state.bindSidebarAction,
+      unbindUi: state.unbindSidebarAction,
     }),
     shallow
   );
@@ -58,35 +57,35 @@ export const FilterPercentageRgb = (): JSX.Element => {
     shallow
   );
 
-  const setAbsoluteRgb = throttle(
-    (colours: SliderValueProps, operator: operatorTypes) => {
-      if (!(activeUiLayer && activeIndex !== undefined)) return;
+  const setAbsoluteRgb = (
+    colours: SliderValueProps,
+    operator: operatorTypes
+  ) => {
+    if (!(activeUiLayer && activeIndex !== undefined)) return;
 
-      const pseudolayer = generatePseudoLayer({
-        inputs: {
-          u_image: activeUiLayer.properties.pseudolayer,
-        },
-        variables: {
-          r_max: String(Number(colours.red) / 100),
-          g_max: String(Number(colours.green) / 100),
-          b_max: String(Number(colours.blue) / 100),
-        },
-        dynamics: {
-          operator: operatorMapping[operator],
-        },
-        shaders: {
-          vertexShader: baseVertex,
-          fragmentShader: filterPercentageRgbFragment,
-        },
-      });
+    const pseudolayer = generatePseudoLayer({
+      inputs: {
+        u_image: activeUiLayer.properties.pseudolayer,
+      },
+      variables: {
+        r_max: String(Number(colours.red) / 100),
+        g_max: String(Number(colours.green) / 100),
+        b_max: String(Number(colours.blue) / 100),
+      },
+      dynamics: {
+        operator: operatorMapping[operator],
+      },
+      shaders: {
+        vertexShader: baseVertex,
+        fragmentShader: filterPercentageRgbFragment,
+      },
+    });
 
-      setUiLayers(updatePendingPseudolayer(uiLayers, activeIndex, pseudolayer));
+    setUiLayers(updatePendingPseudolayer(uiLayers, activeIndex, pseudolayer));
 
-      setSliderValues(colours);
-      setOperator(operator);
-    },
-    250
-  );
+    setSliderValues(colours);
+    setOperator(operator);
+  };
 
   const reset = () => {
     if (!(activeUiLayer && activeIndex !== undefined)) return;

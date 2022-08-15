@@ -5,6 +5,7 @@ import { Icon } from "@/components/Icon";
 import { PrimaryButton } from "@/components/PrimaryButton";
 import { Slider, SliderValueProps } from "@/components/Slider";
 import { VerticalStack } from "@/components/VerticalStack";
+import { useAction } from "@/hooks/useAction";
 import { useSidebarAction } from "@/hooks/useSidebarAction";
 import { useUiLayerState } from "@/hooks/useUiLayerState";
 import { generatePseudoLayer } from "@/primitives/pseudoLayer";
@@ -16,8 +17,7 @@ import {
 import { MenuItem } from "@/ui/Toolbar/MenuItem";
 import { baseVertex } from "@/webgl/shaders/base.vertex";
 import { filterAbsoluteRgbFragment } from "@/webgl/shaders/filterAbsoluteRgb.fragment";
-import throttle from "lodash.throttle";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import shallow from "zustand/shallow";
 
 type operatorTypes = "less than" | "greater than";
@@ -41,10 +41,10 @@ export const FilterAbsoluteRgb = (): JSX.Element => {
   const [operator, setOperator] = useState<operatorTypes>(defaultOperator);
   const [error, setError] = useState<string>();
   const [displayUi, setDisplayUi] = useState(false);
-  const { bindUi, unbindUi } = useSidebarAction(
+  const { bindSidebarAction, unbindSidebarAction } = useAction(
     (state) => ({
-      bindUi: state.bindUi,
-      unbindUi: state.unbindUi,
+      bindSidebarAction: state.bindSidebarAction,
+      unbindSidebarAction: state.unbindSidebarAction,
     }),
     shallow
   );
@@ -58,35 +58,35 @@ export const FilterAbsoluteRgb = (): JSX.Element => {
     shallow
   );
 
-  const setAbsoluteRgb = throttle(
-    (colours: SliderValueProps, operator: operatorTypes) => {
-      if (!(activeUiLayer && activeIndex !== undefined)) return;
+  const setAbsoluteRgb = (
+    colours: SliderValueProps,
+    operator: operatorTypes
+  ) => {
+    if (!(activeUiLayer && activeIndex !== undefined)) return;
 
-      const pseudolayer = generatePseudoLayer({
-        inputs: {
-          u_image: activeUiLayer.properties.pseudolayer,
-        },
-        variables: {
-          r_max: String(Number(colours.red) / 255),
-          g_max: String(Number(colours.green) / 255),
-          b_max: String(Number(colours.blue) / 255),
-        },
-        dynamics: {
-          operator: operatorMapping[operator],
-        },
-        shaders: {
-          vertexShader: baseVertex,
-          fragmentShader: filterAbsoluteRgbFragment,
-        },
-      });
+    const pseudolayer = generatePseudoLayer({
+      inputs: {
+        u_image: activeUiLayer.properties.pseudolayer,
+      },
+      variables: {
+        r_max: String(Number(colours.red) / 255),
+        g_max: String(Number(colours.green) / 255),
+        b_max: String(Number(colours.blue) / 255),
+      },
+      dynamics: {
+        operator: operatorMapping[operator],
+      },
+      shaders: {
+        vertexShader: baseVertex,
+        fragmentShader: filterAbsoluteRgbFragment,
+      },
+    });
 
-      setUiLayers(updatePendingPseudolayer(uiLayers, activeIndex, pseudolayer));
+    setUiLayers(updatePendingPseudolayer(uiLayers, activeIndex, pseudolayer));
 
-      setSliderValues(colours);
-      setOperator(operator);
-    },
-    250
-  );
+    setSliderValues(colours);
+    setOperator(operator);
+  };
 
   const reset = () => {
     if (!(activeUiLayer && activeIndex !== undefined)) return;
@@ -121,13 +121,13 @@ export const FilterAbsoluteRgb = (): JSX.Element => {
 
   const onSubmit = () => {
     apply();
-    unbindUi();
+    unbindSidebarAction();
     setDisplayUi(false);
   };
 
   const onClose = () => {
     reset();
-    unbindUi();
+    unbindSidebarAction();
     setDisplayUi(false);
   };
 
@@ -191,7 +191,7 @@ export const FilterAbsoluteRgb = (): JSX.Element => {
   };
 
   useEffect(() => {
-    displayUi && bindUi(AdjustRgbUi());
+    displayUi && bindSidebarAction(AdjustRgbUi());
   }, [displayUi, sliderValues, operator, error]);
 
   const AdjustRgbUi = (): JSX.Element => {
@@ -231,9 +231,9 @@ export const FilterAbsoluteRgb = (): JSX.Element => {
         />
         <div className="body1">Operator</div>
         <Dropdown
+          value="greater than"
           options={["greater than", "less than"]}
           onChange={handleOperator}
-          defaultValue={operator}
         />
         <div className="flex flex-col justify-center items-center children:w-25">
           <PrimaryButton text="Apply" onClick={onSubmit} active={!error} />

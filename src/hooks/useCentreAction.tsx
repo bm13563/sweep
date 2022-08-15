@@ -1,13 +1,14 @@
 import create from "zustand";
 
 interface CentreActionProps {
-  component: JSX.Element | undefined;
-  bindUi: (component: JSX.Element) => void;
-  unbindUi: () => void;
+  centreAction: JSX.Element | undefined;
+  bindCentreAction: (component: JSX.Element) => void;
+  unbindCentreAction: () => void;
 }
 
 export const useCentreAction = create<CentreActionProps>((set) => ({
-  component: undefined,
-  bindUi: (component: JSX.Element) => set(() => ({ component })),
-  unbindUi: () => set({ component: undefined }),
+  centreAction: undefined,
+  bindCentreAction: (component: JSX.Element) =>
+    set(() => ({ centreAction: component })),
+  unbindCentreAction: () => set({ centreAction: undefined }),
 }));

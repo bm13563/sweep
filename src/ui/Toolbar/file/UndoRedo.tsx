@@ -1,72 +1,62 @@
+import { useToolbarState } from "@/hooks/useToolbarState";
 import { useUiLayerState } from "@/hooks/useUiLayerState";
+import { UndoRedoStateProps } from "@/hooks/useUndoRedoState";
 import { MenuItem } from "@/ui/Toolbar/MenuItem";
 import update from "immutability-helper";
-import React, { useEffect, useState } from "react";
 import shallow from "zustand/shallow";
 
 export const UndoRedo = (): JSX.Element => {
-  const { uiLayers, setUiLayers } = useUiLayerState(
+  const setUiLayers = useUiLayerState((state) => state.setUiLayers);
+
+  const { undoRedoState, setToolbarState } = useToolbarState(
     (state) => ({
-      uiLayers: state.uiLayers,
-      setUiLayers: state.setUiLayers,
+      undoRedoState: state.undoRedoState,
+      setToolbarState: state.setToolbarState,
     }),
     shallow
   );
 
-  // const { undoRedoState, setToolbarState } = useToolbarState();
-
-  const pseudolayers = uiLayers.map(
-    (uiLayer) => uiLayer.properties.pseudolayer
-  );
-  const hashedUiLayers = JSON.stringify(uiLayers);
-
-  const [past, setPast] = useState<string[]>([]);
-  const [present, setPresent] = useState<string>(hashedUiLayers);
-  const [future, setFuture] = useState<string[]>([]);
+  let state: UndoRedoStateProps;
+  try {
+    state = JSON.parse(undoRedoState) as UndoRedoStateProps;
+  } catch (error) {
+    state = { present: "", past: [], future: [] };
+  }
 
   const undo = () => {
-    const newUiLayer = past[past.length - 1];
+    const newUiLayer = state.past[state.past.length - 1];
     setUiLayers(JSON.parse(newUiLayer));
-    setPast(
-      update(past, {
-        $splice: [[past.length - 1, 1]],
+    setToolbarState(
+      "undoRedoState",
+      JSON.stringify({
+        present: newUiLayer,
+        past: update(state.past, {
+          $splice: [[state.past.length - 1, 1]],
+        }),
+        future: [...state.future, state.present],
       })
     );
-    setPresent(newUiLayer);
-    setFuture((prevState) => {
-      return [...prevState, present];
-    });
   };
 
   const redo = () => {
-    const newUiLayer = future[future.length - 1];
+    const newUiLayer = state.future[state.future.length - 1];
     setUiLayers(JSON.parse(newUiLayer));
-    setFuture(
-      update(future, {
-        $splice: [[future.length - 1, 1]],
+    setToolbarState(
+      "undoRedoState",
+      JSON.stringify({
+        present: newUiLayer,
+        past: [...state.past, state.present],
+        future: update(state.future, {
+          $splice: [[state.future.length - 1, 1]],
+        }),
       })
     );
-    setPresent(newUiLayer);
-    setPast((prevState) => {
-      return [...prevState, present];
-    });
   };
-
-  useEffect(() => {
-    if (present === hashedUiLayers) {
-      return;
-    }
-    setPresent(hashedUiLayers);
-    setPast((prevState) => {
-      return [...prevState, present];
-    });
-    setFuture([]);
-  }, [JSON.stringify(pseudolayers)]);
 
   return (
     <>
-      <MenuItem active={past.length > 0} onClick={undo} name={"Undo"} />
-      <MenuItem active={future.length > 0} onClick={redo} name={"Redo"} />
+      <MenuItem active={state.past.length > 1} onClick={undo} name={"Undo"} />
+      <MenuItem active={state.future.length > 0} onClick={redo} name={"Redo"} />
     </>
   );
 };

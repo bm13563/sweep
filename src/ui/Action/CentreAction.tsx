@@ -1,7 +1,7 @@
-import { useCentreAction } from "@/hooks/useCentreAction";
+import { useAction } from "@/hooks/useAction";
 
 export const CentreAction = () => {
-  const component = useCentreAction((state) => state.component);
+  const centreAction = useAction((state) => state.centreAction);
 
-  return <div className="w-full">{component}</div>;
+  return <div className="w-full">{centreAction}</div>;
 };

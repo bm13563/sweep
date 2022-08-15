@@ -1,13 +1,14 @@
 import create from "zustand";
 
 interface SidebarActionProps {
-  component: JSX.Element | undefined;
-  bindUi: (component: JSX.Element) => void;
-  unbindUi: () => void;
+  sidebarAction: JSX.Element | undefined;
+  bindSidebarAction: (component: JSX.Element) => void;
+  unbindSidebarAction: () => void;
 }
 
 export const useSidebarAction = create<SidebarActionProps>((set) => ({
-  component: undefined,
-  bindUi: (component: JSX.Element) => set(() => ({ component })),
-  unbindUi: () => set({ component: undefined }),
+  sidebarAction: undefined,
+  bindSidebarAction: (sidebarAction: JSX.Element) =>
+    set(() => ({ sidebarAction: sidebarAction })),
+  unbindSidebarAction: () => set({ sidebarAction: undefined }),
 }));
