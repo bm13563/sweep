@@ -26,8 +26,8 @@ export const Sidebar = (): JSX.Element => {
         <HorizontalStack className="justify-between">
           <div className="header1">Layers</div>
           <HorizontalStack spacing={2}>
-            <AddLayerFromConfig />
-            <AddLayer />
+            {/* <AddLayerFromConfig />
+            <AddLayer /> */}
           </HorizontalStack>
         </HorizontalStack>
         {

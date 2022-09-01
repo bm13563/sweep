@@ -17,15 +17,15 @@ export const Toolbar = (): JSX.Element => {
       >
         <MenuButton name="File">
           <UndoRedo />
-          <ExpandingMenuItem name="Backlight">
+          {/* <ExpandingMenuItem name="Backlight">
             <Backlight />
-          </ExpandingMenuItem>
+          </ExpandingMenuItem> */}
         </MenuButton>
         <MenuButton name="Processing">
           <AdjustRgb />
-          <FilterAbsoluteRgb />
+          {/* <FilterAbsoluteRgb />
           <FilterPercentageRgb />
-          <ThreeXKernal />
+          <ThreeXKernal /> */}
         </MenuButton>
         {/* <MenuButton name="Tools">
           <BandCalculator />

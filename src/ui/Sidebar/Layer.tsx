@@ -130,13 +130,13 @@ export const Layer = ({
           editable={editMode}
           onChange={updateLayerName}
         />
-        <HorizontalStack spacing={0.5}>
+        {/* <HorizontalStack spacing={0.5}>
           <RenameLayer toggleEditMode={toggleEditMode} />
           <LayerMetadata uiLayer={uiLayer} index={index} />
           <ExportLayer uiLayer={uiLayer} />
           <DeleteLayer uiLayer={uiLayer} />
           <ToggleLayer uiLayer={uiLayer} />
-        </HorizontalStack>
+        </HorizontalStack> */}
       </HorizontalStack>
     </div>
   );

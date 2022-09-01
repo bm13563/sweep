@@ -1,0 +1,201 @@
+import { ErrorNotification } from "@/components/ErrorNotification";
+import { HorizontalStack } from "@/components/HorizontalStack";
+import { Icon } from "@/components/Icon";
+import { InfoBox } from "@/components/InfoNotification";
+import { PrimaryButton } from "@/components/PrimaryButton";
+import { Slider, SliderValueProps } from "@/components/Slider";
+import { VerticalStack } from "@/components/VerticalStack";
+import { useUiLayerState } from "@/hooks/useUiLayerState";
+import { generatePseudoLayer } from "@/primitives/pseudoLayer";
+import {
+  discardPendingPseudolayer,
+  persistPendingPseudolayerAsUiLayer,
+  updatePendingPseudolayer
+} from "@/primitives/uiLayer";
+import { adjustColorsFragment } from "@/webgl/shaders/adjustColors.fragment";
+import { baseVertex } from "@/webgl/shaders/base.vertex";
+import update from "immutability-helper";
+import throttle from "lodash.throttle";
+import { useState } from "react";
+import shallow from "zustand/shallow";
+
+const defaultValues = {
+  red: "1",
+  green: "1",
+  blue: "1",
+};
+
+export const AdjustRgbAction = (): JSX.Element => {
+  const [sliderValues, setSliderValues] =
+    useState<SliderValueProps>(defaultValues);
+  const [error, setError] = useState<string>();
+  const [displayUi, setDisplayUi] = useState(false);
+
+  const { uiLayers, setUiLayers, activeUiLayer, activeIndex } = useUiLayerState(
+    (state) => ({
+      uiLayers: state.uiLayers,
+      activeUiLayer: state.activeUiLayer,
+      activeIndex: state.activeIndex,
+      setUiLayers: state.setUiLayers,
+    }),
+    shallow
+  );
+
+  const setRGBValues = throttle((colours: SliderValueProps) => {
+    if (!(activeUiLayer && activeIndex !== undefined)) return;
+
+    const pseudolayer = generatePseudoLayer({
+      inputs: {
+        u_image: activeUiLayer.properties.pseudolayer,
+      },
+      variables: {
+        r_colour: colours.red,
+        g_colour: colours.green,
+        b_colour: colours.blue,
+      },
+      dynamics: {},
+      shaders: {
+        vertexShader: baseVertex,
+        fragmentShader: adjustColorsFragment,
+      },
+    });
+
+    setUiLayers(updatePendingPseudolayer(uiLayers, activeIndex, pseudolayer));
+    setSliderState(colours);
+  }, 250);
+
+  const reset = () => {
+    if (!(activeUiLayer && activeIndex !== undefined)) return;
+
+    setUiLayers(discardPendingPseudolayer(uiLayers, activeIndex));
+    setSliderState(defaultValues);
+  };
+
+  const apply = () => {
+    if (
+      !(
+        activeUiLayer &&
+        activeUiLayer.pendingPseudolayer &&
+        activeIndex !== undefined
+      )
+    )
+      return;
+
+    setUiLayers(
+      persistPendingPseudolayerAsUiLayer(
+        uiLayers,
+        activeIndex,
+        activeUiLayer?.pendingPseudolayer
+      )
+    );
+
+    setSliderState(defaultValues);
+  };
+
+  const onSubmit = () => {
+    apply();
+    setDisplayUi(false);
+  };
+
+  const onClose = () => {
+    reset();
+    setDisplayUi(false);
+  };
+
+  const setSliderState = (colours: SliderValueProps) => {
+    if (!activeUiLayer) return;
+
+    setSliderValues(
+      update(sliderValues, {
+        $set: {
+          red: colours.red,
+          green: colours.green,
+          blue: colours.blue,
+        },
+      })
+    );
+  };
+
+  const onRedChange = (value: string) => {
+    if (!activeUiLayer) return;
+    setError(undefined);
+
+    setRGBValues({
+      red: value,
+      green: sliderValues.green,
+      blue: sliderValues.blue,
+    });
+  };
+
+  const onGreenChange = (value: string) => {
+    if (!activeUiLayer) return;
+    setError(undefined);
+
+    setRGBValues({
+      red: sliderValues.red,
+      green: value,
+      blue: sliderValues.blue,
+    });
+  };
+
+  const onBlueChange = (value: string) => {
+    if (!activeUiLayer) return;
+    setError(undefined);
+
+    setRGBValues({
+      red: sliderValues.red,
+      green: sliderValues.green,
+      blue: value,
+    });
+  };
+
+  const onError = (message: string | undefined) => {
+    setError(message);
+  };
+
+    return (
+      <>
+        <HorizontalStack className="justify-between">
+          <div className="header1">Adjust RGB</div>
+          <Icon title="Close" className="i-mdi-close" onClick={onClose} />
+        </HorizontalStack>
+        <>{error && <ErrorNotification text={error} />}</>
+        <VerticalStack className="mt-2">
+          <InfoBox
+            text={`Web maps tend not to provide metadata, so it can be useful to label
+          data here yourself.`}
+          />
+          <div className="body1">Red</div>
+          <Slider
+            step={0.01}
+            min={0}
+            max={3}
+            defaultValue={1}
+            onChange={onRedChange}
+            onError={onError}
+          />
+          <div className="body1">Green</div>
+          <Slider
+            step={0.01}
+            min={0}
+            max={3}
+            defaultValue={1}
+            onChange={onGreenChange}
+            onError={onError}
+          />
+          <div className="body1">Blue</div>
+          <Slider
+            step={0.01}
+            min={0}
+            max={3}
+            defaultValue={1}
+            onChange={onBlueChange}
+            onError={onError}
+          />
+          <HorizontalStack className="flex flex-col justify-center items-center children:w-25">
+            <PrimaryButton text="Apply" onClick={onSubmit} active={!error} />
+          </HorizontalStack>
+        </VerticalStack>
+      </>
+    )
+};

@@ -1,17 +1,13 @@
 import { useUiLayerState } from "@/hooks/useUiLayerState";
-import { MenuItem } from "@/ui/Toolbar/MenuItem";
-import update from "immutability-helper";
-import React, { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import shallow from "zustand/shallow";
+import update from "immutability-helper";
 
-export const UndoRedo = (): JSX.Element => {
-  const { uiLayers, setUiLayers } = useUiLayerState(
-    (state) => ({
-      uiLayers: state.uiLayers,
-      setUiLayers: state.setUiLayers,
-    }),
-    shallow
-  );
+export const useUndoRedo = () => {
+  const uiLayers = useUiLayerState.getState().uiLayers;
+  const setUiLayers = useUiLayerState.getState().setUiLayers;
+
+  // const { undoRedoState, setToolbarState } = useToolbarState();
 
   const pseudolayers = uiLayers.map(
     (uiLayer) => uiLayer.properties.pseudolayer
@@ -60,11 +56,4 @@ export const UndoRedo = (): JSX.Element => {
     });
     setFuture([]);
   }, [JSON.stringify(pseudolayers)]);
-
-  return (
-    <>
-      <MenuItem active={past.length > 0} onClick={undo} name={"Undo"} />
-      <MenuItem active={future.length > 0} onClick={redo} name={"Redo"} />
-    </>
-  );
-};
+}

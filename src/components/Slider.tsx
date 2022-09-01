@@ -1,5 +1,6 @@
 import { HorizontalStack } from "@/components/HorizontalStack";
 import React, { useEffect, useRef, useState } from "react";
+import throttle from "lodash/throttle";
 
 export interface SliderValueProps {
   red: string;
@@ -45,7 +46,7 @@ export const Slider = ({
     return value.length > 4;
   };
 
-  const updateValue = (value: string) => {
+  const updateValue = throttle((value: string) => {
     onError && onError(undefined);
     if (value === "" || value.slice(-1) === ".") {
       return;
@@ -54,7 +55,7 @@ export const Slider = ({
     if (sliderRef.current) sliderRef.current.value = `${value}`;
     onChange && onChange(value);
     setTargetValue(value);
-  };
+  }, 250);
 
   useEffect(() => {
     if (valueRef.current) valueRef.current.textContent = `${targetValue}`;
